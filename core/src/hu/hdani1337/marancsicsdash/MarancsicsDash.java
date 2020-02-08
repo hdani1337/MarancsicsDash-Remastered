@@ -1,33 +1,20 @@
 package hu.hdani1337.marancsicsdash;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
+import hu.hdani1337.marancsicsdash.Stage.LoadingStage;
 
-public class MarancsicsDash extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
-	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+public class MarancsicsDash extends MyGame {
+
+	public MarancsicsDash() {
+	}
+
+	public MarancsicsDash(boolean debug) {
+		super(debug);
 	}
 
 	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
+	public void create() {
+		super.create();
+		setLoadingStage(new LoadingStage(this));
 	}
 }
