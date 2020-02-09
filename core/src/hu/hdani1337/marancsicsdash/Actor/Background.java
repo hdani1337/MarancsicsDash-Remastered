@@ -63,7 +63,7 @@ public class Background extends OneSpriteStaticActor {
             case SZAHARA:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(SZAHARA_TEXTURE));
                 //setSize(game.getMyAssetManager().getTexture(SZAHARA_TEXTURE).getWidth(),game.getMyAssetManager().getTexture(SZAHARA_TEXTURE).getHeight());
-                ground = 0.85f;
+                ground = 0.84f;
                 break;
             }
             case OCEAN:{
@@ -84,5 +84,10 @@ public class Background extends OneSpriteStaticActor {
             groundBox.setAsBox(16 * 2, ground);
             groundBody.createFixture(groundBox, 0.0f);
         }
+    }
+
+    @Override
+    public void act(float delta) {
+        setX(getX()-0.1f);
     }
 }

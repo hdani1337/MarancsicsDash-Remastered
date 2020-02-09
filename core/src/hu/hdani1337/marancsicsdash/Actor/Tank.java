@@ -25,4 +25,10 @@ public class Tank extends OneSpriteAnimatedActor {
         setSize(getWidth()*0.007f, getHeight()*0.007f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Tank", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
     }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        setX(getX()-0.05f);
+    }
 }

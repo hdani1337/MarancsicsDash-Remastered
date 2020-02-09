@@ -18,9 +18,13 @@ public class GameScreen extends MyScreen {
         super(game);
     }
 
+    public GameStage gameStage;
+
     @Override
     protected void afterAssetsLoaded() {
-        addStage(new GameStage(game),1,false);
+        gameStage = new GameStage(game);
+        addStage(gameStage,1,false);
+        addStage(new HudStage(game, gameStage),2, true);
     }
 
     @Override

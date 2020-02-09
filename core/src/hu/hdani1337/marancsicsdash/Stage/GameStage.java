@@ -3,6 +3,8 @@ package hu.hdani1337.marancsicsdash.Stage;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.ArrayList;
+
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2dStage;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
@@ -32,6 +34,12 @@ public class GameStage extends Box2dStage implements StageInterface {
     public boolean isShakeScreen;//Kamera megrázása
     final WorldBodyEditorLoader loader = new WorldBodyEditorLoader("bodies.json");
 
+    public Zsolti zsolti;
+    public Tank tank;
+    public ArrayList<Coin> coins;
+    public Mushroom mushroom;
+    public ArrayList<Background> backgrounds;
+
     public GameStage(MyGame game) {
         super(new ResponseViewport(9), game);
         assignment();
@@ -45,6 +53,16 @@ public class GameStage extends Box2dStage implements StageInterface {
     @Override
     public void assignment() {
         isShakeScreen = false;
+        zsolti = new Zsolti(game, world, loader);
+        tank = new Tank(game,world,loader);
+        mushroom = new Mushroom(game,world,loader);
+        backgrounds = new ArrayList<>();
+        for (int i = 0; i < 4; i++){
+            backgrounds.add(new Background(game, Background.BackgroundType.SZAHARA, world, getViewport()));
+            backgrounds.get(i).setX(backgrounds.get(i).getWidth()*i);
+            addActor(backgrounds.get(i));
+            backgrounds.get(i).setZIndex(0);
+        }
     }
 
     @Override
@@ -54,7 +72,9 @@ public class GameStage extends Box2dStage implements StageInterface {
 
     @Override
     public void setPositions() {
-
+        zsolti.setPosition(1.5f,3);
+        tank.setPosition(5,0);
+        mushroom.setPosition(7,5);
     }
 
     @Override
@@ -69,68 +89,17 @@ public class GameStage extends Box2dStage implements StageInterface {
 
     @Override
     public void addActors() {
-        addActor(new Background(game, Background.BackgroundType.ZALA, world,getViewport()));
-        addActor(new Zsolti(game, world, loader){
-            @Override
-            public void init() {
-                super.init();
-                setPosition(1.5f,3);
-            }
-        });
-        addActor(new Marancsics(game, world, loader){
-            @Override
-            public void init() {
-                setPosition(1,3);
-            }
-        });
-        addActor(new Tank(game, world, loader){
-            @Override
-            public void init() {
-                super.init();
-                setPosition(5,0);
-            }
-        });
-        addActor(new Coin(game, world, loader){
-            @Override
-            public void init() {
-                super.init();
-                setPosition(5,5);
-            }
-        });
-        addActor(new Mushroom(game, world, loader){
-            @Override
-            public void init() {
-                super.init();
-                setPosition(7,5);
-            }
-        });
-        addActor(new MarancsicsBoss(game, world, loader){
-            @Override
-            public void init() {
-                super.init();
-                setPosition(8,0);
-            }
-        });
+        addActor(zsolti);
+        addActor(tank);
+        addActor(mushroom);
     }
 
-    private int offset = 2;
-    private float pElapsed = elapsedTime;
+    private int offset = 1;
 
     private void shakeScreen(){
-        if(getViewport().getScreenX() < 20) {
-            getViewport().setScreenX(getViewport().getScreenX() + Math.abs(offset * 4));
-            getViewport().setScreenY(getViewport().getScreenY() + Math.abs(offset * 2));
-            setCameraZoomSpeed(offset / 5.0f);
-            if (elapsedTime > pElapsed + 0.2f) {
-                offset *= -1;
-                pElapsed = elapsedTime;
-            }
-        }
-        else{
-            getViewport().setScreenX(0);
-            getViewport().setScreenY(0);
-            setCameraZoomSpeed(0);
-        }
+        getViewport().setScreenX((int) (Math.sin(offset)*15));
+        getViewport().setScreenY((int) (Math.cos(offset)*15));
+        offset++;
     }
 
     @Override
@@ -140,9 +109,16 @@ public class GameStage extends Box2dStage implements StageInterface {
             shakeScreen();
         }
         else{
+            offset = 1;
             getViewport().setScreenX(0);
             getViewport().setScreenY(0);
-            setCameraZoomSpeed(0);
+        }
+
+        if(backgrounds.get(backgrounds.size()-2).getX() < backgrounds.get(backgrounds.size()-2).getWidth()*backgrounds.size()) {
+            backgrounds.add(new Background(game, Background.BackgroundType.SZAHARA, world, getViewport()));
+            backgrounds.get(backgrounds.size()-1).setX(backgrounds.get(backgrounds.size()-2).getX()+backgrounds.get(backgrounds.size()-2).getWidth());
+            addActor(backgrounds.get(backgrounds.size()-1));
+            backgrounds.get(backgrounds.size()-1).setZIndex(0);
         }
     }
 }
