@@ -32,17 +32,23 @@ public class Background extends OneSpriteStaticActor {
         assetList.addTexture(OCEAN_TEXTURE);
     }
 
-
+    /**
+     * HÁTTÉR TÍPUSAINAK ENUM
+     * EGYSZERŰBB MINT INTEGEREKKEL SZERENCSÉTLENKEDNI
+     * **/
     public enum BackgroundType{
         CSERNOBIL, SZIBERIA, ZALA, SZAHARA, OCEAN
     }
 
-    private float ground;
+    public static float ground;//TALAJ Y KOORDINÁTÁJA
 
     public Background(MyGame game, BackgroundType backgroundType, World world, Viewport viewport) {
         super(game, CSERNOBIL_TEXTURE);
         setSize(viewport.getWorldWidth(), viewport.getWorldHeight());
         switch (backgroundType){
+            /**
+             * HÁTTÉR TÍPUSÁTÓL FÜGGŐEN BEÁLLÍTJUK A TEXTÚRÁKAT ÉS A TALAJ Y KOORDINÁTÁJÁT
+             * **/
             case CSERNOBIL:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(CSERNOBIL_TEXTURE));
                 ground = 0.45f;
@@ -76,6 +82,10 @@ public class Background extends OneSpriteStaticActor {
             }
         }
 
+        /**
+         * NULLKEZELÉS
+         * AKI NEM CSINÁL NULLKEZELÉST AZ BUZI ÉS MÉG MEG IS ÜTÖM
+         * **/
         if(world != null){
             BodyDef groundBodyDef = new BodyDef();
             groundBodyDef.position.set(new Vector2(0, ground));
@@ -88,6 +98,6 @@ public class Background extends OneSpriteStaticActor {
 
     @Override
     public void act(float delta) {
-        setX(getX()-0.1f);
+        setX(getX()-0.1f);//HÁTTÉR FOLYAMATOS MOZGATÁSA
     }
 }

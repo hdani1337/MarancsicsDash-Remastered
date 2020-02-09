@@ -19,13 +19,21 @@ public class Jump extends OneSpriteStaticActor {
         assetList.addTexture(JUMP_TEXTURE);
     }
 
+    /**
+     * @param stage Átadom neki a GameStaget, mert abból gond nélkül eltudom érni Zsoltit
+     * **/
     public Jump(MyGame game, final GameStage stage) {
         super(game, JUMP_TEXTURE);
         addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                ((Box2DWorldHelper)stage.zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0,5000),true);
+                /**
+                 * Zsolti ugrik
+                 * **/
+                if(stage.zsolti.getActorWorldHelper() != null && stage.zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
+                    ((Box2DWorldHelper) stage.zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, 5000), true);
+                }
             }
         });
     }

@@ -31,40 +31,47 @@ public class Marancsics extends OneSpriteAnimatedActor {
         super(game, MARANCSICS_ATLAS);
         setFps(12);
         setSize(getWidth()*0.011f, getHeight()*0.011f);
-        //setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Zsolti", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
+        setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Marancsics", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
 
-        ((Box2DWorldHelper)getActorWorldHelper()).addContactListener(new MyContactListener() {
-            @Override
-            public void beginContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-                if (otherHelper.getActor() instanceof Tank){
-                    //Tankkal ütközés
-                    if(getStage() != null && getStage() instanceof GameStage) ((GameStage)getStage()).isShakeScreen = true;
-                    otherHelper.getBody().applyForceToCenter(new Vector2(5000,1000),true);
+        /**
+         * ÜTKÖZÉSFIGYELÉSEK
+         * **/
+        if(getActorWorldHelper() != null && getActorWorldHelper() instanceof Box2DWorldHelper) {
+            ((Box2DWorldHelper) getActorWorldHelper()).addContactListener(new MyContactListener() {
+                @Override
+                public void beginContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+                    if (otherHelper.getActor() instanceof Tank) {
+                        //Tankkal ütközés
+                        if (getStage() != null && getStage() instanceof GameStage)
+                            ((GameStage) getStage()).isShakeScreen = true;
+                        otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
+                    }
                 }
-            }
 
-            @Override
-            public void endContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-                if (otherHelper.getActor() instanceof Tank){
-                    addTimer(new TickTimer(0.3f,false, new TickTimerListener(){
-                        @Override
-                        public void onTick(Timer sender, float correction) {
-                            super.onTick(sender, correction);
-                            if(getStage() != null && getStage() instanceof GameStage) ((GameStage)getStage()).isShakeScreen = false;
-                        }
-                    }));
+                @Override
+                public void endContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+                    if (otherHelper.getActor() instanceof Tank) {
+                        addTimer(new TickTimer(0.3f, false, new TickTimerListener() {
+                            @Override
+                            public void onTick(Timer sender, float correction) {
+                                super.onTick(sender, correction);
+                                if (getStage() != null && getStage() instanceof GameStage)
+                                    ((GameStage) getStage()).isShakeScreen = false;
+                            }
+                        }));
+                    }
                 }
-            }
 
-            @Override
-            public void preSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+                @Override
+                public void preSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
 
-            }
+                }
 
-            @Override
-            public void postSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+                @Override
+                public void postSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
 
-            }
-        });
+                }
+            });
+        }
     }
 }

@@ -31,14 +31,18 @@ public class GameStage extends Box2dStage implements StageInterface {
         assetList.collectAssetDescriptor(MarancsicsBoss.class,assetList);
     }
 
-    public boolean isShakeScreen;//Kamera megrázása
+    public boolean isShakeScreen;//KÉPERNYŐ MEGRÁZÁSA
     final WorldBodyEditorLoader loader = new WorldBodyEditorLoader("bodies.json");
 
-    public Zsolti zsolti;
-    public Tank tank;
-    public ArrayList<Coin> coins;
-    public Mushroom mushroom;
-    public ArrayList<Background> backgrounds;
+    /**
+     * OBJEKTUMOK
+     * **/
+    public Zsolti zsolti;//ZSÁÚTTI
+    public Marancsics marancsics;//TOMI BÁ'
+    public ArrayList<Coin> coins;//ÉRME LISTA
+    public Mushroom mushroom;//GOMBA
+    public ArrayList<Background> backgrounds;//HÁTTÉR LISTA
+    public ArrayList<Tank> tanks;//TANK LISTA
 
     public GameStage(MyGame game) {
         super(new ResponseViewport(9), game);
@@ -54,15 +58,12 @@ public class GameStage extends Box2dStage implements StageInterface {
     public void assignment() {
         isShakeScreen = false;
         zsolti = new Zsolti(game, world, loader);
-        tank = new Tank(game,world,loader);
+        marancsics = new Marancsics(game, world, loader);
+        tanks = new ArrayList<>();
+        coins = new ArrayList<>();
         mushroom = new Mushroom(game,world,loader);
         backgrounds = new ArrayList<>();
-        for (int i = 0; i < 4; i++){
-            backgrounds.add(new Background(game, Background.BackgroundType.SZAHARA, world, getViewport()));
-            backgrounds.get(i).setX(backgrounds.get(i).getWidth()*i);
-            addActor(backgrounds.get(i));
-            backgrounds.get(i).setZIndex(0);
-        }
+        generateBaseBackgrounds();
     }
 
     @Override
@@ -72,8 +73,7 @@ public class GameStage extends Box2dStage implements StageInterface {
 
     @Override
     public void setPositions() {
-        zsolti.setPosition(1.5f,3);
-        tank.setPosition(5,0);
+        zsolti.setPosition(2,3);
         mushroom.setPosition(7,5);
     }
 
@@ -89,22 +89,45 @@ public class GameStage extends Box2dStage implements StageInterface {
 
     @Override
     public void addActors() {
+        addActor(marancsics);
         addActor(zsolti);
-        addActor(tank);
-        addActor(mushroom);
+        //addActor(mushroom);
     }
 
     private int offset = 1;
 
     private void shakeScreen(){
+        /**
+         * SZINUSZ-KOSZINUSZ FÜGGVÉNYEK SEGÍTSÉGÉVEL MOZGATJUK A VIEVPORTOT
+         * **/
         getViewport().setScreenX((int) (Math.sin(offset)*15));
         getViewport().setScreenY((int) (Math.cos(offset)*15));
         offset++;
     }
 
+    private void generateBaseBackgrounds(){
+        /**
+         * KEZDETNEK 3 HÁTTÉR ELÉG
+         * **/
+        for (int i = 0; i < 3; i++){
+            backgrounds.add(new Background(game, Background.BackgroundType.SZAHARA, world, getViewport()));
+            backgrounds.get(i).setX(backgrounds.get(i).getWidth()*i);
+            addActor(backgrounds.get(i));
+            backgrounds.get(i).setZIndex(0);
+        }
+    }
+
+    private float tankElapsed = elapsedTime;
+
     @Override
     public void act(float delta) {
         super.act(delta);
+        /**
+         * HA MARANCSICS VAGY SUPERZSOLTI BELEÉRT A TANKBA, AKKOR RÁZZUK MEG A KÉPERNYŐT
+         * AZ ÉRINTKEZÉS BEFEJEZTÉVEL ÁLLÍTSUK VISSZA A VIEWPORTOT ÉS AZ OFFSETET
+         *
+         * U.I: A KAMERA MOZGATÁSÁHOZ EGYSZERŰEN AUTISTA VAGYOK, EZÉRT A VIEWPORTOT MOZGATOM
+         * **/
         if(isShakeScreen) {
             shakeScreen();
         }
@@ -114,11 +137,45 @@ public class GameStage extends Box2dStage implements StageInterface {
             getViewport().setScreenY(0);
         }
 
-        if(backgrounds.get(backgrounds.size()-2).getX() < backgrounds.get(backgrounds.size()-2).getWidth()*backgrounds.size()) {
+        /**
+         * HA AZ UTOLSÓ ELŐTTI HÁTTÉR MÁR ÉPPENHOGY BEÉR A KÉPERNYŐRE, AKKOR RAKJUNK BE ÚJ HÁTTERET
+         * */
+        if(backgrounds.get(backgrounds.size()-2).getX() < getViewport().getWorldWidth()) {
             backgrounds.add(new Background(game, Background.BackgroundType.SZAHARA, world, getViewport()));
             backgrounds.get(backgrounds.size()-1).setX(backgrounds.get(backgrounds.size()-2).getX()+backgrounds.get(backgrounds.size()-2).getWidth());
             addActor(backgrounds.get(backgrounds.size()-1));
             backgrounds.get(backgrounds.size()-1).setZIndex(0);
+        }
+
+        /**
+         * RANDOM IDŐKÖZÖNKÉNT ÚJ TANK HOZZÁADÁSA
+         * */
+        if(elapsedTime > tankElapsed){
+            tankElapsed = (float) (elapsedTime + Math.random() * 5);
+            tanks.add(new Tank(game, world, loader));
+            addActor(tanks.get(tanks.size()-1));
+        }
+
+        /**
+         * HA A TANK MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
+         * **/
+        for (Tank tank : tanks) {
+            if(tank.getX() < -tank.getWidth()*2){
+                tank.remove();
+                tanks.remove(tank);
+                break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
+            }
+        }
+
+        /**
+         * HA A HÁTTÉR MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
+         * **/
+        for (Background background : backgrounds) {
+            if(background.getX() < -background.getWidth()*2){
+                background.remove();
+                backgrounds.remove(background);
+                break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
+            }
         }
     }
 }

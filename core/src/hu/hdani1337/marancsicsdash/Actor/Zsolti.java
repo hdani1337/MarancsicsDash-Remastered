@@ -34,50 +34,68 @@ public class Zsolti extends OneSpriteAnimatedActor {
         setSize(getWidth()*0.011f, getHeight()*0.011f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Zsolti", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
 
-        ((Box2DWorldHelper)getActorWorldHelper()).addContactListener(new MyContactListener() {
-            @Override
-            public void beginContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-                if (otherHelper.getActor() instanceof Tank){
-                   //Tankkal ütközés
-                    if(superTime > 0) {
-                        if (getStage() != null && getStage() instanceof GameStage)
-                            ((GameStage) getStage()).isShakeScreen = true;
-                        otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
+        /**
+         * ÜTKÖZÉSFIGYELÉSEK
+         * **/
+        if(getActorWorldHelper() != null && getActorWorldHelper() instanceof Box2DWorldHelper) {
+            ((Box2DWorldHelper) getActorWorldHelper()).addContactListener(new MyContactListener() {
+                @Override
+                public void beginContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+                    if (otherHelper.getActor() instanceof Tank) {
+                        /**
+                         * TANK
+                         * **/
+
+                        if (superTime > 0) {
+                            if (getStage() != null && getStage() instanceof GameStage)
+                                ((GameStage) getStage()).isShakeScreen = true;
+                            otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
+                        }
+
+                    } else if (otherHelper.getActor() instanceof Coin) {
+                        /**
+                         * PÉNZ
+                         * **/
+
+                    } else if (otherHelper.getActor() instanceof Mushroom) {
+                        /**
+                         * GOMBA
+                         * **/
+
+                        otherHelper.actor.remove();
+                        superTime = 8;
                     }
                 }
-                else if (otherHelper.getActor() instanceof Coin){
-                    //Érmével ütközés
+
+                @Override
+                public void endContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+                    if (otherHelper.getActor() instanceof Tank) {
+                        /**
+                         * TANK
+                         * **/
+
+                        addTimer(new TickTimer(0.3f, false, new TickTimerListener() {
+                            @Override
+                            public void onTick(Timer sender, float correction) {
+                                super.onTick(sender, correction);
+                                if (getStage() != null && getStage() instanceof GameStage)
+                                    ((GameStage) getStage()).isShakeScreen = false;
+                            }
+                        }));
+                    }
                 }
-                else if (otherHelper.getActor() instanceof Mushroom){
-                    //Gombával ütközés
-                    otherHelper.actor.remove();
-                    superTime = 8;
+
+                @Override
+                public void preSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+
                 }
-            }
 
-            @Override
-            public void endContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-                if (otherHelper.getActor() instanceof Tank){
-                    addTimer(new TickTimer(0.3f,false, new TickTimerListener(){
-                        @Override
-                        public void onTick(Timer sender, float correction) {
-                            super.onTick(sender, correction);
-                            if(getStage() != null && getStage() instanceof GameStage) ((GameStage)getStage()).isShakeScreen = false;
-                        }
-                    }));
+                @Override
+                public void postSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+
                 }
-            }
-
-            @Override
-            public void preSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-
-            }
-
-            @Override
-            public void postSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-
-            }
-        });
+            });
+        }
     }
 
     float superTime = 0;
@@ -86,11 +104,17 @@ public class Zsolti extends OneSpriteAnimatedActor {
     public void act(float delta) {
         super.act(delta);
         if(superTime > 0){
+            /**
+             * SUPER ZSOLTI
+             * **/
             superTime -= delta;
             if(getTextureAtlas() != game.getMyAssetManager().getTextureAtlas(SUPER_ZSOLTI_ATLAS))
                 setTextureAtlas(game.getMyAssetManager().getTextureAtlas(SUPER_ZSOLTI_ATLAS));
         }
         else{
+            /**
+             * ÁTLAGOS ZSOLTI
+             * **/
             superTime = 0;
             if(getTextureAtlas() != game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS))
                 setTextureAtlas(game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS));
