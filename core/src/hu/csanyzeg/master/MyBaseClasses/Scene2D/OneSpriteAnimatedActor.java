@@ -11,7 +11,7 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
  */
 public class OneSpriteAnimatedActor extends OneSpriteActor {
 
-    protected final TextureAtlas textureAtlas;
+    protected TextureAtlas textureAtlas;
     protected float fps = 30;
     protected boolean running = true;
     protected boolean looping = true;
@@ -107,6 +107,10 @@ public class OneSpriteAnimatedActor extends OneSpriteActor {
 
     public TextureAtlas getTextureAtlas() {
         return textureAtlas;
+    }
+
+    public void setTextureAtlas(TextureAtlas textureAtlas) {
+        this.textureAtlas = textureAtlas;
     }
 
     @Override
