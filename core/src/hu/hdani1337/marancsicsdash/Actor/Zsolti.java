@@ -50,6 +50,10 @@ public class Zsolti extends OneSpriteAnimatedActor {
                             if (getStage() != null && getStage() instanceof GameStage)
                                 ((GameStage) getStage()).isShakeScreen = true;
                             otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
+                        }else {
+                            setFps(0);
+                            GameStage.isAct = false;
+                            //((Box2DWorldHelper)getActorWorldHelper()).getBody().setType(BodyDef.BodyType.StaticBody);
                         }
 
                     } else if (otherHelper.getActor() instanceof Coin) {
@@ -64,6 +68,14 @@ public class Zsolti extends OneSpriteAnimatedActor {
 
                         otherHelper.actor.remove();
                         superTime = 8;
+                    } else if (otherHelper.getActor() instanceof Marancsics) {
+                        /**
+                         * MARANCSICS
+                         * **/
+
+                        ((Marancsics) otherHelper.getActor()).setFps(24);
+                        otherHelper.getBody().applyForceToCenter(new Vector2(-600,0),true);
+                        ((Box2DWorldHelper)getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(700,0),true);
                     }
                 }
 

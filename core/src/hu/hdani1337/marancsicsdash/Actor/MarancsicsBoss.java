@@ -10,6 +10,8 @@ import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
+
 public class MarancsicsBoss extends OneSpriteAnimatedActor {
 
     public static final String MARANCSICSBOSS_ATLAS = "atlas/marancsicsBoss.atlas";
@@ -29,6 +31,6 @@ public class MarancsicsBoss extends OneSpriteAnimatedActor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        setX(getX()-0.05f);
+        if(isAct) setX(getX()-0.05f);
     }
 }

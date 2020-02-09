@@ -15,6 +15,8 @@ import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.ShapeType;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
+
 public class Background extends OneSpriteStaticActor {
 
     public static final String CSERNOBIL_TEXTURE = "pic/bg.png";
@@ -98,6 +100,6 @@ public class Background extends OneSpriteStaticActor {
 
     @Override
     public void act(float delta) {
-        setX(getX()-0.1f);//HÁTTÉR FOLYAMATOS MOZGATÁSA
+        if(isAct) setX(getX()-0.1f);//HÁTTÉR FOLYAMATOS MOZGATÁSA
     }
 }

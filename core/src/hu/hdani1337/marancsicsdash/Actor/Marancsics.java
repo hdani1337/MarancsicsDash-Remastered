@@ -18,6 +18,8 @@ import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
+
 public class Marancsics extends OneSpriteAnimatedActor {
 
     public static final String MARANCSICS_ATLAS = "atlas/marancsics.atlas";
@@ -72,6 +74,14 @@ public class Marancsics extends OneSpriteAnimatedActor {
 
                 }
             });
+        }
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(!isAct){
+            setX(getX()+0.2f);
         }
     }
 }
