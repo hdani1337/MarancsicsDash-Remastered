@@ -44,8 +44,8 @@ public class GameOverStage extends MyStage implements StageInterface {
     public void assignment() {
         info = new TextBox(game, "Vesztettél!",2f);
         pontok = new TextBox(game, "Pontszámok\nHamarosan!");
-        again = new TextBox(game, "Új játék");
-        menu = new TextBox(game, "Menü");
+        again = new TextBox(game, "Új játék",1.5f);
+        menu = new TextBox(game, "Menü",1.5f);
 
         black = new OneSpriteStaticActor(game, BLACK_TEXTURE);
 
@@ -63,9 +63,9 @@ public class GameOverStage extends MyStage implements StageInterface {
     @Override
     public void setPositions() {
         info.setPosition(getViewport().getWorldWidth()/2-info.getWidth()/2,getViewport().getWorldHeight()*0.75f);
-        pontok.setPosition(getViewport().getWorldWidth()/2-pontok.getWidth()/2,getViewport().getWorldHeight()*0.55f);
-        again.setPosition(getViewport().getWorldWidth()/2-again.getWidth()/2,getViewport().getWorldHeight()*0.43f);
-        menu.setPosition(getViewport().getWorldWidth()/2-menu.getWidth()/2,getViewport().getWorldHeight()*0.35f);
+        pontok.setPosition(getViewport().getWorldWidth()/2-pontok.getWidth()/2,getViewport().getWorldHeight()*0.52f);
+        again.setPosition(getViewport().getWorldWidth()/2-again.getWidth()/2,getViewport().getWorldHeight()*0.37f);
+        menu.setPosition(getViewport().getWorldWidth()/2-menu.getWidth()/2,getViewport().getWorldHeight()*0.25f);
     }
 
     @Override

@@ -58,7 +58,6 @@ public class MenuStage extends MyStage implements StageInterface {
     @Override
     public void setSizes() {
         if(getViewport().getWorldWidth() > MenuBackground.getWidth()) MenuBackground.setWidth(getViewport().getWorldWidth());
-        System.out.println(getViewport().getWorldWidth());
         version.setWidth(version.getWidth()*0.9f);
         start.setWidth(start.getWidth()*0.95f);
     }

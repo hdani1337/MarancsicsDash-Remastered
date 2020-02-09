@@ -6,33 +6,35 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.hdani1337.marancsicsdash.Actor.Marancsics;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
+import hu.hdani1337.marancsicsdash.MarancsicsDash;
 
 public class LoadingStage extends hu.csanyzeg.master.MyBaseClasses.Assets.LoadingStage {
 
-    public static AssetList assetList;
+    public static AssetList assetList = new AssetList();
     static
     {
-        assetList = new AssetList();
         assetList.addTextureAtlas(Marancsics.MARANCSICS_ATLAS).protect = true;
         assetList.addTextureAtlas(Zsolti.ZSOLTI_ATLAS).protect = true;
     }
 
     public LoadingStage(MyGame game) {
         super(new ResponseViewport(900), game);
-        addActor(new OneSpriteAnimatedActor(game, (Math.random() < 0.5f) ? Marancsics.MARANCSICS_ATLAS : Zsolti.ZSOLTI_ATLAS){
-            @Override
-            public void init() {
-                super.init();
-                setFps(18);
-                setPosition(getViewport().getWorldWidth() / 2 - this.getWidth() / 2, getViewport().getWorldHeight() / 2 - this.getHeight() / 2);
-            }
+        if(MarancsicsDash.needsLoading) {
+            addActor(new OneSpriteAnimatedActor(game, (Math.random() < 0.5f) ? Marancsics.MARANCSICS_ATLAS : Zsolti.ZSOLTI_ATLAS) {
+                @Override
+                public void init() {
+                    super.init();
+                    setFps(18);
+                    setPosition(getViewport().getWorldWidth() / 2 - this.getWidth() / 2, getViewport().getWorldHeight() / 2 - this.getHeight() / 2);
+                }
 
-            @Override
-            public void act(float delta) {
-                super.act(delta);
-                setRotation(getRotation()-5);
-            }
-        });
+                @Override
+                public void act(float delta) {
+                    super.act(delta);
+                    setRotation(getRotation() - 5);
+                }
+            });
+        }
     }
 
     @Override
