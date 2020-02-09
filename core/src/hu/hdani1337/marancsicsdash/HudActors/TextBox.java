@@ -19,7 +19,7 @@ public class TextBox extends MyGroup implements StageInterface {
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(TEXTBOX_TEXTURE);
-        assetList.addFont(RETRO_FONT, RETRO_FONT, 120, Color.WHITE, AssetList.CHARS);
+        assetList.addFont(RETRO_FONT, RETRO_FONT, 32, Color.WHITE, AssetList.CHARS);
     }
 
     public String text;
@@ -57,7 +57,7 @@ public class TextBox extends MyGroup implements StageInterface {
 
     @Override
     public void setSizes() {
-        textBackground.setSize(textLabel.getWidth()*1.3f, textLabel.getHeight()*1.3f);
+        textBackground.setSize((textLabel.getText().length+1)*20, textLabel.getHeight()*1.35f);
         setScales();
     }
 
@@ -87,5 +87,26 @@ public class TextBox extends MyGroup implements StageInterface {
     private void setScales(){
         textBackground.setSize(textBackground.getWidth()*scale, textBackground.getHeight()*scale);
         textLabel.setFontScale(scale);
+    }
+
+    @Override
+    public float getWidth() {
+        return textBackground.getWidth();
+    }
+
+    @Override
+    public float getHeight() {
+        return textBackground.getHeight();
+    }
+
+    @Override
+    public void setWidth(float width) {
+        textBackground.setWidth(width);
+        setPositions();
+    }
+
+    public void setAlpha(float alpha){
+        textBackground.setAlpha(alpha);
+        textLabel.setColor(textLabel.getColor().r,textLabel.getColor().g,textLabel.getColor().b,alpha);
     }
 }

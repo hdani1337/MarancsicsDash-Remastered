@@ -10,6 +10,8 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
+
 public class Jump extends OneSpriteStaticActor {
 
     public static final String JUMP_TEXTURE = "pic/jump.png";
@@ -31,8 +33,10 @@ public class Jump extends OneSpriteStaticActor {
                 /**
                  * Zsolti ugrik
                  * **/
-                if(stage.zsolti.getActorWorldHelper() != null && stage.zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
-                    ((Box2DWorldHelper) stage.zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, 5000), true);
+                if(isAct) {
+                    if (stage.zsolti.getActorWorldHelper() != null && stage.zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
+                        ((Box2DWorldHelper) stage.zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, 5000), true);
+                    }
                 }
             }
         });

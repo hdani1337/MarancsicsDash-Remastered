@@ -34,5 +34,6 @@ public class Tank extends OneSpriteAnimatedActor {
     public void act(float delta) {
         super.act(delta);
         if(isAct) setX(getX()-0.15f);
+        else if (getFps() != 0) setFps(0);
     }
 }

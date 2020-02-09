@@ -30,6 +30,8 @@ public class GameStage extends Box2dStage implements StageInterface {
         assetList.collectAssetDescriptor(Mushroom.class,assetList);
         assetList.collectAssetDescriptor(Coin.class,assetList);
         assetList.collectAssetDescriptor(MarancsicsBoss.class,assetList);
+        assetList.collectAssetDescriptor(Blood.class,assetList);
+        assetList.collectAssetDescriptor(Background.class,assetList);
     }
 
     public boolean isShakeScreen;//KÉPERNYŐ MEGRÁZÁSA

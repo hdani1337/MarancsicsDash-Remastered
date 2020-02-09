@@ -1,17 +1,18 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Vector3;
-
+import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.StageInterface;
 import hu.hdani1337.marancsicsdash.HudActors.Jump;
-import hu.hdani1337.marancsicsdash.HudActors.Logo;
-import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 
 public class HudStage extends MyStage implements StageInterface {
+
+    public static AssetList assetList = new AssetList();
+    static {
+        assetList.collectAssetDescriptor(Jump.class,assetList);
+    }
 
     private GameStage stage;
     private Jump jump;
@@ -35,12 +36,12 @@ public class HudStage extends MyStage implements StageInterface {
 
     @Override
     public void setSizes() {
-
+        jump.setSize(jump.getWidth()*1.2f,jump.getHeight()*1.2f);
     }
 
     @Override
     public void setPositions() {
-
+        jump.setPosition(getViewport().getWorldWidth()-jump.getWidth()-15,15);
     }
 
     @Override

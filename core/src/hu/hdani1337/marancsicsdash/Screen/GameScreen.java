@@ -3,6 +3,7 @@ package hu.hdani1337.marancsicsdash.Screen;
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyScreen;
+import hu.hdani1337.marancsicsdash.Stage.GameOverStage;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 import hu.hdani1337.marancsicsdash.Stage.HudStage;
 
@@ -12,6 +13,7 @@ public class GameScreen extends MyScreen {
     static {
         assetList.collectAssetDescriptor(GameStage.class, assetList);
         assetList.collectAssetDescriptor(HudStage.class, assetList);
+        assetList.collectAssetDescriptor(GameOverStage.class, assetList);
     }
 
     public GameScreen(MyGame game) {
@@ -25,6 +27,7 @@ public class GameScreen extends MyScreen {
         gameStage = new GameStage(game);
         addStage(gameStage,1,false);
         addStage(new HudStage(game, gameStage),2, true);
+        addStage(new GameOverStage(game),3, true);
     }
 
     @Override
