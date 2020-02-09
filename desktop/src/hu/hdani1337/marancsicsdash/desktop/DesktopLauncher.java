@@ -7,7 +7,7 @@ import hu.hdani1337.marancsicsdash.MarancsicsDash;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new MarancsicsDash(), config);
+		new LwjglApplication(new MarancsicsDash(false), config);
 		config.width = 1600;
 		config.height = 900;
 	}

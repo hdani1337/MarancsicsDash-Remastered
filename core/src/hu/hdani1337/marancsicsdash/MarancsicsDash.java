@@ -1,5 +1,7 @@
 package hu.hdani1337.marancsicsdash;
 
+import com.badlogic.gdx.Gdx;
+
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 import hu.hdani1337.marancsicsdash.Screen.MenuScreen;
