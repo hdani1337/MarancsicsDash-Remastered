@@ -3,13 +3,13 @@ package hu.hdani1337.marancsicsdash.Screen;
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyScreen;
-import hu.hdani1337.marancsicsdash.Stage.IntroStage;
+import hu.hdani1337.marancsicsdash.Stage.InfoStage;
 
 public class InfoScreen extends MyScreen {
 
     public static AssetList assetList = new AssetList();
     static {
-        assetList.collectAssetDescriptor(IntroStage.class, assetList);
+        assetList.collectAssetDescriptor(InfoStage.class, assetList);
     }
 
     public InfoScreen(MyGame game) {
@@ -18,7 +18,7 @@ public class InfoScreen extends MyScreen {
 
     @Override
     protected void afterAssetsLoaded() {
-        addStage(new IntroStage(game),1,true);
+        addStage(new InfoStage(game),1,true);
     }
 
     @Override

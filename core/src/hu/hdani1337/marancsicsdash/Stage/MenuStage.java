@@ -14,6 +14,7 @@ import hu.hdani1337.marancsicsdash.HudActors.Jump;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
+import hu.hdani1337.marancsicsdash.Screen.InfoScreen;
 
 public class MenuStage extends MyStage implements StageInterface {
 
@@ -99,7 +100,7 @@ public class MenuStage extends MyStage implements StageInterface {
         info.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                game.setScreenWithPreloadAssets(InfoScreen.class, new LoadingStage(game));
             }
         });
 

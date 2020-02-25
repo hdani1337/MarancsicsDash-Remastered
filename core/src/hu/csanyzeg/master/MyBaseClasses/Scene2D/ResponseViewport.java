@@ -52,7 +52,7 @@ public class ResponseViewport extends Viewport {
         int x = 1;//Alap szélességi arány
         while (keparany > (x/9.0f)) x++;//Kiszámolja a telefon szélességi arányát (pl. 16)
 
-        if((int)keparany*(x*egyArany) != Gdx.graphics.getWidth()) return (worldHeight/Gdx.graphics.getHeight() * Gdx.graphics.getWidth());
+        if((int)keparany*(x*egyArany) != Gdx.graphics.getWidth()) return (int)(worldHeight/Gdx.graphics.getHeight() * Gdx.graphics.getWidth());
         //Ha nem pontos a képarány számítása, akkor a stage szélessége legyen a telefon kijelzőjének szélessége (worldHeight) pixelhez viszonyítva
 
         return x * egyArany;

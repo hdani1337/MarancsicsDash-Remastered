@@ -109,7 +109,7 @@ public abstract class MultiSpriteActor extends MyActor implements InitableInterf
 
 
     @Override
-    protected void originChanged() {
+    public void originChanged() {
         super.originChanged();
         for (OffsetSprite sprite : spriteMap.values()) {
             sprite.setOrigin(getOriginX() - sprite.getOffsetVector().x, getOriginY() - sprite.getOffsetVector().y);
@@ -200,7 +200,7 @@ public abstract class MultiSpriteActor extends MyActor implements InitableInterf
                 if (((int) ((elapsedTime) * 5)) % 2 == 0 && sprite.visible) {
                     Color c = new Color(Color.MAGENTA);
                     shapes.setColor(c);
-                    drawDebugLines(sprite.getCorners(), shapes);
+                    IActorComplexCollision.drawDebugLines(sprite.getCorners(), shapes);
                     shapes.circle(sprite.getOriginX() + sprite.getX(), sprite.getOriginY() + sprite.getY(), getWidth() / debugPointSize, 5);
                 }
             }

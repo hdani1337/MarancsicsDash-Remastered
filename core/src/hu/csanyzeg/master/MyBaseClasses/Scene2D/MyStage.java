@@ -22,18 +22,17 @@ import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 
 import java.util.ArrayList;
 
-import static com.badlogic.gdx.utils.TimeUtils.nanoTime;
-
 
 /**
  * Created by tuskeb on 2016. 09. 30..
  */
-abstract public class MyStage extends Stage implements InitableInterface, IZindex {
-    public final MyGame game;
+abstract public class MyStage extends Stage implements InitableInterface, IZindex, ITimer, IGame, IElapsedTime {
+    public MyGame game;
 
     private MyScreen screen = null;
 
     protected float elapsedTime = 0;
+
     protected int ZIndexAutoInc = 1;
 
     protected boolean visible = true;
@@ -41,16 +40,6 @@ abstract public class MyStage extends Stage implements InitableInterface, IZinde
     protected boolean pause = false;
 
     public final Array<Timer> timers = new Array<>();
-
-    public void addTimer(Timer timer){
-        timers.add(timer);
-    }
-
-    public void removeTimer(Timer timer){
-        timers.removeValue(timer, true);
-    }
-
-
     public Array<Timer> getTimers() {
         return timers;
     }
@@ -159,10 +148,6 @@ abstract public class MyStage extends Stage implements InitableInterface, IZinde
                 game.setScreenBackByStackPopWithPreloadAssets(loadingStage);
             }
         });
-    }
-
-    public MyGame getGame() {
-        return game;
     }
 
 
@@ -312,11 +297,9 @@ abstract public class MyStage extends Stage implements InitableInterface, IZinde
     public void act(float delta) {
         long nanoTimet = TimeUtils.nanoTime();
         super.act(delta);
-        elapsedTime += delta;
 
-        for(Timer t : timers){
-            t.act(delta);
-        }
+        IElapsedTime.super.act(delta);
+        ITimer.super.act(delta);
 
         OrthographicCamera c = (OrthographicCamera)getCamera();
         if (cameraTargetX!=c.position.x || cameraTargetY!=c.position.y || cameraTargetZoom!=c.zoom){
@@ -588,5 +571,16 @@ abstract public class MyStage extends Stage implements InitableInterface, IZinde
         long t = TimeUtils.nanoTime();
         super.draw();
         drawTime = ((float)(TimeUtils.nanoTime() - t)) / 100000;
+    }
+
+
+    @Override
+    public MyGame getGame() {
+        return game;
+    }
+
+    @Override
+    public void setGame(MyGame game) {
+        this.game = game;
     }
 }

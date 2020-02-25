@@ -5,7 +5,7 @@ public interface StageInterface {
     /**
      * @author hdani1337
      * Ezt az interfészt azért hoztam létre, hogy egy kicsit szebbé és átláthatóbbá varázsolhassuk a kódunkat
-     * Célszerű MyStageknél implementálni, s a különböző típusú értékek beállítása külön-külön voidokban történik meg
+     * Célszerű NyStageknél implementálni, s a különböző típusú értékek beállítása külön-külön voidokban történik meg
      * Például egy voidban értékeket adunk a változóknak, a másikban pozícionáljuk, stb, stb, stb...
      * Nem tudom kinek hasznos, de nekem nagyon jól jön, mivel amúgyis minden stageben létrehozom ezeket a voidokat, így pedig csak implementálnom kell ezt
      * **/
@@ -29,6 +29,7 @@ public interface StageInterface {
      * LISTENEREK HOZZÁADÁSA AZ ACTOROKHOZ
      * **/
     void addListeners();
+
 
     /**
      * ACTOROK Z-INDEXEINEK BEÁLLÍTÁSA
