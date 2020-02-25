@@ -15,14 +15,18 @@ import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 import hu.hdani1337.marancsicsdash.Screen.InfoScreen;
+import hu.hdani1337.marancsicsdash.Screen.OptionsScreen;
+import hu.hdani1337.marancsicsdash.Screen.ShopScreen;
 
 public class MenuStage extends MyStage implements StageInterface {
+
+    public static final String MENU_BG_TEXTURE = "pic/menuBg.jpg";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(Logo.class, assetList);
         assetList.collectAssetDescriptor(TextBox.class, assetList);
-        assetList.addTexture("pic/menuBg.jpg");
+        assetList.addTexture(MENU_BG_TEXTURE);
     }
 
     public MenuStage(MyGame game) {
@@ -46,7 +50,7 @@ public class MenuStage extends MyStage implements StageInterface {
 
     @Override
     public void assignment() {
-        MenuBackground = new OneSpriteStaticActor(game,"pic/menuBg.jpg");
+        MenuBackground = new OneSpriteStaticActor(game,MENU_BG_TEXTURE);
         logo = new Logo(game, Logo.LogoType.MENU);
         start = new TextBox(game ,"A játék indítása",1.25f);
         info = new TextBox(game, "A játékról",1.25f);
@@ -107,14 +111,14 @@ public class MenuStage extends MyStage implements StageInterface {
         shop.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                game.setScreenWithPreloadAssets(ShopScreen.class, new LoadingStage(game));
             }
         });
 
         options.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                game.setScreenWithPreloadAssets(OptionsScreen.class, new LoadingStage(game));
             }
         });
 
