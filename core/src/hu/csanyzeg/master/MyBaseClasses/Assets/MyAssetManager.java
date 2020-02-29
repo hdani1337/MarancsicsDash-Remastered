@@ -1,7 +1,6 @@
 package hu.csanyzeg.master.MyBaseClasses.Assets;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -15,12 +14,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import java.awt.Font;
 import java.util.Map;
-
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyScreen;
 
 public class MyAssetManager implements Disposable {
 

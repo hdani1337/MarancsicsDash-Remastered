@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 
 public class SimpleBody extends MyRectangle {
     protected final HashMap<String, MyShape> shapeMap = new HashMap<>();

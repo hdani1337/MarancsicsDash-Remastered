@@ -1,7 +1,5 @@
 package hu.csanyzeg.master.MyBaseClasses.Scene2D;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 

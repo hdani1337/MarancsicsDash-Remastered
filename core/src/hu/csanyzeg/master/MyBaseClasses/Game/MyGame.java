@@ -3,14 +3,12 @@ package hu.csanyzeg.master.MyBaseClasses.Game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Assets.LoadingListener;
 import hu.csanyzeg.master.MyBaseClasses.Assets.LoadingStage;
 import hu.csanyzeg.master.MyBaseClasses.Assets.MyAssetManager;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyScreen;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;

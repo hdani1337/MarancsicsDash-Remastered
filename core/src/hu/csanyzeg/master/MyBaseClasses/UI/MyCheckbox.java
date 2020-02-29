@@ -20,8 +20,6 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.IElapsedTime;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.IGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.IOriginChanged;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ITimer;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.IZindex;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.IZindexCode;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.WorldActor;
 import hu.csanyzeg.master.MyBaseClasses.SimpleWorld.MyShape;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;

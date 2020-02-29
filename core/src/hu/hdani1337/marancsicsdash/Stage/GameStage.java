@@ -7,7 +7,7 @@ import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2dStage;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.StageInterface;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.IPrettyStage;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Blood;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
@@ -17,7 +17,7 @@ import hu.hdani1337.marancsicsdash.Actor.Mushroom;
 import hu.hdani1337.marancsicsdash.Actor.Tank;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 
-public class GameStage extends Box2dStage implements StageInterface {
+public class GameStage extends Box2dStage implements IPrettyStage {
 
     public static AssetList assetList = new AssetList();
     static {

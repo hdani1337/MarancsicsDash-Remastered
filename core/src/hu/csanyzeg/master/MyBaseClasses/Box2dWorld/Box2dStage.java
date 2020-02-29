@@ -12,10 +12,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
-import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.csanyzeg.master.MyBaseClasses.WorldHelper.HelperStage;
 
 public abstract class Box2dStage extends HelperStage<World, Box2DWorldHelper> {

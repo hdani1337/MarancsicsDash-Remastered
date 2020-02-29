@@ -9,7 +9,6 @@ import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2DWorldHelper;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyContactListener;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyFixtureDef;
-import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.ShapeType;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;

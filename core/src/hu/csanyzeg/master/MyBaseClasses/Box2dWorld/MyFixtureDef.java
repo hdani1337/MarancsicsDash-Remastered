@@ -1,6 +1,5 @@
 package hu.csanyzeg.master.MyBaseClasses.Box2dWorld;
 
-import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
 public class MyFixtureDef {
