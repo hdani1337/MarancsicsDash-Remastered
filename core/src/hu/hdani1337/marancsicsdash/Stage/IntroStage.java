@@ -3,21 +3,19 @@ package hu.hdani1337.marancsicsdash.Stage;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Align;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.StageInterface;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.Screen.MenuScreen;
 
 import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
 
-public class IntroStage extends MyStage implements StageInterface {
+public class IntroStage extends PrettyStage {
 
     public static final String GDX_TEXTURE = "pic/gdx.png";
     public static final String CSANY_TEXTURE = "pic/csany.png";
@@ -39,12 +37,6 @@ public class IntroStage extends MyStage implements StageInterface {
 
     public IntroStage(MyGame game) {
         super(new ResponseViewport(900), game);
-        assignment();
-        setSizes();
-        setPositions();
-        addListeners();
-        setZIndexes();
-        addActors();
     }
 
     @Override

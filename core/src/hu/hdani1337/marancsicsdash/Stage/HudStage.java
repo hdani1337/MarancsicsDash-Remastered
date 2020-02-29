@@ -2,12 +2,11 @@ package hu.hdani1337.marancsicsdash.Stage;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.StageInterface;
 import hu.hdani1337.marancsicsdash.HudActors.Jump;
 
-public class HudStage extends MyStage implements StageInterface {
+public class HudStage extends PrettyStage {
 
     public static AssetList assetList = new AssetList();
     static {
@@ -20,13 +19,12 @@ public class HudStage extends MyStage implements StageInterface {
     public HudStage(MyGame game, GameStage gameStage) {
         super(new ResponseViewport(900), game);
         this.stage = gameStage;
+    }
+
+    @Override
+    public void beforeInit() {
+        super.beforeInit();
         setCameraMoveToXY(10000,10000,1);
-        assignment();
-        setSizes();
-        setPositions();
-        addListeners();
-        setZIndexes();
-        addActors();
     }
 
     @Override

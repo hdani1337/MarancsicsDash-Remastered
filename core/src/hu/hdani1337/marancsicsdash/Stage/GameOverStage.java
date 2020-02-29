@@ -5,16 +5,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.StageInterface;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
-public class GameOverStage extends MyStage implements StageInterface {
+public class GameOverStage extends PrettyStage {
 
     public static final String BLACK_TEXTURE = "pic/fekete.png";
 
@@ -33,11 +32,6 @@ public class GameOverStage extends MyStage implements StageInterface {
 
     public GameOverStage(MyGame game) {
         super(new ResponseViewport(900), game);
-        assignment();
-        setSizes();
-        setPositions();
-        addListeners();
-        setZIndexes();
     }
 
     @Override

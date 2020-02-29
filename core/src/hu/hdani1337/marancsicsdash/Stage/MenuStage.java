@@ -6,11 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.StageInterface;
-import hu.hdani1337.marancsicsdash.HudActors.Jump;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
@@ -18,7 +16,7 @@ import hu.hdani1337.marancsicsdash.Screen.InfoScreen;
 import hu.hdani1337.marancsicsdash.Screen.OptionsScreen;
 import hu.hdani1337.marancsicsdash.Screen.ShopScreen;
 
-public class MenuStage extends MyStage implements StageInterface {
+public class MenuStage extends PrettyStage {
 
     public static final String MENU_BG_TEXTURE = "pic/menuBg.jpg";
 
@@ -31,12 +29,6 @@ public class MenuStage extends MyStage implements StageInterface {
 
     public MenuStage(MyGame game) {
         super(new ResponseViewport(900), game);
-        assignment();
-        setSizes();
-        setPositions();
-        addListeners();
-        setZIndexes();
-        addActors();
     }
 
     private OneSpriteStaticActor MenuBackground;

@@ -1,19 +1,13 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.StageInterface;
 
-public class BossStage extends MyStage implements StageInterface {
+public class BossStage extends PrettyStage {
+
     public BossStage(MyGame game) {
         super(new ResponseViewport(900), game);
-        assignment();
-        setSizes();
-        setPositions();
-        addListeners();
-        setZIndexes();
-        addActors();
     }
 
     @Override
