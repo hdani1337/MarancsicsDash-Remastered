@@ -8,6 +8,7 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
+import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
@@ -88,6 +89,11 @@ public class GameOverStage extends PrettyStage {
 
     @Override
     public void addActors() {
+        /**
+         * MINDEN ACTOR LÁTHATATLAN LESZ
+         * EZUTÁN HOZZÁADJUK AZ ACTOROKAT A STAGEHEZ
+         * ÁTVÁLTJUK AZ {@link addedActors} VÁLTOZÓT IGAZRA, ÍGY CSAK EGYSZER KERÜLNEK FEL A STAGERE AZ ACTOROK, MERT TÖBBSZÖR NEM HÍVÓDIK MEG EZ A METÓDUS
+         * **/
         black.setAlpha(0);
         info.setAlpha(0);
         pontok.setAlpha(0);
@@ -103,23 +109,46 @@ public class GameOverStage extends PrettyStage {
         addedActors = true;
     }
 
+    @Override
+    public void afterInit() {
+        /**
+         * MIVEL AZ addActors() METÓDUS AUTOMATIKUSAN LEFUT, EZÉRT EGYSZER HOZZÁADJA A GOMBOKAT A STAGEHEZ 0-ÁS ALPHÁVAL
+         * EZÉRT A STAGE LÉTREHOZÁSA UTÁN EL KELL ŐKET TÁVOLÍTANI, NEHOGY VÉLETLENÜL KATTINTSUNK A GOMBOKRA
+         * **/
+        black.remove();
+        info.remove();
+        pontok.remove();
+        again.remove();
+        menu.remove();
+        addedActors = false;
+    }
+
     private boolean addedActors;
     private float alpha;
 
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(!isAct){
-            if(!addedActors) addActors();
+        /**
+         * HA VÉGE VAN A JÁTÉKNAK
+         * **/
+        if(!isAct && Zsolti.isDead){
+            //Adjuk hozzá a gombokat a stagehez ha még nincsenek rajta
+            if(!addedActors)
+                addActors();
 
-            if(alpha < 0.99f) alpha += 0.01f;
-            else alpha = 1;
+            //Áttűnés
+            if(alpha < 0.99f)
+                alpha += 0.01f;
+            else
+                alpha = 1;
 
             black.setAlpha(alpha*0.6f);
             info.setAlpha(alpha);
             pontok.setAlpha(alpha);
             again.setAlpha(alpha);
             menu.setAlpha(alpha);
+            //Áttűnés vége
         }
     }
 }

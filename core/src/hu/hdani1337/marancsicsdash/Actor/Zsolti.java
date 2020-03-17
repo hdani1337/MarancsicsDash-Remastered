@@ -28,11 +28,16 @@ public class Zsolti extends OneSpriteAnimatedActor {
         assetList.addTextureAtlas(SUPER_ZSOLTI_ATLAS);
     }
 
+    public static boolean isDead;
+    public static boolean inAir;
+
     public Zsolti(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, ZSOLTI_ATLAS);
         setFps(12);
         setSize(getWidth()*0.011f, getHeight()*0.011f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Zsolti", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
+        isDead = false;
+        inAir = true;
 
         /**
          * ÜTKÖZÉSFIGYELÉSEK
@@ -52,6 +57,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
                             otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
                         }else {
                             setFps(0);
+                            isDead = true;
                             GameStage.isAct = false;
                             //((Box2DWorldHelper)getActorWorldHelper()).getBody().setType(BodyDef.BodyType.StaticBody);
                         }
@@ -76,6 +82,12 @@ public class Zsolti extends OneSpriteAnimatedActor {
                         ((Marancsics) otherHelper.getActor()).setFps(24);
                         otherHelper.getBody().applyForceToCenter(new Vector2(-600,0),true);
                         ((Box2DWorldHelper)getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(700,0),true);
+                    } else if (otherHelper.getActor() instanceof Background){
+                        /**
+                         * VISSZAESIK A TALAJRA
+                         * **/
+                        inAir = false;
+                        System.out.println("talaj");
                     }
                 }
 
@@ -94,6 +106,12 @@ public class Zsolti extends OneSpriteAnimatedActor {
                                     ((GameStage) getStage()).isShakeScreen = false;
                             }
                         }));
+                    } else if(otherHelper.getActor() instanceof Background){
+                        /**
+                         * ZSOLTI A LEVEGŐBEN
+                         * **/
+                        inAir = true;
+                        System.out.println("levegő");
                     }
                 }
 
@@ -130,6 +148,25 @@ public class Zsolti extends OneSpriteAnimatedActor {
             superTime = 0;
             if(getTextureAtlas() != game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS))
                 setTextureAtlas(game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS));
+        }
+
+        /**
+         * ZSOLTI NE BORULJON FEL AMÍG ÉL
+         * **/
+        if(getRotation() != 0 && !isDead)
+            setRotation(0);
+
+        if(getY() > Background.ground*2+0.25) {
+            /**
+             * ZSOLTI ELHAGYJA A TALAJT
+             * **/
+            inAir = true;
+        }
+        else {
+            /**
+             * ZSOLTI VISSZAESIK A TALAJRA VAGY NAGYON A KÖZELÉBE
+             * **/
+            inAir = false;
         }
     }
 }

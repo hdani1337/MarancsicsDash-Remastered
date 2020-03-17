@@ -5,6 +5,7 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.hdani1337.marancsicsdash.HudActors.Jump;
+import hu.hdani1337.marancsicsdash.HudActors.Pause;
 
 public class HudStage extends PrettyStage {
 
@@ -13,12 +14,12 @@ public class HudStage extends PrettyStage {
         assetList.collectAssetDescriptor(Jump.class,assetList);
     }
 
-    private GameStage stage;
+    public static GameStage stage;
     private Jump jump;
+    private Pause pause;
 
-    public HudStage(MyGame game, GameStage gameStage) {
+    public HudStage(MyGame game) {
         super(new ResponseViewport(900), game);
-        this.stage = gameStage;
     }
 
     @Override
@@ -30,6 +31,7 @@ public class HudStage extends PrettyStage {
     @Override
     public void assignment() {
         jump = new Jump(game, stage);
+        pause = new Pause(game);
     }
 
     @Override
@@ -40,6 +42,7 @@ public class HudStage extends PrettyStage {
     @Override
     public void setPositions() {
         jump.setPosition(getViewport().getWorldWidth()-jump.getWidth()-15,15);
+        pause.setPosition(getViewport().getWorldWidth()-pause.getWidth()-15,getViewport().getWorldHeight()-pause.getHeight()-15);
     }
 
     @Override
@@ -55,5 +58,6 @@ public class HudStage extends PrettyStage {
     @Override
     public void addActors() {
         addActor(jump);
+        addActor(pause);
     }
 }

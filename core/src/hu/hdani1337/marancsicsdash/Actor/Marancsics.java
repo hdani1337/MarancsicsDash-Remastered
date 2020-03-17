@@ -79,7 +79,7 @@ public class Marancsics extends OneSpriteAnimatedActor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(!isAct){
+        if(Zsolti.isDead){
             setX(getX()+0.2f);
         }
     }

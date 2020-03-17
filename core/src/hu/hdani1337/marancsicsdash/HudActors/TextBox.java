@@ -57,7 +57,7 @@ public class TextBox extends MyGroup implements IPrettyStage {
 
     @Override
     public void setSizes() {
-        textBackground.setSize((textLabel.getText().length+1)*20, textLabel.getHeight()*1.35f);
+        textBackground.setSize((getMaxRowWidth()+1)*20, textLabel.getHeight()*1.35f);
         setScales();
     }
 
@@ -108,5 +108,17 @@ public class TextBox extends MyGroup implements IPrettyStage {
     public void setAlpha(float alpha){
         textBackground.setAlpha(alpha);
         textLabel.setColor(textLabel.getColor().r,textLabel.getColor().g,textLabel.getColor().b,alpha);
+    }
+
+    public int getMaxRowWidth(){
+        int temp = 0;
+        int max = 0;
+        for (int i = 0; i < this.text.length(); i++){
+            if(text.charAt(i) != '\n') temp++;
+            else temp = 0;
+            if(temp > max) max = temp;
+        }
+        return max;
+        //Visszaadja a leghosszabb sor hosszát a szövegből
     }
 }

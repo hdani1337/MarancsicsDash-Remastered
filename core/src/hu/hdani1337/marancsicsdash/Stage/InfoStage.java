@@ -41,7 +41,6 @@ public class InfoStage extends PrettyStage {
     @Override
     public void setSizes() {
         if(getViewport().getWorldWidth() > bg.getWidth()) bg.setWidth(getViewport().getWorldWidth());
-        desc.setWidth(900);
     }
 
     @Override

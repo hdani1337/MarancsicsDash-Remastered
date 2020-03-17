@@ -1,8 +1,11 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
+import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2DWorldHelper;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2dStage;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
@@ -32,7 +35,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     }
 
     public boolean isShakeScreen;//KÉPERNYŐ MEGRÁZÁSA
-    final WorldBodyEditorLoader loader = new WorldBodyEditorLoader("bodies.json");
+    public WorldBodyEditorLoader loader;
 
     /**
      * OBJEKTUMOK
@@ -59,6 +62,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
 
     @Override
     public void assignment() {
+        loader = new WorldBodyEditorLoader("bodies.json");
         isAct = true;
         isShakeScreen = false;
         zsolti = new Zsolti(game, world, loader);
@@ -185,17 +189,67 @@ public class GameStage extends Box2dStage implements IPrettyStage {
                     break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
                 }
             }
+
+            /**
+             * MEGÁLLÍTÁS UTÁN HA MÉG NEM MOZOGNAK AZ ANIMATED ACTOROK AKKOR MOZOGJANAK
+             * **/
+            //ZSOLTI ÚJRAINDÍTÁSA
+            if(zsolti.getFps() == 0) {
+                zsolti.setFps(12);
+                ((Box2DWorldHelper) zsolti.getActorWorldHelper()).getBody().setActive(true);
+            }
+
+            //MARANCSICS ÚJRAINDÍTÁSA
+            if(marancsics.getFps() == 0) {
+                ((Box2DWorldHelper) marancsics.getActorWorldHelper()).getBody().setActive(true);
+                marancsics.setFps(12);
+            }
+
+            //TANKOK ÚJRAINDÍTÁSA
+            for (Tank t : tanks)
+                if(t.getFps() == 0) {
+                    ((Box2DWorldHelper) t.getActorWorldHelper()).getBody().setActive(true);
+                    t.setFps(15);
+                }
         }
         /**
          * HA VÉGE A JÁTÉKNAK AKKOR ZSOLTI VÉREZZEN
          * **/
-        else{
+        else if(zsolti.isDead){
             if(blood.size() < 128) {
                 for (int i = 0; i < 4; i++){
                     blood.add(new Blood(game, world, zsolti));
                     addActor(blood.get(blood.size() - 1));
                 }
             }
+        }
+        /**
+         * HA MEGÁLLÍTJUK A JÁTÉKOT AKKOR AZ ANIMATED ACTOROK NE MOZOGJANAK
+         * **/
+        else{
+            //ZSOLTI MEGÁLLÍTÁSA
+            if(zsolti.getFps() != 0) {
+                ((Box2DWorldHelper) zsolti.getActorWorldHelper()).getBody().setActive(false);
+                zsolti.setFps(0);
+            }
+
+            //MARANCSICS MEGÁLLÍTÁSA
+            if(marancsics.getFps() != 0) {
+                ((Box2DWorldHelper) marancsics.getActorWorldHelper()).getBody().setActive(false);
+                marancsics.setFps(0);
+            }
+
+            //TANKOK MEGÁLLÍTÁSA
+            for (Tank t : tanks)
+                if(t.getFps() != 0) {
+                    ((Box2DWorldHelper) t.getActorWorldHelper()).getBody().setActive(false);
+                    t.setFps(0);
+                }
+
+            //HA RÁZKÓDIK A KÉPERNYŐ AKKOR ÁLLÍTSUK VISSZA
+            offset = 1;
+            getViewport().setScreenX(0);
+            getViewport().setScreenY(0);
         }
     }
 }

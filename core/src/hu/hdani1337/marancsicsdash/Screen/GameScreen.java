@@ -6,6 +6,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyScreen;
 import hu.hdani1337.marancsicsdash.Stage.GameOverStage;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 import hu.hdani1337.marancsicsdash.Stage.HudStage;
+import hu.hdani1337.marancsicsdash.Stage.PauseStage;
 
 public class GameScreen extends MyScreen {
 
@@ -26,8 +27,10 @@ public class GameScreen extends MyScreen {
     protected void afterAssetsLoaded() {
         gameStage = new GameStage(game);
         addStage(gameStage,1,false);
-        addStage(new HudStage(game, gameStage),2, true);
-        addStage(new GameOverStage(game),3, true);
+        HudStage.stage = gameStage;
+        addStage(new HudStage(game),2, true);
+        addStage(new PauseStage(game),3, true);
+        addStage(new GameOverStage(game),4, true);
     }
 
     @Override
