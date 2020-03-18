@@ -625,45 +625,19 @@ public class ShopStage extends PrettyStage {
     public void act(float delta) {
         super.act(delta);
         if(!setBack) {
-            if (alpha < 0.99) {
-                coin.setColor(1, 1, 1, alpha);
-                coinText.setColor(1, 1, 1, alpha);
-                left.setColor(1, 1, 1, alpha);
-                right.setColor(1, 1, 1, alpha);
-                shopLogo.setColor(1, 1, 1, alpha);
-                instantBoss.setColor(1, 1, 1, alpha);
-                purchase.setAlpha(alpha);
-                termekNevAr.setAlpha(alpha);
-                back.setAlpha(alpha);
-                doubleJumpZs.setAlpha(alpha);
-                superZs.setAlpha(alpha);
-                shopBackgroundPreviewBackground.setAlpha(alpha);
-                shopBackgroundPreview.setAlpha(alpha);
-                superCoin.setAlpha(alpha);
-                alpha += 0.02;
-            } else alpha = 1;
+            if (alpha < 0.95) alpha += 0.05;
+            else alpha = 1;
+            setAlpha();
         }
         else
         {
-            if (alpha > 0.01) {
-                coin.setColor(1, 1, 1, alpha);
-                coinText.setColor(1, 1, 1, alpha);
-                left.setColor(1, 1, 1, alpha);
-                right.setColor(1, 1, 1, alpha);
-                shopLogo.setColor(1, 1, 1, alpha);
-                instantBoss.setColor(1, 1, 1, alpha);
-                purchase.setAlpha(alpha);
-                termekNevAr.setAlpha(alpha);
-                back.setAlpha(alpha);
-                doubleJumpZs.setAlpha(alpha);
-                superZs.setAlpha(alpha);
-                shopBackgroundPreviewBackground.setAlpha(alpha);
-                shopBackgroundPreview.setAlpha(alpha);
-                superCoin.setAlpha(alpha);
-                alpha -= 0.02;
+            if (alpha > 0.05) {
+                setAlpha();
+                alpha -= 0.05;
             } else {
                 game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 alpha = 0;
+                setAlpha();
                 addTimer(new TickTimer(1,false,new TickTimerListener(){
                     @Override
                     public void onTick(Timer sender, float correction) {
@@ -673,5 +647,22 @@ public class ShopStage extends PrettyStage {
                 }));
             }
         }
+    }
+
+    private void setAlpha(){
+        coin.setColor(1, 1, 1, alpha);
+        coinText.setColor(1, 1, 1, alpha);
+        left.setColor(1, 1, 1, alpha);
+        right.setColor(1, 1, 1, alpha);
+        shopLogo.setColor(1, 1, 1, alpha);
+        instantBoss.setColor(1, 1, 1, alpha);
+        purchase.setAlpha(alpha);
+        termekNevAr.setAlpha(alpha);
+        back.setAlpha(alpha);
+        doubleJumpZs.setAlpha(alpha);
+        superZs.setAlpha(alpha);
+        shopBackgroundPreviewBackground.setAlpha(alpha);
+        shopBackgroundPreview.setAlpha(alpha);
+        superCoin.setAlpha(alpha);
     }
 }

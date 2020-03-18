@@ -3,8 +3,14 @@ package hu.hdani1337.marancsicsdash.Stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Assets.MyAssetDescriptor;
@@ -13,6 +19,9 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
+import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
+import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
+import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
@@ -53,7 +62,6 @@ public class MenuStage extends PrettyStage {
     public static Sound uraim;
     public static Sound hee;
     public static Music music;
-
 
     @Override
     public void assignment() {
@@ -107,28 +115,56 @@ public class MenuStage extends PrettyStage {
         start.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreenWithPreloadAssets(GameScreen.class, new LoadingStage(game));
+                fadeOut = true;
+                addTimer(new TickTimer(0.3f, false, new TickTimerListener(){
+                    @Override
+                    public void onTick(Timer sender, float correction) {
+                        super.onTick(sender, correction);
+                        game.setScreenWithPreloadAssets(GameScreen.class, new LoadingStage(game));
+                    }
+                }));
             }
         });
 
         info.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreenWithPreloadAssets(InfoScreen.class, new LoadingStage(game));
+                fadeOut = true;
+                addTimer(new TickTimer(0.3f, false, new TickTimerListener(){
+                    @Override
+                    public void onTick(Timer sender, float correction) {
+                        super.onTick(sender, correction);
+                        game.setScreenWithPreloadAssets(InfoScreen.class, new LoadingStage(game));
+                    }
+                }));
             }
         });
 
         shop.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreenWithPreloadAssets(ShopScreen.class, new LoadingStage(game));
+                fadeOut = true;
+                addTimer(new TickTimer(0.3f, false, new TickTimerListener(){
+                    @Override
+                    public void onTick(Timer sender, float correction) {
+                        super.onTick(sender, correction);
+                        game.setScreenWithPreloadAssets(ShopScreen.class, new LoadingStage(game));
+                    }
+                }));
             }
         });
 
         options.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreenWithPreloadAssets(OptionsScreen.class, new LoadingStage(game));
+                fadeOut = true;
+                addTimer(new TickTimer(0.3f, false, new TickTimerListener(){
+                    @Override
+                    public void onTick(Timer sender, float correction) {
+                        super.onTick(sender, correction);
+                        game.setScreenWithPreloadAssets(OptionsScreen.class, new LoadingStage(game));
+                    }
+                }));
             }
         });
 
@@ -147,6 +183,7 @@ public class MenuStage extends PrettyStage {
 
     @Override
     public void addActors() {
+        setAlpha(0);
         addActor(MenuBackground);
         addActor(logo);
         addActor(start);
@@ -155,5 +192,49 @@ public class MenuStage extends PrettyStage {
         addActor(options);
         addActor(exit);
         addActor(version);
+    }
+
+    private void setAlpha(float alpha){
+        logo.setAlpha(alpha);
+        start.setAlpha(alpha);
+        info.setAlpha(alpha);
+        shop.setAlpha(alpha);
+        options.setAlpha(alpha);
+        exit.setAlpha(alpha);
+        version.setAlpha(alpha);
+    }
+
+    float alpha = 0;
+    boolean fadeOut = false;
+    boolean fadeIn = true;
+    float time = 0;
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(fadeIn) {
+            if (alpha < 0.95) {
+                alpha += 0.05f;
+                setAlpha(alpha);
+            }
+            else {
+                alpha = 1;
+                setAlpha(alpha);
+                fadeIn = false;
+            }
+        }
+
+        if(fadeOut) {
+            time += delta;
+            if (alpha > 0.05f) {
+                alpha -= 0.05f;
+                setAlpha(alpha);
+            }
+            else {
+                alpha = 0;
+                setAlpha(alpha);
+                fadeOut = false;
+            }
+        }
     }
 }

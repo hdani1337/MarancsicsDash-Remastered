@@ -33,6 +33,6 @@ public class MarancsicsDash extends MyGame {
 
 		}
 		setLoadingStage(new LoadingStage(this));
-		setScreen(new MenuScreen(this));
+		setScreen(new IntroScreen(this));
 	}
 }

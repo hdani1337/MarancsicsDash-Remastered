@@ -19,7 +19,6 @@ public class IntroStage extends PrettyStage {
 
     public static final String GDX_TEXTURE = "pic/gdx.png";
     public static final String CSANY_TEXTURE = "pic/csany.png";
-    public static final String EN_TEXTURE = "pic/en.png";
 
     public static AssetList assetList = new AssetList();
     static {
@@ -30,7 +29,6 @@ public class IntroStage extends PrettyStage {
     }
 
     private OneSpriteStaticActor bg;
-    private OneSpriteStaticActor en;
     private OneSpriteStaticActor gdxLogo;
     private OneSpriteStaticActor csanyLogo;
     private MyLabel copyright;
@@ -44,7 +42,6 @@ public class IntroStage extends PrettyStage {
         bg = new OneSpriteStaticActor(game, "pic/menuBg.jpg");
         gdxLogo = new OneSpriteStaticActor(game, GDX_TEXTURE);
         csanyLogo = new OneSpriteStaticActor(game, CSANY_TEXTURE);
-        en = new OneSpriteStaticActor(game, EN_TEXTURE);
 
         copyright = new MyLabel(game,"Copyright 2020 Horváth Dániel. Minden jog fenntartva.", new Label.LabelStyle(game.getMyAssetManager().getFont(RETRO_FONT), Color.WHITE)) {
             @Override
@@ -58,7 +55,6 @@ public class IntroStage extends PrettyStage {
     @Override
     public void setSizes() {
         if(getViewport().getWorldWidth() > bg.getWidth()) bg.setWidth(getViewport().getWorldWidth());
-        en.setSize(en.getWidth()*0.6f,en.getHeight()*0.6f);
     }
 
     @Override
@@ -68,7 +64,6 @@ public class IntroStage extends PrettyStage {
         gdxLogo.setPosition(getViewport().getWorldWidth()/2-gdxLogo.getWidth()/2,getViewport().getWorldHeight()/2-gdxLogo.getHeight()/2);
         csanyLogo.setPosition(getViewport().getWorldWidth()/2-csanyLogo.getWidth()/2, getViewport().getWorldHeight()/2-csanyLogo.getHeight()/2);
         copyright.setPosition(getViewport().getWorldWidth()/2-copyright.getWidth()/2, 20);
-        en.setPosition(getViewport().getWorldWidth()/2-en.getWidth()/2,getViewport().getWorldHeight()/2-en.getHeight()/2);
     }
 
     @Override
@@ -87,7 +82,6 @@ public class IntroStage extends PrettyStage {
         addActor(gdxLogo);
         addActor(csanyLogo);
         addActor(copyright);
-        addActor(en);
 
         for (Actor actor : getActors()) actor.setColor(1,1,1,0);
     }
@@ -95,7 +89,7 @@ public class IntroStage extends PrettyStage {
     float alpha = 0;
 
     private void fadeIn(OneSpriteStaticActor... actor) {
-        if (alpha < 0.98) alpha += 0.02;
+        if (alpha < 0.95) alpha += 0.05;
         else alpha = 1;
 
         for (OneSpriteStaticActor actor1 : actor)
@@ -105,7 +99,7 @@ public class IntroStage extends PrettyStage {
     }
 
     private void fadeOut(OneSpriteStaticActor... actor) {
-        if (alpha > 0.02) alpha -= 0.02;
+        if (alpha > 0.05) alpha -= 0.05;
         else {
             alpha = 0;
             pElapsed = 0;
@@ -124,39 +118,34 @@ public class IntroStage extends PrettyStage {
     @Override
     public void act(float delta) {
         super.act(delta);
-        bg.setAlpha((1/8.0f) * elapsedTime);
+        if((1/5.0f) * elapsedTime < 1) bg.setAlpha((1/5.0f) * elapsedTime);
+        else bg.setAlpha(1);
 
         switch (index) {
             case 0: {
                 pElapsed += delta;
-                if (pElapsed < 1) fadeIn(gdxLogo);
-                else if (pElapsed > 2) fadeOut(gdxLogo);
+                if (pElapsed < 0.75) fadeIn(gdxLogo);
+                else if (pElapsed > 1.5) fadeOut(gdxLogo);
                 break;
             }
 
             case 1: {
                 pElapsed += delta;
-                if (pElapsed < 1) {
+                if (pElapsed < 0.75) {
                     fadeIn(csanyLogo);
+                } else if (pElapsed > 1){
+                    copyright.setColor(1,1,1,elapsedTime-2.8f);
+                    if (pElapsed > 2.5) {
+                        fadeOut(csanyLogo);
+                        copyright.setColor(1,1,1, alpha);
+                    }
                 }
-                else if (pElapsed > 2) {
-                    fadeOut(csanyLogo);
-                }
-                break;
-            }
 
-            case 2: {
-                pElapsed += delta;
-                if (pElapsed < 1) {
-                    fadeIn(en);
-                    copyright.setColor(1,1,1,alpha);
-                }
-                else if (pElapsed > 1.5) copyright.setColor(1,1,1, copyright.getColor().a - 0.02f);
                 break;
             }
         }
 
-        if(elapsedTime > 7.9) {
+        if(elapsedTime > 5) {
             MarancsicsDash.needsLoading = true;
             game.setScreenWithPreloadAssets(MenuScreen.class, true, new LoadingStage(game));
         }
