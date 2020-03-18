@@ -36,6 +36,9 @@ public class ShopBackgroundPreview extends OneSpriteStaticActor {
 
     private byte id;
 
+    /**
+     * Háttér változtatása a StepDirection enummal
+     * **/
     public void step(StepDirection stepDirection){
         if(stepDirection == StepDirection.UP) id++;
         else if (stepDirection == StepDirection.DOWN) id--;
@@ -49,6 +52,9 @@ public class ShopBackgroundPreview extends OneSpriteStaticActor {
         }
     }
 
+    /**
+     * Háttér változtatása konkrét ID alapján (0-4 között)
+     * **/
     public void step(byte id){
         switch (id % 5){
             case 0: sprite.setTexture(game.getMyAssetManager().getTexture(CSERNOBIL_TEXTURE));
@@ -59,11 +65,11 @@ public class ShopBackgroundPreview extends OneSpriteStaticActor {
         }
     }
 
+    /**
+     * Háttér változtatása BackgroundType enummal
+     * **/
     public void step(Background.BackgroundType backgroundType){
         switch (backgroundType) {
-            /**
-             * HÁTTÉR TÍPUSÁTÓL FÜGGŐEN BEÁLLÍTJUK A TEXTÚRÁKAT ÉS A TALAJ Y KOORDINÁTÁJÁT
-             * **/
             case CSERNOBIL: {
                 sprite.setTexture(game.getMyAssetManager().getTexture(CSERNOBIL_TEXTURE));
                 break;

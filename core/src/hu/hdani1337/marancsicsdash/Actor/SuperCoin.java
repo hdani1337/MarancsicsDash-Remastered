@@ -23,19 +23,27 @@ public class SuperCoin extends OneSpriteAnimatedActor {
         assetList.addTextureAtlas(SUPERCOIN_TEXTURE);
     }
 
+    /**
+     * Scene2D konstruktor, mozog
+     * **/
     public SuperCoin(MyGame game) {
-        super(game, SUPERCOIN_TEXTURE);
-        isAct = true;
-        setFps(75);
-        setSize(100,100);
+        this(game,true);
     }
 
+    /**
+     * Scene2D konstruktor
+     * @param isAct mozogjon e a pénz
+     * **/
     public SuperCoin(MyGame game, boolean isAct) {
         super(game, SUPERCOIN_TEXTURE);
         this.isAct = isAct;
         setFps(75);
+        setSize(100,100);
     }
 
+    /**
+     * Box2D konstruktor
+     * **/
     public SuperCoin(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, SUPERCOIN_TEXTURE);
         setSize(getWidth()*0.011f, getHeight()*0.011f);
@@ -44,12 +52,18 @@ public class SuperCoin extends OneSpriteAnimatedActor {
         setFps(75);
     }
 
+    /**
+     * Új pozíció beállítása, az értékek még nincsenek tesztelve
+     * **/
     public void newPosition(){
         float newY = (float)(Math.random() * 3 + ground);
         float newX = (float)(Math.random() * 48 + 24);
         setPosition(newX,newY);
     }
 
+    /**
+     * Mozgás utólagos ki-be kapcsolása
+     * **/
     public void setAct(boolean newAct){
         this.isAct = newAct;
     }
@@ -58,7 +72,7 @@ public class SuperCoin extends OneSpriteAnimatedActor {
     public synchronized void act(float delta) {
         super.act(delta);
         if(isAct) {
-            if (getX() < 0 - getWidth()) newPosition();
+            if (getX() < 0 - getWidth()) newPosition();//Ha kiér a képből akkor új pozíciót kap
             setX(getX() - 0.5f);
         }
     }

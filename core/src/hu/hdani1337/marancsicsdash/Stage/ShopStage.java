@@ -47,6 +47,9 @@ public class ShopStage extends PrettyStage {
         super(new ResponseViewport(900), game);
     }
 
+    /**
+     * Változók a mentésből
+     * **/
     public static boolean boughtInstantBoss = preferences.getBoolean("boughtInstantBoss");
     public static boolean boughtSiberia = preferences.getBoolean("boughtSiberia");
     public static boolean boughtZala = preferences.getBoolean("boughtZala");
@@ -56,6 +59,9 @@ public class ShopStage extends PrettyStage {
     public static boolean boughtDouble = preferences.getBoolean("boughtDouble");
     public static boolean boughtCoin = preferences.getBoolean("boughtCoin");
 
+    /**
+     * Actorok
+     * **/
     private OneSpriteStaticActor MenuBackground;
     private TextBox termekNevAr;//Termék neve és ára
     private TextBox purchase;//Vásárlás gomb
@@ -72,10 +78,16 @@ public class ShopStage extends PrettyStage {
     private Zsolti doubleJumpZs;//Double Jump Zsolti
     private SuperCoin superCoin;//Super Coin
 
-    private int itemID;//Képernyőn megjelenő termék ID-ja
-
+    /**
+     * Hangok
+     * **/
     private Sound paySound;//Fizetés hangja
     private Sound noMoney;//Nincs elég pénz hangja
+
+    /**
+     * Egyéb
+     * **/
+    private int itemID;//Képernyőn megjelenő termék ID-ja
 
     @Override
     public void assignment() {
@@ -159,11 +171,17 @@ public class ShopStage extends PrettyStage {
 
     @Override
     public void addListeners() {
+        /**
+         * Vissza a menübe
+         * **/
         back.addListener(new ClickListener()
         {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                /**
+                 * Változók mentése
+                 * **/
                 preferences.putLong("coin", Coin.coin);
                 preferences.putBoolean("boughtInstantBoss", boughtInstantBoss);
                 preferences.putBoolean("boughtSiberia", boughtSiberia);
@@ -174,14 +192,21 @@ public class ShopStage extends PrettyStage {
                 preferences.putBoolean("boughtDouble", boughtDouble);
                 preferences.putBoolean("boughtCoin", boughtCoin);
                 preferences.flush();
-                setBack = true;
+                setBack = true;//Kifele áttűnés
             }
         });
 
+        /**
+         * Jobbra léptető gomb
+         * **/
         right.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                /**
+                 * Amíg az ID nem éri el a maximumot, ami most 7, addig mindig 1-el léptetjük felfele
+                 * Frissítjül a Labeleket és actorokat
+                 * **/
                 if (itemID == 7) {
                     itemID = 7;
                 } else {
@@ -192,10 +217,17 @@ public class ShopStage extends PrettyStage {
             }
         });
 
+        /**
+         * Balra léptető gomb
+         * **/
         left.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                /**
+                 * Amíg az ID nem éri el a minimumot, ami most 0, addig mindig 1-el léptetjük lefelé
+                 * Frissítjül a Labeleket és actorokat
+                 * **/
                 if (itemID == 0) {
                     itemID = 0;
                 } else {
@@ -206,35 +238,53 @@ public class ShopStage extends PrettyStage {
             }
         });
 
+        /**
+         * Vásárlás gomb
+         * **/
         purchase.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                termekNevAr.setPosition(getViewport().getWorldWidth()/2-termekNevAr.getWidth()/2,shopBackgroundPreview.getY() - 150);
-                left.setPosition(termekNevAr.getX() - left.getWidth() - 30,termekNevAr.getY());
-                right.setPosition(termekNevAr.getX() + termekNevAr.getWidth() + 30,termekNevAr.getY());
-
                 if (itemID == 0)
                 {
+                    /**
+                     * InstantBoss, példaként itt kommentezve van minden
+                     * **/
                     if(!boughtInstantBoss) {
+                        /**
+                         * Ha még nem vette meg a játékos az InstantBosst
+                         * **/
                         if (Coin.coin >= 100) {
-                            if (!muted) paySound.play();
-                            Coin.coin -= 100;
-                            coinText.setText(""+Coin.coin);
-                            termekNevAr.setText("Instant Boss\nMár megvetted!");
-                            purchase.remove();
-                            boughtInstantBoss = true;
+                            /**
+                             * És ha van elég pénze akkor megveheti
+                             * **/
+                            if (!muted) paySound.play();//Ha nincs némítva a játék akkor fizetéshang lejátszása
+                            Coin.coin -= 100;//Az összeg levonása
+                            coinText.setText(""+Coin.coin);//Birtokolt pénzmennyiség label frissítése
+                            termekNevAr.setText("Instant Boss\nMár megvetted!");//Termék árának frissítése
+                            purchase.remove();//Vásárlás gomb eltávolítása
+                            boughtInstantBoss = true;//Innentől kezdve birtokolja az InstantBosst a játékok
+
+                            /**
+                             * Adatok mentése
+                             * **/
                             preferences.putLong("coin", Coin.coin);
                             preferences.putBoolean("boughtInstantBoss", boughtInstantBoss);
                             preferences.flush();
                         }
 
-                        else noMoney.play();
+                        /**
+                         * Ha nincs elég pénze és nincs némítva a játék akkor hibahang lejátszása
+                         * **/
+                        else if (!muted) noMoney.play();
                     }
                 }
 
                 else if (itemID == 1)
                 {
+                    /**
+                     * Szibéria háttér
+                     * **/
                     if(!boughtSiberia) {
                         if (Coin.coin >= 200) {
                             if (!muted) paySound.play();
@@ -248,12 +298,15 @@ public class ShopStage extends PrettyStage {
                             preferences.flush();
                         }
 
-                        else noMoney.play();
+                        else if (!muted) noMoney.play();
                     }
                 }
 
                 else if (itemID == 2)
                 {
+                    /**
+                     * Zala háttér
+                     * **/
                     if(!boughtZala) {
                         if (Coin.coin >= 200) {
                             if (!muted) paySound.play();
@@ -267,12 +320,15 @@ public class ShopStage extends PrettyStage {
                             preferences.flush();
                         }
 
-                        else noMoney.play();
+                        else if (!muted) noMoney.play();
                     }
                 }
 
                 else if (itemID == 3)
                 {
+                    /**
+                     * Szahara háttér
+                     * **/
                     if(!boughtDesert) {
                         if (Coin.coin >= 200) {
                             if (!muted) paySound.play();
@@ -286,12 +342,15 @@ public class ShopStage extends PrettyStage {
                             preferences.flush();
                         }
 
-                        else noMoney.play();
+                        else if (!muted) noMoney.play();
                     }
                 }
 
                 else if (itemID == 4)
                 {
+                    /**
+                     * Óceán háttér
+                     * **/
                     if(!boughtOcean) {
                         if (Coin.coin >= 200) {
                             if (!muted) paySound.play();
@@ -305,12 +364,15 @@ public class ShopStage extends PrettyStage {
                             preferences.flush();
                         }
 
-                        else noMoney.play();
+                        else if (!muted) noMoney.play();
                     }
                 }
 
                 else if (itemID == 5)
                 {
+                    /**
+                     * Super Zsolti
+                     * **/
                     if(!boughtZsolti) {
                         if (Coin.coin >= 250) {
                             if (!muted) paySound.play();
@@ -324,12 +386,15 @@ public class ShopStage extends PrettyStage {
                             preferences.flush();
                         }
 
-                        else noMoney.play();
+                        else if (!muted) noMoney.play();
                     }
                 }
 
                 else if (itemID == 6)
                 {
+                    /**
+                     * Double Jump
+                     * **/
                     if(!boughtDouble) {
                         if (Coin.coin >= 250) {
                             if (!muted) paySound.play();
@@ -343,12 +408,15 @@ public class ShopStage extends PrettyStage {
                             preferences.flush();
                         }
 
-                        else noMoney.play();
+                        else if (!muted) noMoney.play();
                     }
                 }
 
                 else if (itemID == 7)
                 {
+                    /**
+                     * Super Coin
+                     * **/
                     if(!boughtCoin) {
                         if (Coin.coin >= 2000) {
                             if (!muted) paySound.play();
@@ -362,9 +430,16 @@ public class ShopStage extends PrettyStage {
                             preferences.flush();
                         }
 
-                        else noMoney.play();
+                        else if (!muted) noMoney.play();
                     }
                 }
+
+                /**
+                 * Mindig újrapozicionáljuk a gombokat és a terméknevet, mert ha vásárlunk akkor változhatnak a méretek
+                 * **/
+                termekNevAr.setPosition(getViewport().getWorldWidth()/2-termekNevAr.getWidth()/2,shopBackgroundPreview.getY() - 150);
+                left.setPosition(termekNevAr.getX() - left.getWidth() - 30,termekNevAr.getY());
+                right.setPosition(termekNevAr.getX() + termekNevAr.getWidth() + 30,termekNevAr.getY());
             }
         });
     }
@@ -374,6 +449,9 @@ public class ShopStage extends PrettyStage {
 
     }
 
+    /**
+     * Minden actort hozzáadunk a stagehez, csak a Visible tulajdonságaikat állítjuk át
+     * **/
     @Override
     public void addActors() {
         addActor(MenuBackground);
@@ -393,6 +471,9 @@ public class ShopStage extends PrettyStage {
         addActor(superCoin);
     }
 
+    /**
+     * A Stage felépítése után frissítjük egyszer a Labeleket és Actorokat
+     * **/
     @Override
     public void afterInit() {
         setTexts();
@@ -400,14 +481,14 @@ public class ShopStage extends PrettyStage {
     }
 
     /**
-     * INNENTŐL KÁOSZ
+     * Actorok beállítása a jelenlegi ID alapján
      * **/
-
     private void setActor()
     {
         termekNevAr.setPosition(getViewport().getWorldWidth()/2-termekNevAr.getWidth()/2,shopBackgroundPreview.getY() - 150);
         left.setPosition(termekNevAr.getX() - left.getWidth() - 30,termekNevAr.getY());
         right.setPosition(termekNevAr.getX() + termekNevAr.getWidth() + 30,termekNevAr.getY());
+
         /**
          * INSTANTBOSS
          * */
@@ -562,12 +643,19 @@ public class ShopStage extends PrettyStage {
     }
 
     /**
-     * TERMÉK NEVÉNEK ÉS ÁRÁNAK SZÖVEGÉNEK BEÁLLÍTÁSA
+     * Termék nevének és szövegének beállítása a jelenlegi ID-hoz
      * **/
     private void setTexts()
     {
+        /**
+         * Ha valamiért hibás a mentés és még nincs Coin mező benne, akkor 0-t állítunk be a kijelzőhöz
+         * **/
         if(Coin.coin >= 0) coinText.setText(""+Coin.coin);
         else coinText.setText("0");
+
+        /**
+         * Ha megvettünk egy terméket, akkor ne írjuk ki az árát, hanem azt, hogy a játékos azt más megvásárolta
+         * **/
 
         if(itemID == 0)
         {
@@ -625,16 +713,19 @@ public class ShopStage extends PrettyStage {
     public void act(float delta) {
         super.act(delta);
         if(!setBack) {
+            //Áttűnéssel jönnek be az actorok
             if (alpha < 0.95) alpha += 0.05;
             else alpha = 1;
             setAlpha();
         }
         else
         {
+            //Áttűnéssel mennek ki az actorok
             if (alpha > 0.05) {
                 setAlpha();
                 alpha -= 0.05;
             } else {
+                //Ha már nem látszanak akkor megyünk vissza a menübe
                 game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 alpha = 0;
                 setAlpha();
@@ -649,6 +740,9 @@ public class ShopStage extends PrettyStage {
         }
     }
 
+    /**
+     * Actorok átlátszóságának egyidejű beállítása
+     * **/
     private void setAlpha(){
         coin.setColor(1, 1, 1, alpha);
         coinText.setColor(1, 1, 1, alpha);

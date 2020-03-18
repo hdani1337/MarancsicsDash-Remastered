@@ -55,25 +55,21 @@ public class Background extends OneSpriteStaticActor {
             }
             case SZIBERIA:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(SZIBERIA_TEXTURE));
-                //setSize(game.getMyAssetManager().getTexture(SZIBERIA_TEXTURE).getWidth(),game.getMyAssetManager().getTexture(SZIBERIA_TEXTURE).getHeight());
                 ground = 0.25f;
                 break;
             }
             case ZALA:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(ZALA_TEXTURE));
-                //setSize(game.getMyAssetManager().getTexture(ZALA_TEXTURE).getWidth(),game.getMyAssetManager().getTexture(ZALA_TEXTURE).getHeight());
                 ground = 0.65f;
                 break;
             }
             case SZAHARA:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(SZAHARA_TEXTURE));
-                //setSize(game.getMyAssetManager().getTexture(SZAHARA_TEXTURE).getWidth(),game.getMyAssetManager().getTexture(SZAHARA_TEXTURE).getHeight());
                 ground = 0.84f;
                 break;
             }
             case OCEAN:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(OCEAN_TEXTURE));
-                //setSize(game.getMyAssetManager().getTexture(OCEAN_TEXTURE).getWidth(),game.getMyAssetManager().getTexture(OCEAN_TEXTURE).getHeight());
                 break;
             }
             default:{

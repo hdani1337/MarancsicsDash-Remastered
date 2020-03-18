@@ -22,6 +22,9 @@ public class Coin extends OneSpriteAnimatedActor {
         assetList.addTextureAtlas(COIN_ATLAS);
     }
 
+    /**
+     * Box2D konstruktor
+     * **/
     public Coin(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, COIN_ATLAS);
         setFps(60);
@@ -29,6 +32,10 @@ public class Coin extends OneSpriteAnimatedActor {
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Coin", new MyFixtureDef(), BodyDef.BodyType.StaticBody));
     }
 
+    /**
+     * Scene2D konstruktor
+     * @param act forogjon e a pénz
+     * **/
     public Coin(MyGame game, boolean act){
         super(game, COIN_ATLAS);
 

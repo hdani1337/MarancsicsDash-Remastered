@@ -31,6 +31,9 @@ public class Zsolti extends OneSpriteAnimatedActor {
     public static boolean isDead;
     public static boolean inAir;
 
+    /**
+     * Box2D konstruktor ContactListenerrel
+     * **/
     public Zsolti(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, ZSOLTI_ATLAS);
         setFps(12);
@@ -131,6 +134,9 @@ public class Zsolti extends OneSpriteAnimatedActor {
         }
     }
 
+    /**
+     * Scene2D konstruktor
+     * **/
     public Zsolti(MyGame game){
         super(game, ZSOLTI_ATLAS);
         setFps(12);
