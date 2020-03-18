@@ -1,10 +1,14 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
+import hu.csanyzeg.master.MyBaseClasses.Assets.MyAssetDescriptor;
+import hu.csanyzeg.master.MyBaseClasses.Assets.MyAssetManager;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
@@ -19,12 +23,18 @@ import hu.hdani1337.marancsicsdash.Screen.ShopScreen;
 public class MenuStage extends PrettyStage {
 
     public static final String MENU_BG_TEXTURE = "pic/menuBg.jpg";
+    public static final String URAIM_SOUND = "sound/uraim.wav";
+    public static final String HEE_SOUND = "sound/héé.wav";
+    public static final String MENUMUSIC = "music/menuMusic.mp3";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(Logo.class, assetList);
         assetList.collectAssetDescriptor(TextBox.class, assetList);
         assetList.addTexture(MENU_BG_TEXTURE);
+        assetList.addSound(URAIM_SOUND);
+        assetList.addSound(HEE_SOUND);
+        assetList.addMusic(MENUMUSIC);
     }
 
     public MenuStage(MyGame game) {
@@ -40,6 +50,11 @@ public class MenuStage extends PrettyStage {
     private TextBox exit;
     private TextBox version;
 
+    public static Sound uraim;
+    public static Sound hee;
+    public static Music music;
+
+
     @Override
     public void assignment() {
         MenuBackground = new OneSpriteStaticActor(game,MENU_BG_TEXTURE);
@@ -50,6 +65,9 @@ public class MenuStage extends PrettyStage {
         options = new TextBox(game, "Beállítások",1.25f);
         exit = new TextBox(game, "Kilépés",1.25f);
         version = new TextBox(game, "Verzió: 2.0 Epsilon");
+        uraim = game.getMyAssetManager().getSound(URAIM_SOUND);
+        hee = game.getMyAssetManager().getSound(HEE_SOUND);
+        music = game.getMyAssetManager().getMusic(MENUMUSIC);
     }
 
     @Override

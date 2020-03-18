@@ -22,16 +22,22 @@ public class TextBox extends MyGroup implements IPrettyStage {
         assetList.addFont(RETRO_FONT, RETRO_FONT, 32, Color.WHITE, AssetList.CHARS);
     }
 
-    public String text;
+    public String text;//Szöveg
 
-    private OneSpriteStaticActor textBackground;
-    private MyLabel textLabel;
-    private float scale;
+    private OneSpriteStaticActor textBackground;//Szöveg háttere
+    private MyLabel textLabel;//Szöveg label
+    private float scale;//Méretezési skála
 
+    /**
+     * SKÁLÁZÁS NÉLKÜLI KONSTRUKTOR
+     * **/
     public TextBox(MyGame game, String text) {
         this(game,text,1);
     }
 
+    /**
+     * FŐ KONSTRUKTOR
+     * **/
     public TextBox(MyGame game, String text, float scale){
         super(game);
         this.text = text;
@@ -84,32 +90,81 @@ public class TextBox extends MyGroup implements IPrettyStage {
         addActor(textLabel);
     }
 
+    /**
+     * MÉRETEK MÓDOSÍTÁSA SKÁLA ALAPJÁN
+     * A SKÁLÁT A KONSTRUKTORBAN KELL ÁTADNI, ALAPESETBEN EZ 1 MARAD
+     * **/
     private void setScales(){
         textBackground.setSize(textBackground.getWidth()*scale, textBackground.getHeight()*scale);
         textLabel.setFontScale(scale);
     }
 
+    /**
+     * VISSZAADJA A HÁTTÉR SZÉLESSÉGÉT
+     * **/
     @Override
     public float getWidth() {
         return textBackground.getWidth();
     }
 
+    /**
+     * VISSZAADJA A HÁTTÉR MAGASSÁGÁT
+     * **/
     @Override
     public float getHeight() {
         return textBackground.getHeight();
     }
 
+    /**
+     * SZÖVEG HÁTTÉR SZÉLESSÉGÉNEK MÓDOSÍTÁSA
+     * **/
     @Override
     public void setWidth(float width) {
         textBackground.setWidth(width);
         setPositions();
     }
 
+    /**
+     * SZÖVEG HÁTTÉR MÉRETÉNEK MÓDOSÍTÁSA
+     * **/
+    @Override
+    public void setSize(float width, float height) {
+        textBackground.setWidth(width);
+        textBackground.setHeight(height);
+        setPositions();
+    }
+
+    /**
+     * TEXTBOX ÁTLÁTSZÓSÁGÁNAK BEÁLLÍTÁSA
+     * **/
     public void setAlpha(float alpha){
         textBackground.setAlpha(alpha);
         textLabel.setColor(textLabel.getColor().r,textLabel.getColor().g,textLabel.getColor().b,alpha);
     }
 
+    /**
+     * TEXTBOX SZÖVEGÉNEK MÓDOSÍTÁSA
+     * **/
+    public void setText(String text){
+        this.text = text;
+        removeActors();
+        assignment();
+        setSizes();
+        setPositions();
+        addActors();
+    }
+
+    /**
+     * TEXTBOX TÖRLÉSE
+     * **/
+    private void removeActors(){
+        textBackground.remove();
+        textLabel.remove();
+    }
+
+    /**
+     * VISSZAADJA A LEGHOSSZABB SOR HOSSZÁT A SZÖVEGBŐL
+     * **/
     public int getMaxRowWidth(){
         int temp = 0;
         int max = 0;
@@ -119,6 +174,5 @@ public class TextBox extends MyGroup implements IPrettyStage {
             if(temp > max) max = temp;
         }
         return max;
-        //Visszaadja a leghosszabb sor hosszát a szövegből
     }
 }

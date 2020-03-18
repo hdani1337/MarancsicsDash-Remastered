@@ -10,9 +10,12 @@ import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
+
 public class Coin extends OneSpriteAnimatedActor {
 
     public static final String COIN_ATLAS = "atlas/coin.atlas";
+    public static long coin = preferences.getLong("coin");
 
     public static AssetList assetList = new AssetList();
     static {
@@ -24,5 +27,15 @@ public class Coin extends OneSpriteAnimatedActor {
         setFps(60);
         setSize(getWidth()*0.008f, getHeight()*0.008f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Coin", new MyFixtureDef(), BodyDef.BodyType.StaticBody));
+    }
+
+    public Coin(MyGame game, boolean act){
+        super(game, COIN_ATLAS);
+
+        if (act) {
+            setFps(60);
+        } else {
+            setFps(0);
+        }
     }
 }

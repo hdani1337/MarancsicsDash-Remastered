@@ -128,6 +128,11 @@ public class Zsolti extends OneSpriteAnimatedActor {
         }
     }
 
+    public Zsolti(MyGame game){
+        super(game, ZSOLTI_ATLAS);
+        setFps(12);
+    }
+
     float superTime = 0;
 
     @Override
