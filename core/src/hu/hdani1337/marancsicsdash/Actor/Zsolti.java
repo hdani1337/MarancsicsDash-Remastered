@@ -87,7 +87,10 @@ public class Zsolti extends OneSpriteAnimatedActor {
                          * VISSZAESIK A TALAJRA
                          * **/
                         inAir = false;
-                        System.out.println("talaj");
+                    } else if (otherHelper.getActor() instanceof SuperCoin){
+                        /**
+                         * SUPER COIN
+                         * **/
                     }
                 }
 
@@ -133,7 +136,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
         setFps(12);
     }
 
-    float superTime = 0;
+    public float superTime = 0;
 
     @Override
     public void act(float delta) {

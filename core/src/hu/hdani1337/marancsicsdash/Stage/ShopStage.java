@@ -11,9 +11,14 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
+import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
+import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
+import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
+import hu.hdani1337.marancsicsdash.Actor.SuperCoin;
+import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.InstantBoss;
 import hu.hdani1337.marancsicsdash.HudActors.Left;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
@@ -63,6 +68,9 @@ public class ShopStage extends PrettyStage {
     private InstantBoss instantBoss;//Instant boss előnézete
     private Left left;//Balra gomb
     private Right right;//Jobbra gomb
+    private Zsolti superZs;//Super Zsolti
+    private Zsolti doubleJumpZs;//Double Jump Zsolti
+    private SuperCoin superCoin;//Super Coin
 
     private int itemID;//Képernyőn megjelenő termék ID-ja
 
@@ -92,6 +100,33 @@ public class ShopStage extends PrettyStage {
         paySound = game.getMyAssetManager().getSound(PAYSOUND);
         noMoney = game.getMyAssetManager().getSound(NOMONEY);
         itemID = 0;
+        superZs = new Zsolti(game);
+        doubleJumpZs = new Zsolti(game){
+            float time = 0;
+
+            @Override
+            public void act(float delta) {
+                super.act(delta);
+                if(itemID != 6) time = -0.5f;
+                else time += delta;
+                if(time >= 0) {
+                    if (time < 0.5) {
+                        setY(getY() + 8);
+                        setRotation(getRotation() + 5);
+                    } else if (time < 0.7) {
+                        setY(getY() - 8);
+                        setRotation(getRotation() - 5);
+                    } else if (time < 0.85) {
+                        setY(getY() + 8);
+                        setRotation(getRotation() + 5);
+                    } else if (time < 1.3) {
+                        setY(getY() - 8);
+                        setRotation(getRotation() - 5);
+                    } else time = -1.5f;
+                }
+            }
+        };
+        superCoin = new SuperCoin(game,false);
     }
 
     @Override
@@ -99,6 +134,7 @@ public class ShopStage extends PrettyStage {
         if(getViewport().getWorldWidth() > MenuBackground.getWidth()) MenuBackground.setWidth(getViewport().getWorldWidth());
         left.setSize(120,120);
         right.setSize(120,120);
+        superCoin.setSize(160,160);
         shopBackgroundPreviewBackground.setSize(shopBackgroundPreview.getWidth() + 16, shopBackgroundPreview.getHeight() + 18);
     }
 
@@ -116,6 +152,9 @@ public class ShopStage extends PrettyStage {
         back.setPosition(getViewport().getWorldWidth() - (back.getWidth() + 45),50);
         coin.setPosition(15, getViewport().getWorldHeight()-15-coin.getHeight());
         coinText.setPosition(coin.getX() + coin.getWidth() + 10, coin.getY() + coin.getHeight()/4);
+        superZs.setPosition(getViewport().getWorldWidth()/2-superZs.getWidth()/2,getViewport().getWorldHeight()/2-superZs.getHeight()/2 + 25);
+        doubleJumpZs.setPosition(superZs.getX(),superZs.getY());
+        superCoin.setPosition(getViewport().getWorldWidth()/2-superCoin.getWidth()/2,getViewport().getWorldHeight()/2-superCoin.getHeight()/2 + 25);
     }
 
     @Override
@@ -171,6 +210,10 @@ public class ShopStage extends PrettyStage {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                termekNevAr.setPosition(getViewport().getWorldWidth()/2-termekNevAr.getWidth()/2,shopBackgroundPreview.getY() - 150);
+                left.setPosition(termekNevAr.getX() - left.getWidth() - 30,termekNevAr.getY());
+                right.setPosition(termekNevAr.getX() + termekNevAr.getWidth() + 30,termekNevAr.getY());
+
                 if (itemID == 0)
                 {
                     if(!boughtInstantBoss) {
@@ -345,6 +388,9 @@ public class ShopStage extends PrettyStage {
         addActor(shopBackgroundPreviewBackground);
         addActor(shopBackgroundPreview);
         addActor(instantBoss);
+        addActor(superZs);
+        addActor(doubleJumpZs);
+        addActor(superCoin);
     }
 
     @Override
@@ -367,6 +413,9 @@ public class ShopStage extends PrettyStage {
          * */
         if (itemID == 0){
             left.remove();
+            superZs.setVisible(false);
+            superCoin.setVisible(false);
+            doubleJumpZs.setVisible(false);
             shopBackgroundPreviewBackground.setVisible(false);
             shopBackgroundPreview.setVisible(false);
             instantBoss.setVisible(true);
@@ -383,6 +432,9 @@ public class ShopStage extends PrettyStage {
         else if (itemID == 1){
             addActor(right);
             instantBoss.setVisible(false);
+            superZs.setVisible(false);
+            superCoin.setVisible(false);
+            doubleJumpZs.setVisible(false);
             shopBackgroundPreview.setVisible(true);
             shopBackgroundPreviewBackground.setVisible(true);
             shopBackgroundPreview.step(Background.BackgroundType.SZIBERIA);
@@ -400,6 +452,9 @@ public class ShopStage extends PrettyStage {
         else if (itemID == 2){
             addActor(right);
             shopBackgroundPreview.setVisible(true);
+            superZs.setVisible(false);
+            superCoin.setVisible(false);
+            doubleJumpZs.setVisible(false);
             shopBackgroundPreviewBackground.setVisible(true);
             shopBackgroundPreview.step(Background.BackgroundType.ZALA);
             if(boughtZala) {
@@ -415,6 +470,9 @@ public class ShopStage extends PrettyStage {
         else if (itemID == 3){
             addActor(right);
             shopBackgroundPreview.setVisible(true);
+            superZs.setVisible(false);
+            superCoin.setVisible(false);
+            doubleJumpZs.setVisible(false);
             shopBackgroundPreviewBackground.setVisible(true);
             shopBackgroundPreview.step(Background.BackgroundType.SZAHARA);
             if(boughtDesert) {
@@ -430,6 +488,9 @@ public class ShopStage extends PrettyStage {
         else if (itemID == 4){
             addActor(right);
             shopBackgroundPreview.setVisible(true);
+            superZs.setVisible(false);
+            superCoin.setVisible(false);
+            doubleJumpZs.setVisible(false);
             shopBackgroundPreviewBackground.setVisible(true);
             shopBackgroundPreview.step(Background.BackgroundType.OCEAN);
             if(boughtOcean) {
@@ -444,6 +505,17 @@ public class ShopStage extends PrettyStage {
          * **/
         else if (itemID == 5){
             addActor(right);
+            superZs.superTime = 3;
+            addTimer(new TickTimer(5,true,new TickTimerListener(){
+                @Override
+                public void onTick(Timer sender, float correction) {
+                    super.onTick(sender, correction);
+                    superZs.superTime = 3;
+                }
+            }));
+            superZs.setVisible(true);
+            doubleJumpZs.setVisible(false);
+            superCoin.setVisible(false);
             shopBackgroundPreview.setVisible(false);
             shopBackgroundPreviewBackground.setVisible(false);
             if(boughtZsolti) {
@@ -458,8 +530,10 @@ public class ShopStage extends PrettyStage {
          * **/
         else if (itemID == 6){
             addActor(right);
-            //doubleJump.setPosition(getViewport().getWorldWidth()/2-superZS.getWidth()/2,getViewport().getWorldHeight()/2-superZS.getHeight()/2 + 25);
-            //addActor(doubleJump);
+            superZs.setVisible(false);
+            doubleJumpZs.setVisible(true);
+            superCoin.setVisible(false);
+            doubleJumpZs.setPosition(superZs.getX(),superZs.getY());
             shopBackgroundPreview.setVisible(false);
             shopBackgroundPreviewBackground.setVisible(false);
             if(boughtDouble) {
@@ -474,8 +548,9 @@ public class ShopStage extends PrettyStage {
          * **/
         else if (itemID == 7){
             right.remove();
-            //superCoin.setPosition(getViewport().getWorldWidth()/2-superCoin.getWidth()/2,getViewport().getWorldHeight()/2-superCoin.getHeight()/2 + 25);
-            //addActor(superCoin);
+            superZs.setVisible(false);
+            doubleJumpZs.setVisible(false);
+            superCoin.setVisible(true);
             shopBackgroundPreview.setVisible(false);
             shopBackgroundPreviewBackground.setVisible(false);
             if(boughtCoin) {
@@ -560,6 +635,11 @@ public class ShopStage extends PrettyStage {
                 purchase.setAlpha(alpha);
                 termekNevAr.setAlpha(alpha);
                 back.setAlpha(alpha);
+                doubleJumpZs.setAlpha(alpha);
+                superZs.setAlpha(alpha);
+                shopBackgroundPreviewBackground.setAlpha(alpha);
+                shopBackgroundPreview.setAlpha(alpha);
+                superCoin.setAlpha(alpha);
                 alpha += 0.02;
             } else alpha = 1;
         }
@@ -575,11 +655,22 @@ public class ShopStage extends PrettyStage {
                 purchase.setAlpha(alpha);
                 termekNevAr.setAlpha(alpha);
                 back.setAlpha(alpha);
+                doubleJumpZs.setAlpha(alpha);
+                superZs.setAlpha(alpha);
+                shopBackgroundPreviewBackground.setAlpha(alpha);
+                shopBackgroundPreview.setAlpha(alpha);
+                superCoin.setAlpha(alpha);
                 alpha -= 0.02;
             } else {
                 game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 alpha = 0;
-                setBack = false;
+                addTimer(new TickTimer(1,false,new TickTimerListener(){
+                    @Override
+                    public void onTick(Timer sender, float correction) {
+                        super.onTick(sender, correction);
+                        setBack = false;
+                    }
+                }));
             }
         }
     }
