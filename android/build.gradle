@@ -18,10 +18,10 @@ android {
     }
     defaultConfig {
         applicationId "hu.hdani1337.marancsicsdash"
-        minSdkVersion 14
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "2.0-Epsilon"
     }
     buildTypes {
         release {
