@@ -70,6 +70,7 @@ public class Background extends OneSpriteStaticActor {
             }
             case OCEAN:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(OCEAN_TEXTURE));
+                ground = 0.9f;
                 break;
             }
             default:{

@@ -80,7 +80,12 @@ public class Marancsics extends OneSpriteAnimatedActor {
     public void act(float delta) {
         super.act(delta);
         if(Zsolti.isDead){
-            setX(getX()+0.2f);
+            setX(getX()+0.25f);
+            if(getRotation() != 0) setRotation(0);
+        }else{
+            if(getRotation() != 0) setRotation(0);
+            if(getX() != 0.5f) setX(0.5f);
+            if(!isAct) setY(Background.ground*2);
         }
     }
 }

@@ -69,7 +69,8 @@ public class Zsolti extends OneSpriteAnimatedActor {
                         /**
                          * PÉNZ
                          * **/
-
+                        otherHelper.actor.remove();
+                        Coin.coin++;
                     } else if (otherHelper.getActor() instanceof Mushroom) {
                         /**
                          * GOMBA
@@ -83,7 +84,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
                          * **/
 
                         ((Marancsics) otherHelper.getActor()).setFps(24);
-                        otherHelper.getBody().applyForceToCenter(new Vector2(-600,0),true);
+                        otherHelper.getBody().applyForceToCenter(new Vector2(-900,0),true);
                         ((Box2DWorldHelper)getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(700,0),true);
                     } else if (otherHelper.getActor() instanceof Background){
                         /**
@@ -181,6 +182,12 @@ public class Zsolti extends OneSpriteAnimatedActor {
              * ZSOLTI VISSZAESIK A TALAJRA VAGY NAGYON A KÖZELÉBE
              * **/
             inAir = false;
+        }
+
+        if(getX() != 2 && !isDead && getStage() instanceof GameStage) {
+            setX(2);
+            setOrigin(0,0);
+            getActorWorldHelper().setBodyPosition(getX()+0.3f,getY());
         }
     }
 }

@@ -726,9 +726,9 @@ public class ShopStage extends PrettyStage {
                 alpha -= 0.05;
             } else {
                 //Ha már nem látszanak akkor megyünk vissza a menübe
-                game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 alpha = 0;
                 setAlpha();
+                game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 addTimer(new TickTimer(1,false,new TickTimerListener(){
                     @Override
                     public void onTick(Timer sender, float correction) {

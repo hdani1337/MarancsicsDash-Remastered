@@ -20,6 +20,8 @@ import hu.hdani1337.marancsicsdash.Actor.Mushroom;
 import hu.hdani1337.marancsicsdash.Actor.Tank;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
+
 public class GameStage extends Box2dStage implements IPrettyStage {
 
     public static AssetList assetList = new AssetList();
@@ -46,9 +48,11 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     public Mushroom mushroom;//GOMBA
     public ArrayList<Background> backgrounds;//HÁTTÉR LISTA
     public ArrayList<Tank> tanks;//TANK LISTA
-    public ArrayList<Blood> blood;//TANK LISTA
+    public ArrayList<Blood> blood;//VÉR LISTA
 
     public static boolean isAct;
+
+    private Background.BackgroundType backgroundType;
 
     public GameStage(MyGame game) {
         super(new ResponseViewport(9), game);
@@ -62,6 +66,28 @@ public class GameStage extends Box2dStage implements IPrettyStage {
 
     @Override
     public void assignment() {
+        switch (preferences.getInteger("selectedBackground")){
+            case 0: {
+                backgroundType = Background.BackgroundType.CSERNOBIL;
+                break;
+            }
+            case 1: {
+                backgroundType = Background.BackgroundType.SZIBERIA;
+                break;
+            }
+            case 2: {
+                backgroundType = Background.BackgroundType.ZALA;
+                break;
+            }
+            case 3: {
+                backgroundType = Background.BackgroundType.SZAHARA;
+                break;
+            }
+            case 4: {
+                backgroundType = Background.BackgroundType.OCEAN;
+                break;
+            }
+        }
         loader = new WorldBodyEditorLoader("bodies.json");
         isAct = true;
         isShakeScreen = false;
@@ -119,7 +145,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
          * KEZDETNEK 3 HÁTTÉR ELÉG
          * **/
         for (int i = 0; i < 3; i++){
-            backgrounds.add(new Background(game, Background.BackgroundType.SZAHARA, world, getViewport()));
+            backgrounds.add(new Background(game, backgroundType, world, getViewport()));
             backgrounds.get(i).setX(backgrounds.get(i).getWidth()*i);
             addActor(backgrounds.get(i));
             backgrounds.get(i).setZIndex(0);
@@ -127,6 +153,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     }
 
     private float tankElapsed = elapsedTime;
+    private float coinElapsed = elapsedTime;
 
     @Override
     public void act(float delta) {
@@ -153,7 +180,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
              * HA AZ UTOLSÓ ELŐTTI HÁTTÉR MÁR ÉPPENHOGY BEÉR A KÉPERNYŐRE, AKKOR RAKJUNK BE ÚJ HÁTTERET
              * */
             if (backgrounds.get(backgrounds.size() - 2).getX() < getViewport().getWorldWidth()) {
-                backgrounds.add(new Background(game, Background.BackgroundType.SZAHARA, world, getViewport()));
+                backgrounds.add(new Background(game, backgroundType, world, getViewport()));
                 backgrounds.get(backgrounds.size() - 1).setX(backgrounds.get(backgrounds.size() - 2).getX() + backgrounds.get(backgrounds.size() - 2).getWidth());
                 addActor(backgrounds.get(backgrounds.size() - 1));
                 backgrounds.get(backgrounds.size() - 1).setZIndex(0);
@@ -169,12 +196,32 @@ public class GameStage extends Box2dStage implements IPrettyStage {
             }
 
             /**
+             * RANDOM IDŐKÖZÖNKÉNT ÚJ PÉNZ HOZZÁADÁSA
+             * */
+            if (elapsedTime > coinElapsed) {
+                coinElapsed = (float) (elapsedTime + Math.random() * 3);
+                coins.add(new Coin(game, world, loader, this));
+                addActor(coins.get(coins.size() - 1));
+            }
+
+            /**
              * HA A TANK MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
              * **/
             for (Tank tank : tanks) {
                 if (tank.getX() < -tank.getWidth() * 2) {
                     tank.remove();
                     tanks.remove(tank);
+                    break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
+                }
+            }
+
+            /**
+             * HA A PÉNZ MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
+             * **/
+            for (Coin coin : coins) {
+                if (coin.getX() < -coin.getWidth() * 2) {
+                    coin.remove();
+                    coins.remove(coin);
                     break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
                 }
             }
