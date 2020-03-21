@@ -8,10 +8,12 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
+import hu.hdani1337.marancsicsdash.Actor.Coin;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
 public class GameOverStage extends PrettyStage {
@@ -38,7 +40,7 @@ public class GameOverStage extends PrettyStage {
     @Override
     public void assignment() {
         info = new TextBox(game, "Vesztettél!",2f);
-        pontok = new TextBox(game, "Pontszámok\nHamarosan!");
+        pontok = new TextBox(game, "Elért pontszámod\n-NULL-");
         again = new TextBox(game, "Új játék",1.5f);
         menu = new TextBox(game, "Menü",1.5f);
 
@@ -70,6 +72,8 @@ public class GameOverStage extends PrettyStage {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 game.setScreenWithPreloadAssets(GameScreen.class, false, new LoadingStage(game));
+                preferences.putLong("coin", Coin.coin);
+                preferences.flush();
             }
         });
 
@@ -78,6 +82,8 @@ public class GameOverStage extends PrettyStage {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
+                preferences.putLong("coin", Coin.coin);
+                preferences.flush();
             }
         });
     }
@@ -133,6 +139,10 @@ public class GameOverStage extends PrettyStage {
          * HA VÉGE VAN A JÁTÉKNAK
          * **/
         if(!isAct && Zsolti.isDead){
+            if(getScreen() instanceof GameScreen){
+                pontok.setText("Elért pontszámod\n"+((GameScreen)getScreen()).gameStage.score);
+                setPositions();
+            }
             //Adjuk hozzá a gombokat a stagehez ha még nincsenek rajta
             if(!addedActors)
                 addActors();

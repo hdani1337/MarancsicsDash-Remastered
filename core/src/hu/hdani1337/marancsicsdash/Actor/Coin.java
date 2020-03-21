@@ -1,10 +1,12 @@
 package hu.hdani1337.marancsicsdash.Actor;
 
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.World;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2DWorldHelper;
+import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyContactListener;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyFixtureDef;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
@@ -34,8 +36,32 @@ public class Coin extends OneSpriteAnimatedActor {
         setSize(getWidth()*0.006f, getHeight()*0.006f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Coin", new MyFixtureDef(), BodyDef.BodyType.StaticBody));
         setX((float) (stage.getViewport().getWorldWidth()+Math.random()*9));
-        setY((float) (Background.ground+0.2));
+        setY((float) ((stage.marancsics.getY()+stage.marancsics.getHeight()/2)+Math.random()*4.5f));
         this.isAct = true;
+        if(getActorWorldHelper() != null && getActorWorldHelper() instanceof Box2DWorldHelper) {
+            ((Box2DWorldHelper) getActorWorldHelper()).addContactListener(new MyContactListener(){
+                @Override
+                public void beginContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+                    if(otherHelper.getActor() instanceof Tank) myHelper.actor.remove();
+                    else if(otherHelper.getActor() instanceof Marancsics) myHelper.actor.remove();
+                }
+
+                @Override
+                public void endContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+
+                }
+
+                @Override
+                public void preSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+
+                }
+
+                @Override
+                public void postSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
+
+                }
+            });
+        }
     }
 
     /**
@@ -55,7 +81,7 @@ public class Coin extends OneSpriteAnimatedActor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(this.isAct) {
+        if(this.isAct && GameStage.isAct) {
             setX(getX() - 0.15f);
         }
     }

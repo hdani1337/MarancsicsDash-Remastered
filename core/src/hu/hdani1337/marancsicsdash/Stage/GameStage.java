@@ -51,8 +51,8 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     public ArrayList<Blood> blood;//VÉR LISTA
 
     public static boolean isAct;
-
     private Background.BackgroundType backgroundType;
+    public long score;
 
     public GameStage(MyGame game) {
         super(new ResponseViewport(9), game);
@@ -66,6 +66,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
 
     @Override
     public void assignment() {
+        score = 0;
         switch (preferences.getInteger("selectedBackground")){
             case 0: {
                 backgroundType = Background.BackgroundType.CSERNOBIL;
@@ -108,7 +109,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
 
     @Override
     public void setPositions() {
-        zsolti.setPosition(2,3);
+        zsolti.setPosition(2.5f,3);
         mushroom.setPosition(7,5);
     }
 
@@ -127,6 +128,14 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         addActor(zsolti);
         addActor(marancsics);
         //addActor(mushroom);
+        //addActor(new SuperCoin(game,world,loader));
+    }
+
+    public void addCoins(){
+        for (int i = 0; i < 127; i++) {
+            coins.add(new Coin(game, world, loader, this));
+            addActor(coins.get(coins.size() - 1));
+        }
     }
 
     private int offset = 1;
@@ -269,6 +278,9 @@ public class GameStage extends Box2dStage implements IPrettyStage {
                     addActor(blood.get(blood.size() - 1));
                 }
             }
+            offset = 1;
+            getViewport().setScreenX(0);
+            getViewport().setScreenY(0);
         }
         /**
          * HA MEGÁLLÍTJUK A JÁTÉKOT AKKOR AZ ANIMATED ACTOROK NE MOZOGJANAK

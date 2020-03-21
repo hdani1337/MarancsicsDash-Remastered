@@ -148,6 +148,7 @@ public class ShopStage extends PrettyStage {
         right.setSize(120,120);
         superCoin.setSize(160,160);
         shopBackgroundPreviewBackground.setSize(shopBackgroundPreview.getWidth() + 16, shopBackgroundPreview.getHeight() + 18);
+        coin.setSize(coin.getWidth()*0.7f,coin.getHeight()*0.7f);
     }
 
     @Override

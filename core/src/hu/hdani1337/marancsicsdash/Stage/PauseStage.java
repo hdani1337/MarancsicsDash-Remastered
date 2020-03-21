@@ -8,10 +8,12 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
+import hu.hdani1337.marancsicsdash.Actor.Coin;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
 public class PauseStage extends PrettyStage {
@@ -77,6 +79,8 @@ public class PauseStage extends PrettyStage {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
+                preferences.putLong("coin", Coin.coin);
+                preferences.flush();
             }
         });
     }
@@ -132,6 +136,12 @@ public class PauseStage extends PrettyStage {
          * HA MEGÁLL A JÁTÉK DE ZSOLTI MÉG NEM HALT MEG (PAUSE)
          * **/
         if(!isAct && !Zsolti.isDead){
+            if(getScreen() != null && getScreen() instanceof GameScreen){
+                if(!pontok.text.equals("Jelenlegi pontszámod\n"+((GameScreen)getScreen()).gameStage.score)) {
+                    pontok.setText("Jelenlegi pontszámod\n"+((GameScreen)getScreen()).gameStage.score);
+                    pontok.setX(getViewport().getWorldWidth()/2-pontok.getWidth()/2);
+                }
+            }
             //Adjuk hozzá a gombokat a stagehez ha még nincsenek rajta
             if(!addedActors)
                 addActors();

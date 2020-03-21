@@ -95,6 +95,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
                         /**
                          * SUPER COIN
                          * **/
+                        otherHelper.actor.remove();
                     }
                 }
 
@@ -119,6 +120,9 @@ public class Zsolti extends OneSpriteAnimatedActor {
                          * **/
                         inAir = true;
                         System.out.println("levegő");
+                    } else if(otherHelper.getActor() instanceof SuperCoin){
+                        if(getStage() != null && getStage() instanceof GameStage)
+                            ((GameStage)getStage()).addCoins();
                     }
                 }
 
@@ -184,8 +188,8 @@ public class Zsolti extends OneSpriteAnimatedActor {
             inAir = false;
         }
 
-        if(getX() != 2 && !isDead && getStage() instanceof GameStage) {
-            setX(2);
+        if(getX() != 2.5f && !isDead && getStage() instanceof GameStage) {
+            setX(2.5f);
             setOrigin(0,0);
             getActorWorldHelper().setBodyPosition(getX()+0.3f,getY());
         }

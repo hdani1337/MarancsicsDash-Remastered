@@ -46,6 +46,14 @@ public class Marancsics extends OneSpriteAnimatedActor {
                         if (getStage() != null && getStage() instanceof GameStage)
                             ((GameStage) getStage()).isShakeScreen = true;
                         otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
+                        ((Tank)otherHelper.actor).kicked();
+                    }
+                    else if(otherHelper.getActor() instanceof Coin){
+                        if(!Zsolti.isDead){
+                            if(getRotation() != 0) setRotation(0);
+                            if(getX() != 0.5f) setX(0.5f);
+                            if(!isAct) setY(Background.ground*2);
+                        }
                     }
                 }
 
@@ -60,6 +68,13 @@ public class Marancsics extends OneSpriteAnimatedActor {
                                     ((GameStage) getStage()).isShakeScreen = false;
                             }
                         }));
+                    }
+                    else if (otherHelper.getActor() instanceof Coin){
+                        if(!Zsolti.isDead){
+                            if(getRotation() != 0) setRotation(0);
+                            if(getX() != 0.5f) setX(0.5f);
+                            if(!isAct) setY(Background.ground*2);
+                        }
                     }
                 }
 

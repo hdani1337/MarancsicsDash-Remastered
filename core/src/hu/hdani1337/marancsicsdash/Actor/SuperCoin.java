@@ -9,6 +9,7 @@ import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyFixtureDef;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
+import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 import static hu.hdani1337.marancsicsdash.Actor.Background.ground;
 
@@ -57,7 +58,7 @@ public class SuperCoin extends OneSpriteAnimatedActor {
      * **/
     public void newPosition(){
         float newY = (float)(Math.random() * 3 + ground);
-        float newX = (float)(Math.random() * 48 + 24);
+        float newX = (float)(Math.random() *20);
         setPosition(newX,newY);
     }
 
@@ -71,7 +72,7 @@ public class SuperCoin extends OneSpriteAnimatedActor {
     @Override
     public synchronized void act(float delta) {
         super.act(delta);
-        if(isAct) {
+        if(GameStage.isAct) {
             if (getX() < 0 - getWidth()) newPosition();//Ha kiér a képből akkor új pozíciót kap
             setX(getX() - 0.5f);
         }

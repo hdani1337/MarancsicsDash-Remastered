@@ -1,5 +1,6 @@
 package hu.hdani1337.marancsicsdash.Actor;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -9,6 +10,7 @@ import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyFixtureDef;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
+import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
@@ -21,8 +23,11 @@ public class Tank extends OneSpriteAnimatedActor {
         assetList.addTextureAtlas(TANK_ATLAS);
     }
 
+    private boolean contacted;
+
     public Tank(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, TANK_ATLAS);
+        this.contacted = false;
         setFps(15);
         setSize(getWidth()*0.007f, getHeight()*0.007f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Tank", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
@@ -33,7 +38,25 @@ public class Tank extends OneSpriteAnimatedActor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(isAct) setX(getX()-0.15f);
+        if(isAct) {
+            setX(getX() - 0.15f);
+            if(getStage() != null)
+                if(getX() > getStage().getViewport().getWorldWidth() && contacted)
+                    remove();
+        }
         else if (getFps() != 0) setFps(0);
+    }
+
+    public void kicked(){
+        this.contacted = true;
+    }
+
+    @Override
+    public boolean remove() {
+        if(getStage() != null && getStage() instanceof GameStage) {
+            ((GameStage) getStage()).tanks.remove(this);
+            ((GameStage) getStage()).score++;
+        }
+        return super.remove();
     }
 }
