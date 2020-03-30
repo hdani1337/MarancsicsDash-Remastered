@@ -25,6 +25,7 @@ import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.Right;
 import hu.hdani1337.marancsicsdash.HudActors.ShopBackgroundPreview;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.SoundManager;
 
 import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
@@ -41,6 +42,7 @@ public class ShopStage extends PrettyStage {
         assetList.addTexture(MENU_BG_TEXTURE);
         assetList.addSound(PAYSOUND);
         assetList.addSound(NOMONEY);
+        SoundManager.load(assetList);
     }
 
     public ShopStage(MyGame game) {
@@ -91,6 +93,9 @@ public class ShopStage extends PrettyStage {
 
     @Override
     public void assignment() {
+        SoundManager.assign();
+        if(!muted)
+            SoundManager.menuMusic.play();
         MenuBackground = new OneSpriteStaticActor(game,MENU_BG_TEXTURE);
         termekNevAr = new TextBox(game, "asd\nasd");
         purchase = new TextBox(game, "Vásárlás");

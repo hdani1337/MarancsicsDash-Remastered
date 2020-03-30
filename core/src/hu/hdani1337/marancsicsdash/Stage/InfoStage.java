@@ -10,6 +10,9 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.SoundManager;
+
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 
 public class InfoStage extends PrettyStage {
 
@@ -17,6 +20,7 @@ public class InfoStage extends PrettyStage {
     static {
         assetList.collectAssetDescriptor(TextBox.class, assetList);
         assetList.addTexture("pic/menuBg.jpg");
+        SoundManager.load(assetList);
     }
 
     public InfoStage(MyGame game) {
@@ -33,6 +37,9 @@ public class InfoStage extends PrettyStage {
 
     @Override
     public void assignment() {
+        SoundManager.assign();
+        if(!muted)
+            SoundManager.menuMusic.play();
         bg = new OneSpriteStaticActor(game,"pic/menuBg.jpg");
         back = new TextBox(game, "Vissza a menübe");
         desc = new TextBox(game, "A játék valós eseményeken alapul.\nEgy szép napon a föhösünk, Zsolti beszólt szeretett\nosztályfönökünknek, Marancsicsnak.\nMarancsics nagyon megharagudott rá, s mindenáron elakarja kapni Zsoltit,\nhogy osztályfönökit adhasson neki. A Te feladatod az,\nhogy Zsolti minél tovább tudjon menekülni. Vigyázz, mert Marancsics\nneked tudja rúgni az akadályokat!");

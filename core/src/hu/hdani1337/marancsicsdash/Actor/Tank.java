@@ -12,6 +12,8 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
+import static hu.hdani1337.marancsicsdash.SoundManager.crashSound;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
 public class Tank extends OneSpriteAnimatedActor {
@@ -53,6 +55,7 @@ public class Tank extends OneSpriteAnimatedActor {
 
     @Override
     public boolean remove() {
+        if(!muted) crashSound.play();
         if(getStage() != null && getStage() instanceof GameStage) {
             ((GameStage) getStage()).tanks.remove(this);
             ((GameStage) getStage()).score++;

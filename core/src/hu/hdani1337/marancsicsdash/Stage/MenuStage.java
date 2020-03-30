@@ -1,20 +1,10 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
-import hu.csanyzeg.master.MyBaseClasses.Assets.MyAssetDescriptor;
-import hu.csanyzeg.master.MyBaseClasses.Assets.MyAssetManager;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
@@ -22,6 +12,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
+import hu.hdani1337.marancsicsdash.SoundManager;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
@@ -29,21 +20,21 @@ import hu.hdani1337.marancsicsdash.Screen.InfoScreen;
 import hu.hdani1337.marancsicsdash.Screen.OptionsScreen;
 import hu.hdani1337.marancsicsdash.Screen.ShopScreen;
 
+import static hu.hdani1337.marancsicsdash.SoundManager.hee;
+import static hu.hdani1337.marancsicsdash.SoundManager.menuMusic;
+import static hu.hdani1337.marancsicsdash.SoundManager.uraim;
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
+
 public class MenuStage extends PrettyStage {
 
     public static final String MENU_BG_TEXTURE = "pic/menuBg.jpg";
-    public static final String URAIM_SOUND = "sound/uraim.wav";
-    public static final String HEE_SOUND = "sound/héé.wav";
-    public static final String MENUMUSIC = "music/menuMusic.mp3";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(Logo.class, assetList);
         assetList.collectAssetDescriptor(TextBox.class, assetList);
         assetList.addTexture(MENU_BG_TEXTURE);
-        assetList.addSound(URAIM_SOUND);
-        assetList.addSound(HEE_SOUND);
-        assetList.addMusic(MENUMUSIC);
+        SoundManager.load(assetList);
     }
 
     public MenuStage(MyGame game) {
@@ -59,12 +50,9 @@ public class MenuStage extends PrettyStage {
     private TextBox exit;
     private TextBox version;
 
-    public static Sound uraim;
-    public static Sound hee;
-    public static Music music;
-
     @Override
     public void assignment() {
+        SoundManager.assign();
         MenuBackground = new OneSpriteStaticActor(game,MENU_BG_TEXTURE);
         logo = new Logo(game, Logo.LogoType.MENU);
         start = new TextBox(game ,"A játék indítása",1.25f);
@@ -73,9 +61,6 @@ public class MenuStage extends PrettyStage {
         options = new TextBox(game, "Beállítások",1.25f);
         exit = new TextBox(game, "Kilépés",1.25f);
         version = new TextBox(game, "Verzió: 2.0 Epsilon");
-        uraim = game.getMyAssetManager().getSound(URAIM_SOUND);
-        hee = game.getMyAssetManager().getSound(HEE_SOUND);
-        music = game.getMyAssetManager().getMusic(MENUMUSIC);
     }
 
     @Override
@@ -116,6 +101,7 @@ public class MenuStage extends PrettyStage {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 fadeOut = true;
+                if(!muted) uraim.play(1);
                 addTimer(new TickTimer(0.3f, false, new TickTimerListener(){
                     @Override
                     public void onTick(Timer sender, float correction) {
@@ -171,7 +157,16 @@ public class MenuStage extends PrettyStage {
         exit.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
+                if(!muted){
+                    hee.play(1);
+                }
+                addTimer(new TickTimer(0.5f,false,new TickTimerListener(){
+                    @Override
+                    public void onStop(Timer sender) {
+                        super.onStop(sender);
+                        Gdx.app.exit();
+                    }
+                }));
             }
         });
     }
@@ -192,6 +187,15 @@ public class MenuStage extends PrettyStage {
         addActor(options);
         addActor(exit);
         addActor(version);
+    }
+
+    @Override
+    public void afterInit() {
+        if(!muted) {
+            menuMusic.setLooping(true);
+            menuMusic.setVolume(0.7f);
+            menuMusic.play();
+        }
     }
 
     private void setAlpha(float alpha){

@@ -17,6 +17,12 @@ import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
+import static hu.hdani1337.marancsicsdash.SoundManager.coinSound;
+import static hu.hdani1337.marancsicsdash.SoundManager.crashSound;
+import static hu.hdani1337.marancsicsdash.SoundManager.kickSound;
+import static hu.hdani1337.marancsicsdash.SoundManager.powerUpSound;
+
 public class Zsolti extends OneSpriteAnimatedActor {
 
     public static final String ZSOLTI_ATLAS = "atlas/zsolti.atlas";
@@ -64,6 +70,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
                             GameStage.isAct = false;
                             //((Box2DWorldHelper)getActorWorldHelper()).getBody().setType(BodyDef.BodyType.StaticBody);
                         }
+                        if(!muted) crashSound.play();
 
                     } else if (otherHelper.getActor() instanceof Coin) {
                         /**
@@ -71,6 +78,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
                          * **/
                         otherHelper.actor.remove();
                         Coin.coin++;
+                        if(!muted) coinSound.play();
                     } else if (otherHelper.getActor() instanceof Mushroom) {
                         /**
                          * GOMBA
@@ -78,6 +86,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
 
                         otherHelper.actor.remove();
                         superTime = 8;
+                        if(!muted) powerUpSound.play();
                     } else if (otherHelper.getActor() instanceof Marancsics) {
                         /**
                          * MARANCSICS
@@ -86,11 +95,10 @@ public class Zsolti extends OneSpriteAnimatedActor {
                         ((Marancsics) otherHelper.getActor()).setFps(24);
                         otherHelper.getBody().applyForceToCenter(new Vector2(-900,0),true);
                         ((Box2DWorldHelper)getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(700,0),true);
-                    } else if (otherHelper.getActor() instanceof Background){
-                        /**
-                         * VISSZAESIK A TALAJRA
-                         * **/
-                        inAir = false;
+                        if(getStage() != null) {
+                            if (!muted && getX() < getStage().getViewport().getWorldWidth() + 2)
+                                kickSound.play();
+                        }
                     } else if (otherHelper.getActor() instanceof SuperCoin){
                         /**
                          * SUPER COIN
@@ -114,12 +122,6 @@ public class Zsolti extends OneSpriteAnimatedActor {
                                     ((GameStage) getStage()).isShakeScreen = false;
                             }
                         }));
-                    } else if(otherHelper.getActor() instanceof Background){
-                        /**
-                         * ZSOLTI A LEVEGŐBEN
-                         * **/
-                        inAir = true;
-                        System.out.println("levegő");
                     } else if(otherHelper.getActor() instanceof SuperCoin){
                         if(getStage() != null && getStage() instanceof GameStage)
                             ((GameStage)getStage()).addCoins();
@@ -188,6 +190,9 @@ public class Zsolti extends OneSpriteAnimatedActor {
             inAir = false;
         }
 
+        /**
+         * FIGYELJÜK HOGY ZSOLTI A TALAJON VAN E VAGY SEM
+         * **/
         if(getX() != 2.5f && !isDead && getStage() instanceof GameStage) {
             setX(2.5f);
             setOrigin(0,0);

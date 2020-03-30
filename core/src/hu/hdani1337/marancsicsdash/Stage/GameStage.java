@@ -19,8 +19,12 @@ import hu.hdani1337.marancsicsdash.Actor.MarancsicsBoss;
 import hu.hdani1337.marancsicsdash.Actor.Mushroom;
 import hu.hdani1337.marancsicsdash.Actor.Tank;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
+import hu.hdani1337.marancsicsdash.SoundManager;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
+import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
+import static hu.hdani1337.marancsicsdash.SoundManager.menuMusic;
 
 public class GameStage extends Box2dStage implements IPrettyStage {
 
@@ -34,6 +38,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         assetList.collectAssetDescriptor(MarancsicsBoss.class,assetList);
         assetList.collectAssetDescriptor(Blood.class,assetList);
         assetList.collectAssetDescriptor(Background.class,assetList);
+        SoundManager.load(assetList);
     }
 
     public boolean isShakeScreen;//KÉPERNYŐ MEGRÁZÁSA
@@ -62,10 +67,12 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         addListeners();
         setZIndexes();
         addActors();
+        afterInit();
     }
 
     @Override
     public void assignment() {
+        SoundManager.assign();
         score = 0;
         switch (preferences.getInteger("selectedBackground")){
             case 0: {
@@ -129,6 +136,15 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         addActor(marancsics);
         //addActor(mushroom);
         //addActor(new SuperCoin(game,world,loader));
+    }
+
+    public void afterInit() {
+        if(!muted) {
+            menuMusic.stop();
+            gameMusic.setLooping(true);
+            gameMusic.setVolume(0.7f);
+            gameMusic.play();
+        }
     }
 
     public void addCoins(){

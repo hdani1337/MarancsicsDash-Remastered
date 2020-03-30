@@ -13,7 +13,9 @@ import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
+import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
 public class PauseStage extends PrettyStage {
@@ -78,6 +80,7 @@ public class PauseStage extends PrettyStage {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                if(!muted) gameMusic.stop();
                 game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 preferences.putLong("coin", Coin.coin);
                 preferences.flush();

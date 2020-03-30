@@ -15,8 +15,12 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
+import hu.hdani1337.marancsicsdash.SoundManager;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
+import static hu.hdani1337.marancsicsdash.SoundManager.hee;
+import static hu.hdani1337.marancsicsdash.SoundManager.kickSound;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
 public class Marancsics extends OneSpriteAnimatedActor {
@@ -26,6 +30,7 @@ public class Marancsics extends OneSpriteAnimatedActor {
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTextureAtlas(MARANCSICS_ATLAS);
+        assetList.addSound(SoundManager.KICK_SOUND);
     }
 
     public Marancsics(MyGame game, World world, WorldBodyEditorLoader loader) {
@@ -47,6 +52,10 @@ public class Marancsics extends OneSpriteAnimatedActor {
                             ((GameStage) getStage()).isShakeScreen = true;
                         otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
                         ((Tank)otherHelper.actor).kicked();
+                        if(!muted) {
+                            kickSound.play();
+                            hee.play();
+                        }
                     }
                     else if(otherHelper.getActor() instanceof Coin){
                         if(!Zsolti.isDead){

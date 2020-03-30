@@ -12,6 +12,7 @@ import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.SoundManager;
 
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
@@ -26,6 +27,7 @@ public class OptionsStage extends PrettyStage {
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(MENU_BG_TEXTURE);
+        SoundManager.load(assetList);
     }
 
     public static int difficulty = preferences.getInteger("difficulty");;
@@ -48,6 +50,9 @@ public class OptionsStage extends PrettyStage {
 
     @Override
     public void assignment() {
+        SoundManager.assign();
+        if(!muted)
+            SoundManager.menuMusic.play();
         setBack = false;
         MenuBackground = new OneSpriteStaticActor(game,MENU_BG_TEXTURE);
         backButton = new TextBox(game,"Vissza a menübe");
@@ -96,9 +101,11 @@ public class OptionsStage extends PrettyStage {
                 super.clicked(event, x, y);
                 if(!muted){
                     muted = true;
+                    SoundManager.menuMusic.pause();
                 }
                 else{
                     muted = false;
+                    SoundManager.menuMusic.play();
                 }
                 setTexts();
             }
