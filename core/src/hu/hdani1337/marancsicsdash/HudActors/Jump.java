@@ -21,28 +21,52 @@ public class Jump extends OneSpriteStaticActor {
         assetList.addTexture(JUMP_TEXTURE);
     }
 
+    private boolean touchDown;
+    private int force;
+    private GameStage stage;
+
     /**
      * @param stage Átadom neki a GameStaget, mert abból gond nélkül eltudom érni Zsoltit
      * **/
-    public Jump(MyGame game, final GameStage stage) {
+    public Jump(MyGame game, GameStage stage) {
         super(game, JUMP_TEXTURE);
+        touchDown = false;
+        force = 0;
+        this.stage = stage;
+
         addListener(new ClickListener(){
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                /**
-                 * Zsolti ugrik
-                 * **/
-                if(isAct) {
-                    if (stage.zsolti.getActorWorldHelper() != null) {
-                        if(stage.zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
-                            if(!stage.zsolti.inAir) {
-                                ((Box2DWorldHelper) stage.zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, 5500), true);
-                            }
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                force = 4000;
+                touchDown = true;
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                touchDown = false;
+                super.touchUp(event, x, y, pointer, button);
+            }
+        });
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(touchDown){
+            if(force < 7500) force+=250;
+            System.out.println(force);
+        } else{
+            if(isAct) {
+                if (stage.zsolti.getActorWorldHelper() != null) {
+                    if(stage.zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
+                        if(!stage.zsolti.inAir) {
+                            ((Box2DWorldHelper) stage.zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, force), true);
                         }
                     }
                 }
             }
-        });
+            force = 0;
+        }
     }
 }
