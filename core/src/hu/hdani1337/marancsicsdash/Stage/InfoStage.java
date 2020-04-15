@@ -10,8 +10,10 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.SoundManager;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 
 public class InfoStage extends PrettyStage {
@@ -38,6 +40,8 @@ public class InfoStage extends PrettyStage {
     @Override
     public void assignment() {
         SoundManager.assign();
+        MarancsicsDash.presenceDetail = "Reading some good stuff";
+        UpdatePresence();
         if(!muted)
             SoundManager.menuMusic.play();
         bg = new OneSpriteStaticActor(game,"pic/menuBg.jpg");

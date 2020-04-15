@@ -11,8 +11,10 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
@@ -139,6 +141,8 @@ public class PauseStage extends PrettyStage {
          * HA MEGÁLL A JÁTÉK DE ZSOLTI MÉG NEM HALT MEG (PAUSE)
          * **/
         if(!isAct && !Zsolti.isDead){
+            MarancsicsDash.presenceDetail = "Paused the game";
+            UpdatePresence();
             if(getScreen() != null && getScreen() instanceof GameScreen){
                 if(!pontok.text.equals("Jelenlegi pontszámod\n"+((GameScreen)getScreen()).gameStage.score)) {
                     pontok.setText("Jelenlegi pontszámod\n"+((GameScreen)getScreen()).gameStage.score);

@@ -25,9 +25,11 @@ import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.Right;
 import hu.hdani1337.marancsicsdash.HudActors.ShopBackgroundPreview;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.SoundManager;
 
 import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.Stage.MenuStage.MENU_BG_TEXTURE;
@@ -93,6 +95,8 @@ public class ShopStage extends PrettyStage {
 
     @Override
     public void assignment() {
+        MarancsicsDash.presenceDetail = "Shopping";
+        UpdatePresence();
         SoundManager.assign();
         if(!muted)
             SoundManager.menuMusic.play();

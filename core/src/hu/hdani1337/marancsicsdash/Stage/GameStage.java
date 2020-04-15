@@ -19,8 +19,10 @@ import hu.hdani1337.marancsicsdash.Actor.MarancsicsBoss;
 import hu.hdani1337.marancsicsdash.Actor.Mushroom;
 import hu.hdani1337.marancsicsdash.Actor.Tank;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
+import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.SoundManager;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
@@ -61,6 +63,8 @@ public class GameStage extends Box2dStage implements IPrettyStage {
 
     public GameStage(MyGame game) {
         super(new ResponseViewport(9), game);
+        MarancsicsDash.presenceDetail = "In Game";
+        UpdatePresence();
         assignment();
         setSizes();
         setPositions();
@@ -77,22 +81,32 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         switch (preferences.getInteger("selectedBackground")){
             case 0: {
                 backgroundType = Background.BackgroundType.CSERNOBIL;
+                MarancsicsDash.presenceDetail = "In Game - Chernobyl";
+                UpdatePresence();
                 break;
             }
             case 1: {
                 backgroundType = Background.BackgroundType.SZIBERIA;
+                MarancsicsDash.presenceDetail = "In Game - Siberia";
+                UpdatePresence();
                 break;
             }
             case 2: {
                 backgroundType = Background.BackgroundType.ZALA;
+                MarancsicsDash.presenceDetail = "In Game - Zala County";
+                UpdatePresence();
                 break;
             }
             case 3: {
                 backgroundType = Background.BackgroundType.SZAHARA;
+                MarancsicsDash.presenceDetail = "In Game - Sahara";
+                UpdatePresence();
                 break;
             }
             case 4: {
                 backgroundType = Background.BackgroundType.OCEAN;
+                MarancsicsDash.presenceDetail = "In Game - Atlantic Ocean";
+                UpdatePresence();
                 break;
             }
         }

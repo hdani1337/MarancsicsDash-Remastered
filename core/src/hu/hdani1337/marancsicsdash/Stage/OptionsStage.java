@@ -12,8 +12,10 @@ import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.SoundManager;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.Stage.MenuStage.MENU_BG_TEXTURE;
@@ -51,6 +53,8 @@ public class OptionsStage extends PrettyStage {
     @Override
     public void assignment() {
         SoundManager.assign();
+        MarancsicsDash.presenceDetail = "Tweaking the settings";
+        UpdatePresence();
         if(!muted)
             SoundManager.menuMusic.play();
         setBack = false;

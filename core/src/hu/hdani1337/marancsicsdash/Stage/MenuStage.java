@@ -12,6 +12,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
+import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.SoundManager;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
@@ -20,6 +21,7 @@ import hu.hdani1337.marancsicsdash.Screen.InfoScreen;
 import hu.hdani1337.marancsicsdash.Screen.OptionsScreen;
 import hu.hdani1337.marancsicsdash.Screen.ShopScreen;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.SoundManager.hee;
 import static hu.hdani1337.marancsicsdash.SoundManager.menuMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.uraim;
@@ -53,6 +55,8 @@ public class MenuStage extends PrettyStage {
     @Override
     public void assignment() {
         SoundManager.assign();
+        MarancsicsDash.presenceDetail = "In the menu";
+        UpdatePresence();
         MenuBackground = new OneSpriteStaticActor(game,MENU_BG_TEXTURE);
         logo = new Logo(game, Logo.LogoType.MENU);
         start = new TextBox(game ,"A játék indítása",1.25f);
