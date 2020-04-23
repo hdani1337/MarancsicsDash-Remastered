@@ -1,5 +1,6 @@
 package hu.hdani1337.marancsicsdash;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
@@ -49,22 +50,25 @@ public class MarancsicsDash extends MyGame {
 
 	public static void UpdatePresence()
 	{
-		DiscordRPC lib = DiscordRPC.INSTANCE;
-		String applicationId = "700046583047127061";
-		DiscordEventHandlers handlers = new DiscordEventHandlers();
-		lib.Discord_Initialize(applicationId, handlers, true, "");
-		DiscordRichPresence presence = new DiscordRichPresence();
-		presence.startTimestamp = startTime; // epoch second
-		presence.details = presenceDetail;
-		presence.largeImageKey = "ic_launcher-web";
-		lib.Discord_UpdatePresence(presence);
-		new Thread(() -> {
-			while (!Thread.currentThread().isInterrupted()) {
-				lib.Discord_RunCallbacks();
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException ignored) {}
-			}
-		}, "RPC-Callback-Handler").start();
+		if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
+			DiscordRPC lib = DiscordRPC.INSTANCE;
+			String applicationId = "700046583047127061";
+			DiscordEventHandlers handlers = new DiscordEventHandlers();
+			lib.Discord_Initialize(applicationId, handlers, true, "");
+			DiscordRichPresence presence = new DiscordRichPresence();
+			presence.startTimestamp = startTime; // epoch second
+			presence.details = presenceDetail;
+			presence.largeImageKey = "ic_launcher-web";
+			lib.Discord_UpdatePresence(presence);
+			new Thread(() -> {
+				while (!Thread.currentThread().isInterrupted()) {
+					lib.Discord_RunCallbacks();
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException ignored) {
+					}
+				}
+			}, "RPC-Callback-Handler").start();
+		}
 	}
 }

@@ -72,13 +72,6 @@ public class Zsolti extends OneSpriteAnimatedActor {
                         }
                         if(!muted) crashSound.play();
 
-                    } else if (otherHelper.getActor() instanceof Coin) {
-                        /**
-                         * PÉNZ
-                         * **/
-                        otherHelper.actor.remove();
-                        Coin.coin++;
-                        if(!muted) coinSound.play();
                     } else if (otherHelper.getActor() instanceof Mushroom) {
                         /**
                          * GOMBA

@@ -10,15 +10,19 @@ public class Logo extends OneSpriteStaticActor {
 
     public static final String LOGO_TEXTURE = "pic/logo.png";
     public static final String MARANCSHOP_TEXTURE = "pic/marancshop.png";
+    public static final String OPTIONS_TEXTURE = "pic/options.png";
+    public static final String INFO_TEXTURE = "pic/info.png";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(LOGO_TEXTURE);
         assetList.addTexture(MARANCSHOP_TEXTURE);
+        assetList.addTexture(OPTIONS_TEXTURE);
+        assetList.addTexture(INFO_TEXTURE);
     }
 
     public enum LogoType{
-        MENU, SHOP
+        MENU, SHOP, OPTIONS, INFO
     }
 
     public Logo(MyGame game, LogoType logotype) {
@@ -31,6 +35,16 @@ public class Logo extends OneSpriteStaticActor {
             case SHOP:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(MARANCSHOP_TEXTURE));
                 setSize(game.getMyAssetManager().getTexture(MARANCSHOP_TEXTURE).getWidth(),game.getMyAssetManager().getTexture(MARANCSHOP_TEXTURE).getHeight());
+                break;
+            }
+            case OPTIONS:{
+                sprite.setTexture(game.getMyAssetManager().getTexture(OPTIONS_TEXTURE));
+                setSize(game.getMyAssetManager().getTexture(OPTIONS_TEXTURE).getWidth()*0.7f,game.getMyAssetManager().getTexture(OPTIONS_TEXTURE).getHeight()*0.7f);
+                break;
+            }
+            case INFO:{
+                sprite.setTexture(game.getMyAssetManager().getTexture(INFO_TEXTURE));
+                setSize(game.getMyAssetManager().getTexture(INFO_TEXTURE).getWidth()*0.7f,game.getMyAssetManager().getTexture(INFO_TEXTURE).getHeight()*0.7f);
                 break;
             }
             default:{

@@ -11,6 +11,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
+import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.SoundManager;
@@ -42,6 +43,8 @@ public class OptionsStage extends PrettyStage {
 
     private OneSpriteStaticActor MenuBackground;
 
+    private Logo optionsLogo;
+
     private TextBox backButton;
     private TextBox muteButton;
     private TextBox gameModeButton;
@@ -64,6 +67,7 @@ public class OptionsStage extends PrettyStage {
         gameModeButton = new TextBox(game, "Játékmód: -NULL-");
         backgroundTypeButton = new TextBox(game, "Háttér: -NULL-");
         difficultyButton = new TextBox(game, "Nehézség: -NULL-");
+        optionsLogo = new Logo(game, Logo.LogoType.OPTIONS);
         setTexts();
     }
 
@@ -80,6 +84,7 @@ public class OptionsStage extends PrettyStage {
         backgroundTypeButton.setPosition(75,500);
         difficultyButton.setPosition(75,650);
         backButton.setPosition(getViewport().getWorldWidth() - (backButton.getWidth() + 45),50);
+        optionsLogo.setPosition(getViewport().getWorldWidth()/2 - optionsLogo.getWidth()/2, getViewport().getWorldHeight() - optionsLogo.getHeight()*1.15f);
     }
 
     @Override
@@ -168,6 +173,7 @@ public class OptionsStage extends PrettyStage {
     @Override
     public void addActors() {
         addActor(MenuBackground);
+        addActor(optionsLogo);
         addActor(difficultyButton);
         addActor(backButton);
         addActor(muteButton);
@@ -192,43 +198,60 @@ public class OptionsStage extends PrettyStage {
         }
 
         //Nehézségek
-        if(difficulty == 1){
-            difficultyButton.setText("Nehézség: Könnyü");
-        }
-        else if(difficulty == 2){
-            difficultyButton.setText("Nehézség: Normál");
-        }
-        else if(difficulty == 3){
-            difficultyButton.setText("Nehézség: Nehéz");
-        }
-        else{
-            System.out.println("A fejlesztő egy buzi.");
-            difficultyButton.setText("Nehézség: Hiba");
+        switch (difficulty){
+            case 1:{
+                difficultyButton.setText("Nehézség: Könnyü");
+                break;
+            }
+            case 2:{
+                difficultyButton.setText("Nehézség: Normál");
+                break;
+            }
+            case 3:{
+                difficultyButton.setText("Nehézség: Nehéz");
+                break;
+            }
+            default:{
+                System.out.println("A fejlesztő egy buzi.");
+                difficultyButton.setText("Nehézség: Hiba");
+                break;
+            }
         }
 
         //Játékmód
-        if(gamemode == 1){
-            gameModeButton.setText("Játékmód: Story");
-        }
-        else{
-            gameModeButton.setText("Játékmód: Endless");
+        switch (gamemode){
+            case 1:{
+                gameModeButton.setText("Játékmód: Story");
+                break;
+            }
+            default:{
+                gameModeButton.setText("Játékmód: Endless");
+                break;
+            }
         }
 
         //Háttér
-        if(selectedBackground == 0){
-            backgroundTypeButton.setText("Háttér: Csernobil");
-        }
-        else if (selectedBackground == 1){
-            backgroundTypeButton.setText("Háttér: Szibéria");
-        }
-        else if (selectedBackground == 2){
-            backgroundTypeButton.setText("Háttér: Zala");
-        }
-        else if (selectedBackground == 3){
-            backgroundTypeButton.setText("Háttér: Szahara");
-        }
-        else if (selectedBackground == 4){
-            backgroundTypeButton.setText("Háttér: Atlanti-óceán");
+        switch (selectedBackground){
+            case 0:{
+                backgroundTypeButton.setText("Háttér: Csernobil");
+                break;
+            }
+            case 1:{
+                backgroundTypeButton.setText("Háttér: Szibéria");
+                break;
+            }
+            case 2:{
+                backgroundTypeButton.setText("Háttér: Zala");
+                break;
+            }
+            case 3:{
+                backgroundTypeButton.setText("Háttér: Szahara");
+                break;
+            }
+            case 4:{
+                backgroundTypeButton.setText("Háttér: Atlanti-óceán");
+                break;
+            }
         }
     }
 
@@ -269,6 +292,7 @@ public class OptionsStage extends PrettyStage {
      * Actorok átlátszóságának egyidejű beállítása
      * **/
     private void setAlpha(){
+        optionsLogo.setAlpha(alpha);
         backButton.setAlpha(alpha);
         muteButton.setAlpha(alpha);
         gameModeButton.setAlpha(alpha);

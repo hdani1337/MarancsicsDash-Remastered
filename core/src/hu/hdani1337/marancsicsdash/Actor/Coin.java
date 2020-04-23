@@ -13,7 +13,9 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
+import static hu.hdani1337.marancsicsdash.SoundManager.coinSound;
 
 public class Coin extends OneSpriteAnimatedActor {
 
@@ -26,47 +28,25 @@ public class Coin extends OneSpriteAnimatedActor {
     }
 
     private boolean isAct;
+    private Zsolti zsolti;
 
     /**
-     * Box2D konstruktor
+     * GameStage konstruktor
+     * @param stage A GameStage, hogy hozzáférjünk Zsoltihoz
      * **/
-    public Coin(MyGame game, World world, WorldBodyEditorLoader loader, GameStage stage) {
+    public Coin(MyGame game, GameStage stage) {
         super(game, COIN_ATLAS);
         setFps(60);
         setSize(getWidth()*0.006f, getHeight()*0.006f);
-        setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Coin", new MyFixtureDef(), BodyDef.BodyType.StaticBody));
         setX((float) (stage.getViewport().getWorldWidth()+Math.random()*9));
         setY((float) ((stage.marancsics.getY()+stage.marancsics.getHeight()/2)+Math.random()*4.5f));
         this.isAct = true;
-        if(getActorWorldHelper() != null && getActorWorldHelper() instanceof Box2DWorldHelper) {
-            ((Box2DWorldHelper) getActorWorldHelper()).addContactListener(new MyContactListener(){
-                @Override
-                public void beginContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-                    if(otherHelper.getActor() instanceof Tank) myHelper.actor.remove();
-                    else if(otherHelper.getActor() instanceof Marancsics) myHelper.actor.remove();
-                }
-
-                @Override
-                public void endContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-
-                }
-
-                @Override
-                public void preSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-
-                }
-
-                @Override
-                public void postSolve(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-
-                }
-            });
-        }
+        this.zsolti = stage.zsolti;
     }
 
     /**
      * Scene2D konstruktor
-     * @param act forogjon e a pénz
+     * @param act Forogjon e a pénz
      * **/
     public Coin(MyGame game, boolean act){
         super(game, COIN_ATLAS);
@@ -83,6 +63,19 @@ public class Coin extends OneSpriteAnimatedActor {
         super.act(delta);
         if(this.isAct && GameStage.isAct) {
             setX(getX() - 0.15f);
+
+            /**
+             * Ütközésvizsgálat
+             * Nem adom hozzá a világhoz a pénzt, mert visszapattanik róla a tank és Zsolti is
+             * Tudom hogy szar, de működik, kuss
+             * **/
+            if(getX() < zsolti.getX()+zsolti.getWidth() && getY() < zsolti.getY()+zsolti.getHeight()){
+                if(getX() > zsolti.getX() && getY() > zsolti.getY()) {
+                    Coin.coin++;
+                    if (!muted) coinSound.play();
+                    remove();
+                }
+            }
         }
     }
 }
