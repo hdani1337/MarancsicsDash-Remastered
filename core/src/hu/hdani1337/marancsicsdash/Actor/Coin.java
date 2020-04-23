@@ -1,14 +1,6 @@
 package hu.hdani1337.marancsicsdash.Actor;
 
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.World;
-
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
-import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2DWorldHelper;
-import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyContactListener;
-import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyFixtureDef;
-import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
@@ -17,7 +9,7 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.SoundManager.coinSound;
 
-public class Coin extends OneSpriteAnimatedActor {
+public class Coin extends OneSpriteAnimatedActor implements CollectableItem {
 
     public static final String COIN_ATLAS = "atlas/coin.atlas";
     public static long coin = preferences.getLong("coin");
@@ -62,20 +54,14 @@ public class Coin extends OneSpriteAnimatedActor {
     public void act(float delta) {
         super.act(delta);
         if(this.isAct && GameStage.isAct) {
-            setX(getX() - 0.15f);
-
-            /**
-             * Ütközésvizsgálat
-             * Nem adom hozzá a világhoz a pénzt, mert visszapattanik róla a tank és Zsolti is
-             * Tudom hogy szar, de működik, kuss
-             * **/
-            if(getX() < zsolti.getX()+zsolti.getWidth() && getY() < zsolti.getY()+zsolti.getHeight()){
-                if(getX() > zsolti.getX() && getY() > zsolti.getY()) {
-                    Coin.coin++;
-                    if (!muted) coinSound.play();
-                    remove();
-                }
-            }
+            isCollected(zsolti);
         }
+    }
+
+    @Override
+    public void collected() {
+        Coin.coin++;
+        if (!muted) coinSound.play();
+        remove();
     }
 }

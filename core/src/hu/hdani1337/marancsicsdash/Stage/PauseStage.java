@@ -12,6 +12,7 @@ import hu.hdani1337.marancsicsdash.Actor.Coin;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
+import hu.hdani1337.marancsicsdash.Screen.BossScreen;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
@@ -143,9 +144,9 @@ public class PauseStage extends PrettyStage {
         if(!isAct && !Zsolti.isDead){
             MarancsicsDash.presenceDetail = "Paused the game";
             UpdatePresence();
-            if(getScreen() != null && getScreen() instanceof GameScreen){
-                if(!pontok.text.equals("Jelenlegi pontszámod\n"+((GameScreen)getScreen()).gameStage.score)) {
-                    pontok.setText("Jelenlegi pontszámod\n"+((GameScreen)getScreen()).gameStage.score);
+            if(getScreen() != null && (getScreen() instanceof GameScreen || getScreen() instanceof BossScreen)){
+                if(!pontok.text.equals("Jelenlegi pontszámod\n"+GameStage.score)) {
+                    pontok.setText("Jelenlegi pontszámod\n"+GameStage.score);
                     pontok.setX(getViewport().getWorldWidth()/2-pontok.getWidth()/2);
                 }
             }

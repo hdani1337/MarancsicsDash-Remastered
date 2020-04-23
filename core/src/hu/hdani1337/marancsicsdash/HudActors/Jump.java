@@ -7,10 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2DWorldHelper;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
+import hu.hdani1337.marancsicsdash.Actor.Zsolti;
+import hu.hdani1337.marancsicsdash.Stage.BossStage;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDouble;
 
 public class Jump extends OneSpriteStaticActor {
 
@@ -23,16 +27,22 @@ public class Jump extends OneSpriteStaticActor {
 
     private boolean touchDown;
     private int force;
-    private GameStage stage;
+    private Zsolti zsolti;
 
     /**
-     * @param stage Átadom neki a GameStaget, mert abból gond nélkül eltudom érni Zsoltit
+     * @param stage Átadom neki a GameStaget/BossStaget, mert abból gond nélkül eltudom érni Zsoltit
      * **/
-    public Jump(MyGame game, GameStage stage) {
+    public Jump(MyGame game, MyStage stage) {
         super(game, JUMP_TEXTURE);
         touchDown = false;
         force = 0;
-        this.stage = stage;
+        if(stage != null){
+            if(stage instanceof GameStage){
+                this.zsolti = ((GameStage)stage).zsolti;
+            }else if(stage instanceof BossStage){
+                this.zsolti = ((BossStage)stage).zsolti;
+            }else this.zsolti = null;
+        }
 
         addListener(new ClickListener(){
             @Override
@@ -55,13 +65,14 @@ public class Jump extends OneSpriteStaticActor {
         super.act(delta);
         if(touchDown){
             if(force < 7500) force+=250;
-            System.out.println(force);
         } else{
             if(isAct) {
-                if (stage.zsolti.getActorWorldHelper() != null) {
-                    if(stage.zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
-                        if(!stage.zsolti.inAir) {
-                            ((Box2DWorldHelper) stage.zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, force), true);
+                if(zsolti != null) {
+                    if (zsolti.getActorWorldHelper() != null) {
+                        if (zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
+                            if (!zsolti.inAir) {
+                                ((Box2DWorldHelper) zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, force), true);
+                            }
                         }
                     }
                 }

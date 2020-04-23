@@ -29,13 +29,10 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 
 public class MenuStage extends PrettyStage {
 
-    public static final String MENU_BG_TEXTURE = "pic/menuBg.jpg";
-
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(Logo.class, assetList);
         assetList.collectAssetDescriptor(TextBox.class, assetList);
-        assetList.addTexture(MENU_BG_TEXTURE);
         SoundManager.load(assetList);
     }
 
@@ -43,7 +40,7 @@ public class MenuStage extends PrettyStage {
         super(new ResponseViewport(900), game);
     }
 
-    private OneSpriteStaticActor MenuBackground;
+
     private Logo logo;
     private TextBox start;
     private TextBox info;
@@ -55,9 +52,8 @@ public class MenuStage extends PrettyStage {
     @Override
     public void assignment() {
         SoundManager.assign();
-        MarancsicsDash.presenceDetail = "In the menu";
+        MarancsicsDash.presenceDetail = "Idling in the menu";
         UpdatePresence();
-        MenuBackground = new OneSpriteStaticActor(game,MENU_BG_TEXTURE);
         logo = new Logo(game, Logo.LogoType.MENU);
         start = new TextBox(game ,"A játék indítása",1.25f);
         info = new TextBox(game, "A játékról",1.25f);
@@ -69,15 +65,12 @@ public class MenuStage extends PrettyStage {
 
     @Override
     public void setSizes() {
-        if(getViewport().getWorldWidth() > MenuBackground.getWidth()) MenuBackground.setWidth(getViewport().getWorldWidth());
         version.setWidth(version.getWidth()*0.9f);
         start.setWidth(start.getWidth()*0.95f);
     }
 
     @Override
     public void setPositions() {
-        if(getViewport().getWorldWidth() < MenuBackground.getWidth()) MenuBackground.setX((getViewport().getWorldWidth()-MenuBackground.getWidth())/2);
-
         logo.setPosition(getViewport().getWorldWidth()/2-logo.getWidth()/2,getViewport().getWorldHeight()-logo.getHeight()*1.25f);
 
         start.setX(getViewport().getWorldWidth()/2 - start.getWidth()/2);
@@ -183,7 +176,6 @@ public class MenuStage extends PrettyStage {
     @Override
     public void addActors() {
         setAlpha(0);
-        addActor(MenuBackground);
         addActor(logo);
         addActor(start);
         addActor(info);

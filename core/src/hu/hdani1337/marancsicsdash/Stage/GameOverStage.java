@@ -11,12 +11,12 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.Screen.BossScreen;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
-import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
 public class GameOverStage extends PrettyStage {
 
@@ -141,27 +141,38 @@ public class GameOverStage extends PrettyStage {
         /**
          * HA VÉGE VAN A JÁTÉKNAK
          * **/
-        if(!isAct && Zsolti.isDead){
+        if(getScreen() != null){
             if(getScreen() instanceof GameScreen){
-                pontok.setText("Elért pontszámod\n"+((GameScreen)getScreen()).gameStage.score);
-                setPositions();
+                if(!GameStage.isAct && Zsolti.isDead){
+                   makeStage();
+                }
+            }else if(getScreen() instanceof BossScreen){
+                if(!BossStage.isAct && Zsolti.isDead){
+                   makeStage();
+                }
             }
-            //Adjuk hozzá a gombokat a stagehez ha még nincsenek rajta
-            if(!addedActors)
-                addActors();
-
-            //Áttűnés
-            if(alpha < 0.99f)
-                alpha += 0.01f;
-            else
-                alpha = 1;
-
-            black.setAlpha(alpha*0.6f);
-            info.setAlpha(alpha);
-            pontok.setAlpha(alpha);
-            again.setAlpha(alpha);
-            menu.setAlpha(alpha);
-            //Áttűnés vége
         }
+    }
+
+    private void makeStage(){
+        pontok.setText("Elért pontszámod\n"+GameStage.score);
+        setPositions();
+
+        //Adjuk hozzá a gombokat a stagehez ha még nincsenek rajta
+        if(!addedActors)
+            addActors();
+
+        //Áttűnés
+        if(alpha < 0.99f)
+            alpha += 0.01f;
+        else
+            alpha = 1;
+
+        black.setAlpha(alpha*0.6f);
+        info.setAlpha(alpha);
+        pontok.setAlpha(alpha);
+        again.setAlpha(alpha);
+        menu.setAlpha(alpha);
+        //Áttűnés vége
     }
 }

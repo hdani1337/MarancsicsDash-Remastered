@@ -32,7 +32,7 @@ import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
-import static hu.hdani1337.marancsicsdash.Stage.MenuStage.MENU_BG_TEXTURE;
+import static hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage.MENU_BG_TEXTURE;
 
 public class ShopStage extends PrettyStage {
 

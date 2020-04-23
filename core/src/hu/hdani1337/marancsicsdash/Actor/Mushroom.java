@@ -9,8 +9,9 @@ import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyFixtureDef;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
+import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
-public class Mushroom extends OneSpriteStaticActor {
+public class Mushroom extends OneSpriteStaticActor implements CollectableItem {
 
     public static final String MUSHROOM_TEXTURE = "pic/mushroom.png";
 
@@ -19,9 +20,31 @@ public class Mushroom extends OneSpriteStaticActor {
         assetList.addTexture(MUSHROOM_TEXTURE);
     }
 
-    public Mushroom(MyGame game, World world, WorldBodyEditorLoader loader) {
+    private boolean isAct;
+    private Zsolti zsolti;
+
+    public Mushroom(MyGame game, GameStage stage) {
         super(game, MUSHROOM_TEXTURE);
         setSize(getWidth()*0.003f, getHeight()*0.003f);
-        setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Mushroom", new MyFixtureDef(), BodyDef.BodyType.StaticBody));
+        this.zsolti = stage.zsolti;
+        this.isAct = true;
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(this.isAct && GameStage.isAct) {
+            isCollected(zsolti);
+        }
+    }
+
+    @Override
+    public void collected() {
+        zsolti.superTime = 8;
+        newPosition();
+    }
+
+    public void newPosition(){
+        setPosition((float)(72+Math.random()*168),(float)(Math.random()*6+Background.ground*2));
     }
 }

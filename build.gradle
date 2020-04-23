@@ -87,10 +87,9 @@ project(":core") {
 
 
     dependencies {
-        implementation 'club.minnced:java-discord-rpc:2.0.2'
+        api 'club.minnced:java-discord-rpc:2.0.2'
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        
     }
 }

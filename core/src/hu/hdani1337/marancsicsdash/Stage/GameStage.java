@@ -1,6 +1,6 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
 
@@ -17,6 +17,7 @@ import hu.hdani1337.marancsicsdash.Actor.Coin;
 import hu.hdani1337.marancsicsdash.Actor.Marancsics;
 import hu.hdani1337.marancsicsdash.Actor.MarancsicsBoss;
 import hu.hdani1337.marancsicsdash.Actor.Mushroom;
+import hu.hdani1337.marancsicsdash.Actor.SuperCoin;
 import hu.hdani1337.marancsicsdash.Actor.Tank;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
@@ -40,6 +41,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         assetList.collectAssetDescriptor(MarancsicsBoss.class,assetList);
         assetList.collectAssetDescriptor(Blood.class,assetList);
         assetList.collectAssetDescriptor(Background.class,assetList);
+        assetList.collectAssetDescriptor(SuperCoin.class,assetList);
         SoundManager.load(assetList);
     }
 
@@ -53,13 +55,14 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     public Marancsics marancsics;//TOMI BÁ'
     public ArrayList<Coin> coins;//ÉRME LISTA
     public Mushroom mushroom;//GOMBA
+    public SuperCoin superCoin;//SUPER COIN
     public ArrayList<Background> backgrounds;//HÁTTÉR LISTA
     public ArrayList<Tank> tanks;//TANK LISTA
     public ArrayList<Blood> blood;//VÉR LISTA
 
     public static boolean isAct;
-    private Background.BackgroundType backgroundType;
-    public long score;
+    public static Background.BackgroundType backgroundType;
+    public static long score;
 
     public GameStage(MyGame game) {
         super(new ResponseViewport(9), game);
@@ -118,7 +121,8 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         tanks = new ArrayList<>();
         coins = new ArrayList<>();
         blood = new ArrayList<>();
-        mushroom = new Mushroom(game,world,loader);
+        mushroom = new Mushroom(game,this);
+        superCoin = new SuperCoin(game,this);
         backgrounds = new ArrayList<>();
         generateBaseBackgrounds();
     }
@@ -131,7 +135,8 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     @Override
     public void setPositions() {
         zsolti.setPosition(2.5f,3);
-        mushroom.setPosition(7,5);
+        mushroom.newPosition();
+        superCoin.newPosition();
     }
 
     @Override
@@ -148,8 +153,10 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     public void addActors() {
         addActor(zsolti);
         addActor(marancsics);
-        //addActor(mushroom);
-        //addActor(new SuperCoin(game,world,loader));
+        if(ShopStage.boughtZsolti) addActor(mushroom);
+        else mushroom = null;
+        if(ShopStage.boughtCoin) addActor(superCoin);
+        else superCoin = null;
     }
 
     public void afterInit() {
@@ -177,6 +184,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         getViewport().setScreenX((int) (Math.sin(offset)*15));
         getViewport().setScreenY((int) (Math.cos(offset)*15));
         offset++;
+        Gdx.input.vibrate(100);
     }
 
     private void generateBaseBackgrounds(){
@@ -308,6 +316,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
                     addActor(blood.get(blood.size() - 1));
                 }
             }
+            zsolti.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.DEAD_ZSOLTI));
             offset = 1;
             getViewport().setScreenX(0);
             getViewport().setScreenY(0);

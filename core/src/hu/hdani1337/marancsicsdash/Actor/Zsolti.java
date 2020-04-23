@@ -15,10 +15,10 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
+import hu.hdani1337.marancsicsdash.Stage.BossStage;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
-import static hu.hdani1337.marancsicsdash.SoundManager.coinSound;
 import static hu.hdani1337.marancsicsdash.SoundManager.crashSound;
 import static hu.hdani1337.marancsicsdash.SoundManager.kickSound;
 import static hu.hdani1337.marancsicsdash.SoundManager.powerUpSound;
@@ -26,11 +26,13 @@ import static hu.hdani1337.marancsicsdash.SoundManager.powerUpSound;
 public class Zsolti extends OneSpriteAnimatedActor {
 
     public static final String ZSOLTI_ATLAS = "atlas/zsolti.atlas";
+    public static final String DEAD_ZSOLTI = "atlas/zsoltiDead.atlas";
     public static final String SUPER_ZSOLTI_ATLAS = "atlas/superZsolti.atlas";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTextureAtlas(ZSOLTI_ATLAS);
+        assetList.addTextureAtlas(DEAD_ZSOLTI);
         assetList.addTextureAtlas(SUPER_ZSOLTI_ATLAS);
     }
 
@@ -188,6 +190,12 @@ public class Zsolti extends OneSpriteAnimatedActor {
          * **/
         if(getX() != 2.5f && !isDead && getStage() instanceof GameStage) {
             setX(2.5f);
+            setOrigin(0,0);
+            getActorWorldHelper().setBodyPosition(getX()+0.3f,getY());
+        }
+
+        if(getX() != 1 && !isDead && getStage() instanceof BossStage){
+            setX(1);
             setOrigin(0,0);
             getActorWorldHelper().setBodyPosition(getX()+0.3f,getY());
         }

@@ -5,10 +5,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
+import hu.hdani1337.marancsicsdash.HudActors.HealthBar;
+import hu.hdani1337.marancsicsdash.HudActors.InstantBoss;
 import hu.hdani1337.marancsicsdash.HudActors.Jump;
 import hu.hdani1337.marancsicsdash.HudActors.Pause;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
@@ -21,14 +24,18 @@ public class HudStage extends PrettyStage {
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(Jump.class,assetList);
+        assetList.collectAssetDescriptor(Pause.class,assetList);
+        assetList.collectAssetDescriptor(InstantBoss.class,assetList);
     }
 
-    public static GameStage stage;
+    public static MyStage stage;
     private Jump jump;
     private Pause pause;
     private TextBox scoreBoard;
     private Coin coin;
     private MyLabel coinLabel;
+    private InstantBoss instantBoss;
+    private HealthBar healthBar;
 
     public HudStage(MyGame game) {
         super(new ResponseViewport(900), game);
@@ -42,7 +49,9 @@ public class HudStage extends PrettyStage {
 
     @Override
     public void assignment() {
+        healthBar = new HealthBar(game,stage);
         jump = new Jump(game, stage);
+        instantBoss = new InstantBoss(game);
         pause = new Pause(game);
         scoreBoard = new TextBox(game,"0");
         coin = new Coin(game, true);
@@ -57,7 +66,9 @@ public class HudStage extends PrettyStage {
 
     @Override
     public void setSizes() {
-        jump.setSize(jump.getWidth()*1.2f,jump.getHeight()*1.2f);
+        instantBoss.setSize(160,160);
+        pause.setSize(180,180);
+        jump.setSize(180,180);
         coin.setSize(coin.getWidth()*0.7f,coin.getHeight()*0.7f);
     }
 
@@ -65,9 +76,11 @@ public class HudStage extends PrettyStage {
     public void setPositions() {
         jump.setPosition(getViewport().getWorldWidth()-jump.getWidth()-15,15);
         pause.setPosition(getViewport().getWorldWidth()-pause.getWidth()-15,getViewport().getWorldHeight()-pause.getHeight()-15);
+        instantBoss.setPosition(getViewport().getWorldWidth()-instantBoss.getWidth()-15,getViewport().getWorldHeight()/2-instantBoss.getHeight()/2);
         scoreBoard.setPosition(getViewport().getWorldWidth()/2-scoreBoard.getWidth()/2,getViewport().getWorldHeight()-scoreBoard.getHeight()-15);
         coin.setPosition(15, getViewport().getWorldHeight()-15-coin.getHeight());
         coinLabel.setPosition(coin.getX() + coin.getWidth() + 10, coin.getY() + coin.getHeight()/4);
+        healthBar.setPosition(15,pause.getY()+pause.getHeight()/2-healthBar.getHeight()/2);
     }
 
     @Override
@@ -84,9 +97,15 @@ public class HudStage extends PrettyStage {
     public void addActors() {
         addActor(jump);
         addActor(pause);
-        addActor(scoreBoard);
-        addActor(coin);
-        addActor(coinLabel);
+        if(stage instanceof GameStage) {
+            if (ShopStage.boughtInstantBoss && OptionsStage.gamemode == 1) addActor(instantBoss);
+            else instantBoss = null;
+            addActor(scoreBoard);
+            addActor(coin);
+            addActor(coinLabel);
+        }else if(stage instanceof BossStage){
+            addActor(healthBar);
+        }
     }
 
     @Override

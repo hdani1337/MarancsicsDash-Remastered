@@ -55,16 +55,19 @@ public class MarancsicsDash extends MyGame {
 			String applicationId = "700046583047127061";
 			DiscordEventHandlers handlers = new DiscordEventHandlers();
 			lib.Discord_Initialize(applicationId, handlers, true, "");
+
 			DiscordRichPresence presence = new DiscordRichPresence();
 			presence.startTimestamp = startTime; // epoch second
 			presence.details = presenceDetail;
 			presence.largeImageKey = "ic_launcher-web";
+			presence.largeImageText = "v2.0-Epsilon";
 			lib.Discord_UpdatePresence(presence);
+
 			new Thread(() -> {
 				while (!Thread.currentThread().isInterrupted()) {
 					lib.Discord_RunCallbacks();
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(500);
 					} catch (InterruptedException ignored) {
 					}
 				}

@@ -1,18 +1,70 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
+import com.badlogic.gdx.Gdx;
+
+import java.util.ArrayList;
+
+import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
+import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2DWorldHelper;
+import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.Box2dStage;
+import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
+import hu.csanyzeg.master.MyBaseClasses.Scene2D.IPrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
+import hu.hdani1337.marancsicsdash.Actor.Background;
+import hu.hdani1337.marancsicsdash.Actor.Blood;
+import hu.hdani1337.marancsicsdash.Actor.MarancsicsBoss;
+import hu.hdani1337.marancsicsdash.Actor.Zsolti;
+import hu.hdani1337.marancsicsdash.MarancsicsDash;
+import hu.hdani1337.marancsicsdash.SoundManager;
 
-public class BossStage extends PrettyStage {
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.backgroundType;
+
+public class BossStage extends Box2dStage implements IPrettyStage {
+
+    public static AssetList assetList = new AssetList();
+    static {
+        assetList.collectAssetDescriptor(Zsolti.class,assetList);
+        assetList.collectAssetDescriptor(MarancsicsBoss.class,assetList);
+        assetList.collectAssetDescriptor(Blood.class,assetList);
+        assetList.collectAssetDescriptor(Background.class,assetList);
+        SoundManager.load(assetList);
+    }
+
+    public WorldBodyEditorLoader loader;
+    public static boolean isAct;
+
+    /**
+     * OBJEKTUMOK
+     * **/
+    public Zsolti zsolti;//ZSÁÚTTI
+    public MarancsicsBoss marancsics;//TOMI BÁ'
+    public ArrayList<Background> backgrounds;//HÁTTÉR LISTA
+    public ArrayList<Blood> blood;//VÉR LISTA
 
     public BossStage(MyGame game) {
-        super(new ResponseViewport(900), game);
+        super(new ResponseViewport(9), game);
+        MarancsicsDash.presenceDetail = "Fighting with the boss";
+        UpdatePresence();
+        assignment();
+        setSizes();
+        setPositions();
+        addListeners();
+        setZIndexes();
+        addActors();
     }
 
     @Override
     public void assignment() {
-
+        loader = new WorldBodyEditorLoader("bodies.json");
+        zsolti = new Zsolti(game, world, loader);
+        marancsics = new MarancsicsBoss(game,world,loader);
+        backgrounds = new ArrayList<>();
+        blood = new ArrayList<>();
+        isAct = true;
+        generateBaseBackgrounds();
     }
 
     @Override
@@ -22,7 +74,8 @@ public class BossStage extends PrettyStage {
 
     @Override
     public void setPositions() {
-
+        marancsics.setX(getViewport().getWorldWidth()+6);
+        zsolti.setPosition(1,Background.ground*2);
     }
 
     @Override
@@ -37,6 +90,118 @@ public class BossStage extends PrettyStage {
 
     @Override
     public void addActors() {
+        addActor(zsolti);
+        addActor(marancsics);
+    }
 
+    private void generateBaseBackgrounds(){
+        /**
+         * KEZDETNEK 3 HÁTTÉR ELÉG
+         * **/
+        for (int i = 0; i < 3; i++){
+            backgrounds.add(new Background(game, backgroundType, world, getViewport()));
+            backgrounds.get(i).setX(backgrounds.get(i).getWidth()*i);
+            addActor(backgrounds.get(i));
+            backgrounds.get(i).setZIndex(0);
+        }
+    }
+
+    private int offset = 1;
+    public boolean isShakeScreen;
+
+    private void shakeScreen(){
+        /**
+         * SZINUSZ-KOSZINUSZ FÜGGVÉNYEK SEGÍTSÉGÉVEL MOZGATJUK A VIEVPORTOT
+         * **/
+        getViewport().setScreenX((int) (Math.sin(offset)*15));
+        getViewport().setScreenY((int) (Math.cos(offset)*15));
+        offset++;
+        Gdx.input.vibrate(100);
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(isAct) {
+            if (isShakeScreen) {
+                shakeScreen();
+            } else {
+                offset = 1;
+                getViewport().setScreenX(0);
+                getViewport().setScreenY(0);
+            }
+
+            /**
+             * HA AZ UTOLSÓ ELŐTTI HÁTTÉR MÁR ÉPPENHOGY BEÉR A KÉPERNYŐRE, AKKOR RAKJUNK BE ÚJ HÁTTERET
+             * */
+            if (backgrounds.get(backgrounds.size() - 2).getX() < getViewport().getWorldWidth()) {
+                backgrounds.add(new Background(game, backgroundType, world, getViewport()));
+                backgrounds.get(backgrounds.size() - 1).setX(backgrounds.get(backgrounds.size() - 2).getX() + backgrounds.get(backgrounds.size() - 2).getWidth());
+                addActor(backgrounds.get(backgrounds.size() - 1));
+                backgrounds.get(backgrounds.size() - 1).setZIndex(0);
+            }
+
+            /**
+             * HA A HÁTTÉR MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
+             * **/
+            for (Background background : backgrounds) {
+                if (background.getX() < -background.getWidth() * 2) {
+                    background.remove();
+                    backgrounds.remove(background);
+                    break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
+                }
+            }
+
+            /**
+             * MEGÁLLÍTÁS UTÁN HA MÉG NEM MOZOGNAK AZ ANIMATED ACTOROK AKKOR MOZOGJANAK
+             * **/
+            //ZSOLTI ÚJRAINDÍTÁSA
+            if(zsolti.getFps() == 0) {
+                zsolti.setFps(12);
+                ((Box2DWorldHelper) zsolti.getActorWorldHelper()).getBody().setActive(true);
+            }
+
+            //MARANCSICS ÚJRAINDÍTÁSA
+            if(marancsics.getFps() == 0) {
+                ((Box2DWorldHelper) marancsics.getActorWorldHelper()).getBody().setActive(true);
+                marancsics.setFps(12);
+            }
+        }
+        /**
+         * HA VÉGE A JÁTÉKNAK AKKOR ZSOLTI VÉREZZEN
+         * **/
+        else if(Zsolti.isDead){
+            if(blood.size() < 128) {
+                for (int i = 0; i < 4; i++){
+                    blood.add(new Blood(game, world, zsolti));
+                    addActor(blood.get(blood.size() - 1));
+                }
+            }
+            zsolti.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.DEAD_ZSOLTI));
+            offset = 1;
+            getViewport().setScreenX(0);
+            getViewport().setScreenY(0);
+        }
+        /**
+         * HA MEGÁLLÍTJUK A JÁTÉKOT AKKOR AZ ANIMATED ACTOROK NE MOZOGJANAK
+         * **/
+        else{
+            //ZSOLTI MEGÁLLÍTÁSA
+            if(zsolti.getFps() != 0) {
+                ((Box2DWorldHelper) zsolti.getActorWorldHelper()).getBody().setActive(false);
+                zsolti.setFps(0);
+            }
+
+            //MARANCSICS MEGÁLLÍTÁSA
+            if(marancsics.getFps() != 0) {
+                ((Box2DWorldHelper) marancsics.getActorWorldHelper()).getBody().setActive(false);
+                marancsics.setFps(0);
+            }
+
+            //HA RÁZKÓDIK A KÉPERNYŐ AKKOR ÁLLÍTSUK VISSZA
+            offset = 1;
+            getViewport().setScreenX(0);
+            getViewport().setScreenY(0);
+        }
     }
 }

@@ -19,7 +19,7 @@ import hu.hdani1337.marancsicsdash.SoundManager;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
-import static hu.hdani1337.marancsicsdash.Stage.MenuStage.MENU_BG_TEXTURE;
+import static hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage.MENU_BG_TEXTURE;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDesert;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtOcean;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtSiberia;

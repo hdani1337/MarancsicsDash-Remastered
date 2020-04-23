@@ -11,8 +11,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
-
-import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
+import hu.hdani1337.marancsicsdash.Stage.BossStage;
+import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 public class Background extends OneSpriteStaticActor {
 
@@ -60,7 +60,7 @@ public class Background extends OneSpriteStaticActor {
             }
             case ZALA:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(ZALA_TEXTURE));
-                ground = 0.65f;
+                ground = 0.6f;
                 break;
             }
             case SZAHARA:{
@@ -89,11 +89,24 @@ public class Background extends OneSpriteStaticActor {
             PolygonShape groundBox = new PolygonShape();
             groundBox.setAsBox(16 * 2, ground);
             groundBody.createFixture(groundBox, 0.0f);
+
+            BodyDef groundBodyDef2 = new BodyDef();
+            groundBodyDef2.position.set(new Vector2(0, 12));
+            Body groundBody2 = world.createBody(groundBodyDef);
+            PolygonShape groundBox2 = new PolygonShape();
+            groundBox.setAsBox(16 * 2, ground);
+            groundBody.createFixture(groundBox, 0.0f);
         }
     }
 
     @Override
     public void act(float delta) {
-        if(isAct) setX(getX()-0.1f);//HÁTTÉR FOLYAMATOS MOZGATÁSA
+        if(getStage() != null){
+            if(getStage() instanceof GameStage){
+                if(GameStage.isAct) setX(getX()-0.1f);//HÁTTÉR FOLYAMATOS MOZGATÁSA
+            }else if(getStage() instanceof BossStage){
+                if(BossStage.isAct) setX(getX()-0.1f);//HÁTTÉR FOLYAMATOS MOZGATÁSA
+            }
+        }
     }
 }

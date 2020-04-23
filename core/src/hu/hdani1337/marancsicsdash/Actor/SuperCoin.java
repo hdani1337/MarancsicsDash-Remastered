@@ -13,11 +13,13 @@ import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 import static hu.hdani1337.marancsicsdash.Actor.Background.ground;
 
-public class SuperCoin extends OneSpriteAnimatedActor {
+public class SuperCoin extends OneSpriteAnimatedActor implements CollectableItem{
 
     public static final String SUPERCOIN_TEXTURE = "atlas/superCoin.atlas";
 
     private boolean isAct;
+    private Zsolti zsolti;
+    private GameStage stage;
 
     public static AssetList assetList = new AssetList();
     static {
@@ -43,22 +45,23 @@ public class SuperCoin extends OneSpriteAnimatedActor {
     }
 
     /**
-     * Box2D konstruktor
+     * GameStage konstruktor
      * **/
-    public SuperCoin(MyGame game, World world, WorldBodyEditorLoader loader) {
+    public SuperCoin(MyGame game, GameStage stage) {
         super(game, SUPERCOIN_TEXTURE);
         setSize(getWidth()*0.011f, getHeight()*0.011f);
-        setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Coin", new MyFixtureDef(), BodyDef.BodyType.StaticBody));
         newPosition();
         setFps(75);
+        this.stage = stage;
+        this.zsolti = stage.zsolti;
     }
 
     /**
      * Új pozíció beállítása, az értékek még nincsenek tesztelve
      * **/
     public void newPosition(){
-        float newY = (float)(Math.random() * 3 + ground);
-        float newX = (float)(Math.random() *20);
+        float newY = (float)(Math.random() * 6 + ground);
+        float newX = (float)(Math.random() * 96 + 168);
         setPosition(newX,newY);
     }
 
@@ -73,8 +76,14 @@ public class SuperCoin extends OneSpriteAnimatedActor {
     public synchronized void act(float delta) {
         super.act(delta);
         if(GameStage.isAct) {
+            isCollected(zsolti);
             if (getX() < 0 - getWidth()) newPosition();//Ha kiér a képből akkor új pozíciót kap
-            setX(getX() - 0.5f);
         }
+    }
+
+    @Override
+    public void collected() {
+        stage.addCoins();
+        newPosition();
     }
 }
