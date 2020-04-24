@@ -6,7 +6,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 
 public class Left extends OneSpriteStaticActor {
 
-    public static final String LEFT_TEXTURE = "pic/left.png";
+    public static final String LEFT_TEXTURE = "pic/ui/left.png";
 
     public static AssetList assetList = new AssetList();
     static {

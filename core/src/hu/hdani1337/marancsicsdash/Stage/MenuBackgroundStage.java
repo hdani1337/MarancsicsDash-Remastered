@@ -10,7 +10,7 @@ import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 
 public class MenuBackgroundStage extends PrettyStage {
 
-    public static final String MENU_BG_TEXTURE = "pic/menuBg.jpg";
+    public static final String MENU_BG_TEXTURE = "pic/backgrounds/menuBg.jpg";
 
     public static AssetList assetList = new AssetList();
     static {

@@ -13,7 +13,7 @@ import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 
 public class TextBox extends MyGroup implements IPrettyStage {
 
-    public static final String TEXTBOX_TEXTURE = "pic/textBG.png";
+    public static final String TEXTBOX_TEXTURE = "pic/ui/textBG.png";
     public static final String RETRO_FONT = "font/fontstyle.ttf";
 
     public static AssetList assetList = new AssetList();

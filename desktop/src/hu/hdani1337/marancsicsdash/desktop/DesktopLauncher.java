@@ -13,5 +13,7 @@ public class DesktopLauncher {
 		new LwjglApplication(new MarancsicsDash(false), config);
 		config.width = 1;
 		config.height = 1;
+		config.resizable = false;
+		config.vSyncEnabled = true;
 	}
 }

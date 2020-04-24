@@ -16,11 +16,11 @@ import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 public class Background extends OneSpriteStaticActor {
 
-    public static final String CSERNOBIL_TEXTURE = "pic/bg.png";
-    public static final String SZIBERIA_TEXTURE = "pic/bg2.png";
-    public static final String ZALA_TEXTURE = "pic/bg3.jpg";
-    public static final String SZAHARA_TEXTURE = "pic/bg4.png";
-    public static final String OCEAN_TEXTURE = "pic/bg5.jpg";
+    public static final String CSERNOBIL_TEXTURE = "pic/backgrounds/bg.png";
+    public static final String SZIBERIA_TEXTURE = "pic/backgrounds/bg2.png";
+    public static final String ZALA_TEXTURE = "pic/backgrounds/bg3.jpg";
+    public static final String SZAHARA_TEXTURE = "pic/backgrounds/bg4.png";
+    public static final String OCEAN_TEXTURE = "pic/backgrounds/bg5.jpg";
 
     public static AssetList assetList = new AssetList();
     static {

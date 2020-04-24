@@ -8,10 +8,11 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.hdani1337.marancsicsdash.Screen.BossScreen;
 import hu.hdani1337.marancsicsdash.Stage.LoadingStage;
+import hu.hdani1337.marancsicsdash.Stage.ShopStage;
 
 public class InstantBoss extends OneSpriteStaticActor {
 
-    public static final String INSTANTBOSS_TEXTURE = "pic/instantBoss.png";
+    public static final String INSTANTBOSS_TEXTURE = "pic/ui/instantBoss.png";
 
     public static AssetList assetList = new AssetList();
     static {
@@ -24,7 +25,9 @@ public class InstantBoss extends OneSpriteStaticActor {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreenWithPreloadAssets(BossScreen.class,new LoadingStage(game));
+                if(getStage() != null && !(getStage() instanceof ShopStage)) {
+                    game.setScreenWithPreloadAssets(BossScreen.class, new LoadingStage(game));
+                }
             }
         });
     }

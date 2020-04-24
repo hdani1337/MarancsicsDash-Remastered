@@ -8,10 +8,10 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 
 public class Logo extends OneSpriteStaticActor {
 
-    public static final String LOGO_TEXTURE = "pic/logo.png";
-    public static final String MARANCSHOP_TEXTURE = "pic/marancshop.png";
-    public static final String OPTIONS_TEXTURE = "pic/options.png";
-    public static final String INFO_TEXTURE = "pic/info.png";
+    public static final String LOGO_TEXTURE = "pic/logos/logo.png";
+    public static final String MARANCSHOP_TEXTURE = "pic/logos/marancshop.png";
+    public static final String OPTIONS_TEXTURE = "pic/logos/options.png";
+    public static final String INFO_TEXTURE = "pic/logos/info.png";
 
     public static AssetList assetList = new AssetList();
     static {

@@ -13,7 +13,7 @@ import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 public class Mushroom extends OneSpriteStaticActor implements CollectableItem {
 
-    public static final String MUSHROOM_TEXTURE = "pic/mushroom.png";
+    public static final String MUSHROOM_TEXTURE = "pic/ui/mushroom.png";
 
     public static AssetList assetList = new AssetList();
     static {

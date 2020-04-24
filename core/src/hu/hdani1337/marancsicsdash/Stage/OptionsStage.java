@@ -122,7 +122,6 @@ public class OptionsStage extends PrettyStage {
                 preferences.putBoolean("fullscreen", fullscreen);
                 preferences.putBoolean("muted",muted);
                 preferences.flush();
-                game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 setBack = true;
                 windowHeight = (int) Resolution.y;
                 windowWidth = (int) Resolution.x;
@@ -338,13 +337,14 @@ public class OptionsStage extends PrettyStage {
 
     boolean change = false;
     float alpha = 0;
+    float bgAlpha = 1;
 
     @Override
     public void act(float delta) {
         super.act(delta);
         if(!setBack) {
             //Áttűnéssel jönnek be az actorok
-            if (alpha < 0.95) alpha += 0.05;
+            if (alpha < 0.95) alpha += 0.025;
             else alpha = 1;
             setAlpha();
         }
@@ -354,6 +354,8 @@ public class OptionsStage extends PrettyStage {
             if (alpha > 0.05) {
                 setAlpha();
                 alpha -= 0.05;
+                if(bgAlpha<0.95) bgAlpha+= 0.05;
+                MenuBackground.setAlpha(bgAlpha);
             } else {
                 //Ha már nem látszanak akkor megyünk vissza a menübe
                 alpha = 0;
@@ -376,6 +378,11 @@ public class OptionsStage extends PrettyStage {
             if(warningBox.getY()>-warningBox.getHeight()) {
                 warningBox.setY(warningBox.getY() - 5);
             }
+        }
+
+        if(bgAlpha>0.25 && !setBack){
+            bgAlpha-=0.025;
+            MenuBackground.setAlpha(bgAlpha);
         }
     }
 

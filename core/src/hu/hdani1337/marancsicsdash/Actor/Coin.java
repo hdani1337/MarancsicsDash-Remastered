@@ -12,7 +12,7 @@ import static hu.hdani1337.marancsicsdash.SoundManager.coinSound;
 public class Coin extends OneSpriteAnimatedActor implements CollectableItem {
 
     public static final String COIN_ATLAS = "atlas/coin.atlas";
-    public static long coin = preferences.getLong("coin");
+    public static long coin = 1337;
 
     public static AssetList assetList = new AssetList();
     static {

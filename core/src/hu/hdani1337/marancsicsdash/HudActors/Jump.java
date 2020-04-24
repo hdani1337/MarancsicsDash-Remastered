@@ -18,7 +18,7 @@ import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDouble;
 
 public class Jump extends OneSpriteStaticActor {
 
-    public static final String JUMP_TEXTURE = "pic/jump.png";
+    public static final String JUMP_TEXTURE = "pic/ui/jump.png";
 
     public static AssetList assetList = new AssetList();
     static {

@@ -6,7 +6,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 
 public class Play extends OneSpriteStaticActor {
 
-    public static final String PLAY_TEXTURE = "pic/play.png";
+    public static final String PLAY_TEXTURE = "pic/ui/play.png";
 
     public static AssetList assetList = new AssetList();
     static {

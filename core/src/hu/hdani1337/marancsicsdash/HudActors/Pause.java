@@ -10,7 +10,7 @@ import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 public class Pause extends OneSpriteStaticActor {
 
-    public static final String PAUSE_TEXTURE = "pic/pause.png";
+    public static final String PAUSE_TEXTURE = "pic/ui/pause.png";
 
     public static AssetList assetList = new AssetList();
     static {

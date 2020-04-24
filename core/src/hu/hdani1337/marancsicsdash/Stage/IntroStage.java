@@ -14,15 +14,16 @@ import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.Screen.MenuScreen;
 
 import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
+import static hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage.MENU_BG_TEXTURE;
 
 public class IntroStage extends PrettyStage {
 
-    public static final String GDX_TEXTURE = "pic/gdx.png";
-    public static final String CSANY_TEXTURE = "pic/csany.png";
+    public static final String GDX_TEXTURE = "pic/logos/gdx.png";
+    public static final String CSANY_TEXTURE = "pic/logos/csany.png";
 
     public static AssetList assetList = new AssetList();
     static {
-        assetList.addTexture("pic/menuBg.jpg");
+        assetList.addTexture(MENU_BG_TEXTURE);
         assetList.addTexture(GDX_TEXTURE);
         assetList.addTexture(CSANY_TEXTURE);
         assetList.addFont(RETRO_FONT, RETRO_FONT, 32, Color.WHITE, AssetList.CHARS);
@@ -39,7 +40,7 @@ public class IntroStage extends PrettyStage {
 
     @Override
     public void assignment() {
-        bg = new OneSpriteStaticActor(game, "pic/menuBg.jpg");
+        bg = new OneSpriteStaticActor(game, MENU_BG_TEXTURE);
         gdxLogo = new OneSpriteStaticActor(game, GDX_TEXTURE);
         csanyLogo = new OneSpriteStaticActor(game, CSANY_TEXTURE);
 
