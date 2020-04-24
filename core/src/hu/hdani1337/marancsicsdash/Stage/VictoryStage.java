@@ -1,12 +1,10 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
@@ -14,17 +12,15 @@ import hu.hdani1337.marancsicsdash.Actor.Coin;
 import hu.hdani1337.marancsicsdash.Actor.MarancsicsBoss;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
-import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.Screen.BossScreen;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
-import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.SoundManager.bossMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
 
-public class PauseStage extends PrettyStage {
+public class VictoryStage extends PrettyStage {
     public static final String BLACK_TEXTURE = "pic/fekete.png";
 
     public static AssetList assetList = new AssetList();
@@ -40,15 +36,15 @@ public class PauseStage extends PrettyStage {
 
     private OneSpriteStaticActor black;
 
-    public PauseStage(MyGame game) {
+    public VictoryStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
 
     @Override
     public void assignment() {
-        info = new TextBox(game, "Megállítva",2f);
-        pontok = new TextBox(game, "Pontszámok\nHamarosan!");
-        again = new TextBox(game, "Folytatás",1.5f);
+        info = new TextBox(game, "Gratulálok,\nlegyözted Marancsicsot!",1.75f);
+        pontok = new TextBox(game, "Elért pontszámod\n-NULL-");
+        again = new TextBox(game, "Új játék",1.5f);
         menu = new TextBox(game, "Menü",1.5f);
 
         black = new OneSpriteStaticActor(game, BLACK_TEXTURE);
@@ -66,10 +62,10 @@ public class PauseStage extends PrettyStage {
 
     @Override
     public void setPositions() {
-        info.setPosition(getViewport().getWorldWidth()/2-info.getWidth()/2,getViewport().getWorldHeight()*0.75f);
-        pontok.setPosition(getViewport().getWorldWidth()/2-pontok.getWidth()/2,getViewport().getWorldHeight()*0.52f);
-        again.setPosition(getViewport().getWorldWidth()/2-again.getWidth()/2,getViewport().getWorldHeight()*0.37f);
-        menu.setPosition(getViewport().getWorldWidth()/2-menu.getWidth()/2,getViewport().getWorldHeight()*0.25f);
+        info.setPosition(getViewport().getWorldWidth()/2-info.getWidth()/2,getViewport().getWorldHeight()*0.65f);
+        pontok.setPosition(getViewport().getWorldWidth()/2-pontok.getWidth()/2,getViewport().getWorldHeight()*0.45f);
+        again.setPosition(getViewport().getWorldWidth()/2-again.getWidth()/2,getViewport().getWorldHeight()*0.33f);
+        menu.setPosition(getViewport().getWorldWidth()/2-menu.getWidth()/2,getViewport().getWorldHeight()*0.2f);
     }
 
     @Override
@@ -78,12 +74,9 @@ public class PauseStage extends PrettyStage {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                if(getScreen() != null) {
-                    if (getScreen() instanceof GameScreen)
-                        GameStage.isAct = true;
-                    else if (getScreen() instanceof BossScreen)
-                        BossStage.isAct = true;
-                }
+                game.setScreenWithPreloadAssets(GameScreen.class, false, new LoadingStage(game));
+                preferences.putLong("coin", Coin.coin);
+                preferences.flush();
             }
         });
 
@@ -91,10 +84,7 @@ public class PauseStage extends PrettyStage {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                if(!muted) {
-                    gameMusic.stop();
-                    bossMusic.stop();
-                }
+                if(!muted) gameMusic.stop();
                 game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 preferences.putLong("coin", Coin.coin);
                 preferences.flush();
@@ -149,36 +139,30 @@ public class PauseStage extends PrettyStage {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(getScreen() != null) {
-            if (getScreen() instanceof GameScreen) {
-                if (!GameStage.isAct && !Zsolti.isDead) pause(gameMusic);
-                else if (GameStage.isAct && addedActors) resume(gameMusic);
-            }
-            else if (getScreen() instanceof BossScreen) {
-                if (!BossStage.isAct && !Zsolti.isDead && MarancsicsBoss.hp > 0) pause(bossMusic);
-                else if (BossStage.isAct && addedActors) resume(bossMusic);
+        /**
+         * HA VÉGE VAN A JÁTÉKNAK
+         * **/
+        if(getScreen() != null){
+            if(getScreen() instanceof BossScreen){
+                if(!BossStage.isAct && !Zsolti.isDead && MarancsicsBoss.hp <= 0){
+                    bossMusic.stop();
+                    makeStage();
+                }
             }
         }
     }
 
-    private void pause(Music music){
-        MarancsicsDash.presenceDetail = "Paused the game";
-        UpdatePresence();
-        if(getScreen() != null && (getScreen() instanceof GameScreen || getScreen() instanceof BossScreen)){
-            if(!pontok.text.equals("Jelenlegi pontszámod\n"+GameStage.score)) {
-                pontok.setText("Jelenlegi pontszámod\n"+GameStage.score);
-                pontok.setX(getViewport().getWorldWidth()/2-pontok.getWidth()/2);
-            }
-        }
+    private void makeStage(){
+        pontok.setText("Elért pontszámod\n"+GameStage.score);
+        setPositions();
+
         //Adjuk hozzá a gombokat a stagehez ha még nincsenek rajta
-        if(!addedActors) {
+        if(!addedActors)
             addActors();
-            music.pause();
-        }
 
         //Áttűnés
-        if(alpha < 0.95f)
-            alpha += 0.05f;
+        if(alpha < 0.99f)
+            alpha += 0.01f;
         else
             alpha = 1;
 
@@ -188,28 +172,5 @@ public class PauseStage extends PrettyStage {
         again.setAlpha(alpha);
         menu.setAlpha(alpha);
         //Áttűnés vége
-    }
-
-    private void resume(Music music){
-        //Áttűnéssel tűnnek el a stageről
-        if(alpha > 0.05f) {
-            if(!music.isPlaying()) music.play();
-            alpha -= 0.05f;
-            black.setAlpha(alpha*0.6f);
-            info.setAlpha(alpha);
-            pontok.setAlpha(alpha);
-            again.setAlpha(alpha);
-            menu.setAlpha(alpha);
-        }
-        //Ha már láthatatlanok, akkor eltávolítjuk őket a stageről
-        else {
-            alpha = 0;
-            black.remove();
-            info.remove();
-            pontok.remove();
-            again.remove();
-            menu.remove();
-            addedActors = false;
-        }
     }
 }

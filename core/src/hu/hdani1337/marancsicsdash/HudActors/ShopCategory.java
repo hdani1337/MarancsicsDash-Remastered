@@ -59,7 +59,11 @@ public class ShopCategory extends OneSpriteStaticActor {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 if(getStage() != null && getStage() instanceof ShopStage) {
-                    ((ShopStage) getStage()).selectedCategory = type;
+                    if(((ShopStage) getStage()).selectedCategory != type) {
+                        ((ShopStage) getStage()).selectedCategory = type;
+                    }else{
+                        ((ShopStage) getStage()).selectedCategory = ShopCategoryType.NULL;
+                    }
                 }
             }
         });

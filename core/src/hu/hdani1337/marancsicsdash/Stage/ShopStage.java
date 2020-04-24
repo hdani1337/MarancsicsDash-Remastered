@@ -64,14 +64,14 @@ public class ShopStage extends PrettyStage {
     /**
      * Változók a mentésből
      * **/
-    public static boolean boughtInstantBoss = false;
-    public static boolean boughtSiberia = false;
+    public static boolean boughtInstantBoss = preferences.getBoolean("boughtInstantBoss");
+    public static boolean boughtSiberia = preferences.getBoolean("boughtSiberia");
     public static boolean boughtZala = preferences.getBoolean("boughtZala");
     public static boolean boughtDesert = preferences.getBoolean("boughtDesert");
     public static boolean boughtOcean = preferences.getBoolean("boughtOcean");
-    public static boolean boughtZsolti = false;
-    public static boolean boughtDouble =false;
-    public static boolean boughtCoin = false;
+    public static boolean boughtZsolti = preferences.getBoolean("boughtZsolti");
+    public static boolean boughtDouble = preferences.getBoolean("boughtDouble");
+    public static boolean boughtCoin = preferences.getBoolean("boughtCoin");
 
     /**
      * Actorok

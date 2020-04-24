@@ -38,6 +38,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
 
     public static boolean isDead;
     public static boolean inAir;
+    private boolean playing;
 
     /**
      * Box2D konstruktor ContactListenerrel
@@ -49,6 +50,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Zsolti", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
         isDead = false;
         inAir = true;
+        playing = false;
 
         /**
          * ÜTKÖZÉSFIGYELÉSEK
@@ -58,10 +60,6 @@ public class Zsolti extends OneSpriteAnimatedActor {
                 @Override
                 public void beginContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
                     if (otherHelper.getActor() instanceof Tank) {
-                        /**
-                         * TANK
-                         * **/
-
                         if (superTime > 0) {
                             if (getStage() != null && getStage() instanceof GameStage)
                                 ((GameStage) getStage()).isShakeScreen = true;
@@ -70,9 +68,18 @@ public class Zsolti extends OneSpriteAnimatedActor {
                             setFps(0);
                             isDead = true;
                             GameStage.isAct = false;
-                            //((Box2DWorldHelper)getActorWorldHelper()).getBody().setType(BodyDef.BodyType.StaticBody);
                         }
-                        if(!muted) crashSound.play();
+                        if(!muted && !playing) {
+                            crashSound.play();
+                            playing = true;
+                            addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
+                                @Override
+                                public void onStop(Timer sender) {
+                                    super.onStop(sender);
+                                    playing = false;
+                                }
+                            }));
+                        }
 
                     } else if (otherHelper.getActor() instanceof Mushroom) {
                         /**
@@ -81,24 +88,34 @@ public class Zsolti extends OneSpriteAnimatedActor {
 
                         otherHelper.actor.remove();
                         superTime = 8;
-                        if(!muted) powerUpSound.play();
+                        if(!muted && !playing) {
+                            powerUpSound.play();
+                            playing = true;
+                            addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
+                                @Override
+                                public void onStop(Timer sender) {
+                                    super.onStop(sender);
+                                    playing = false;
+                                }
+                            }));
+                        }
                     } else if (otherHelper.getActor() instanceof Marancsics) {
-                        /**
-                         * MARANCSICS
-                         * **/
-
                         ((Marancsics) otherHelper.getActor()).setFps(24);
                         otherHelper.getBody().applyForceToCenter(new Vector2(-900,0),true);
                         ((Box2DWorldHelper)getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(700,0),true);
                         if(getStage() != null) {
-                            if (!muted && getX() < getStage().getViewport().getWorldWidth() + 2)
+                            if (!muted && getX() < getStage().getViewport().getWorldWidth() + 2 && !playing) {
                                 kickSound.play();
+                                playing = true;
+                                addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
+                                    @Override
+                                    public void onStop(Timer sender) {
+                                        super.onStop(sender);
+                                        playing = false;
+                                    }
+                                }));
+                            }
                         }
-                    } else if (otherHelper.getActor() instanceof SuperCoin){
-                        /**
-                         * SUPER COIN
-                         * **/
-                        otherHelper.actor.remove();
                     }
                 }
 
@@ -117,9 +134,6 @@ public class Zsolti extends OneSpriteAnimatedActor {
                                     ((GameStage) getStage()).isShakeScreen = false;
                             }
                         }));
-                    } else if(otherHelper.getActor() instanceof SuperCoin){
-                        if(getStage() != null && getStage() instanceof GameStage)
-                            ((GameStage)getStage()).addCoins();
                     }
                 }
 

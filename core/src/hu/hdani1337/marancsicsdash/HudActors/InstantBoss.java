@@ -26,7 +26,7 @@ public class InstantBoss extends OneSpriteStaticActor {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 if(getStage() != null && !(getStage() instanceof ShopStage)) {
-                    game.setScreenWithPreloadAssets(BossScreen.class, new LoadingStage(game));
+                    game.setScreenWithPreloadAssets(BossScreen.class,false, new LoadingStage(game));
                 }
             }
         });

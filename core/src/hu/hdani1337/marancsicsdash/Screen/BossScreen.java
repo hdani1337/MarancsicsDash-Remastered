@@ -7,6 +7,7 @@ import hu.hdani1337.marancsicsdash.Stage.BossStage;
 import hu.hdani1337.marancsicsdash.Stage.GameOverStage;
 import hu.hdani1337.marancsicsdash.Stage.HudStage;
 import hu.hdani1337.marancsicsdash.Stage.PauseStage;
+import hu.hdani1337.marancsicsdash.Stage.VictoryStage;
 
 public class BossScreen extends MyScreen {
 
@@ -29,6 +30,7 @@ public class BossScreen extends MyScreen {
         addStage(new HudStage(game),2,true);
         addStage(new PauseStage(game),3, true);
         addStage(new GameOverStage(game),4, true);
+        addStage(new VictoryStage(game),5, true);
     }
 
     @Override

@@ -169,7 +169,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     }
 
     public void addCoins(){
-        for (int i = 0; i < 127; i++) {
+        for (int i = 0; i < 512; i++) {
             coins.add(new Coin(game, this));
             addActor(coins.get(coins.size() - 1));
         }

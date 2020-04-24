@@ -16,6 +16,7 @@ import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
+import static hu.hdani1337.marancsicsdash.SoundManager.bossMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
 
 public class GameOverStage extends PrettyStage {
@@ -144,11 +145,13 @@ public class GameOverStage extends PrettyStage {
         if(getScreen() != null){
             if(getScreen() instanceof GameScreen){
                 if(!GameStage.isAct && Zsolti.isDead){
-                   makeStage();
+                    gameMusic.stop();
+                    makeStage();
                 }
             }else if(getScreen() instanceof BossScreen){
                 if(!BossStage.isAct && Zsolti.isDead){
-                   makeStage();
+                    bossMusic.stop();
+                    makeStage();
                 }
             }
         }

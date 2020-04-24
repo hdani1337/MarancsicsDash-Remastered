@@ -14,12 +14,17 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Blood;
+import hu.hdani1337.marancsicsdash.Actor.Fire;
 import hu.hdani1337.marancsicsdash.Actor.MarancsicsBoss;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.SoundManager;
 
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
+import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
+import static hu.hdani1337.marancsicsdash.SoundManager.bossMusic;
+import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
+import static hu.hdani1337.marancsicsdash.SoundManager.menuMusic;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.backgroundType;
 
 public class BossStage extends Box2dStage implements IPrettyStage {
@@ -43,9 +48,11 @@ public class BossStage extends Box2dStage implements IPrettyStage {
     public MarancsicsBoss marancsics;//TOMI BÁ'
     public ArrayList<Background> backgrounds;//HÁTTÉR LISTA
     public ArrayList<Blood> blood;//VÉR LISTA
+    public ArrayList<Fire> flames;//LÁNG LISTA
 
     public BossStage(MyGame game) {
         super(new ResponseViewport(9), game);
+        gameMusic.stop();
         MarancsicsDash.presenceDetail = "Fighting with the boss";
         UpdatePresence();
         assignment();
@@ -54,16 +61,20 @@ public class BossStage extends Box2dStage implements IPrettyStage {
         addListeners();
         setZIndexes();
         addActors();
+        afterInit();
     }
 
     @Override
     public void assignment() {
+        addedFlames = false;
         loader = new WorldBodyEditorLoader("bodies.json");
         zsolti = new Zsolti(game, world, loader);
         marancsics = new MarancsicsBoss(game,world,loader);
         backgrounds = new ArrayList<>();
         blood = new ArrayList<>();
+        flames = new ArrayList<>();
         isAct = true;
+        for (int i = 0; i < 18; i++) flames.add(new Fire(game));
         generateBaseBackgrounds();
     }
 
@@ -106,6 +117,15 @@ public class BossStage extends Box2dStage implements IPrettyStage {
         }
     }
 
+    public void afterInit() {
+        if(!muted) {
+            gameMusic.stop();
+            bossMusic.setLooping(true);
+            bossMusic.setVolume(0.7f);
+            bossMusic.play();
+        }
+    }
+
     private int offset = 1;
     public boolean isShakeScreen;
 
@@ -118,6 +138,8 @@ public class BossStage extends Box2dStage implements IPrettyStage {
         offset++;
         Gdx.input.vibrate(100);
     }
+
+    private boolean addedFlames;
 
     @Override
     public void act(float delta) {
@@ -181,6 +203,19 @@ public class BossStage extends Box2dStage implements IPrettyStage {
             offset = 1;
             getViewport().setScreenX(0);
             getViewport().setScreenY(0);
+        }
+        else if(marancsics.hp <= 0){
+            if(!addedFlames){
+                for (Fire flame : flames){
+                    flame.setPosition((float)(marancsics.getX() + Math.random()*marancsics.getWidth()*0.7f), (float)(marancsics.getY()+Math.random()*(marancsics.getHeight()*0.7f)));
+                    addActor(flame);
+                }
+                marancsics.setFps(0);
+                zsolti.setFps(0);
+                addedFlames = true;
+                getViewport().setScreenX(0);
+                getViewport().setScreenY(0);
+            }
         }
         /**
          * HA MEGÁLLÍTJUK A JÁTÉKOT AKKOR AZ ANIMATED ACTOROK NE MOZOGJANAK

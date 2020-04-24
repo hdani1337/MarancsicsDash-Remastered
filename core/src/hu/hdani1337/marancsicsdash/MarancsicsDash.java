@@ -8,6 +8,7 @@ import club.minnced.discord.rpc.DiscordEventHandlers;
 import club.minnced.discord.rpc.DiscordRPC;
 import club.minnced.discord.rpc.DiscordRichPresence;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
+import hu.hdani1337.marancsicsdash.Screen.BossScreen;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 import hu.hdani1337.marancsicsdash.Screen.IntroScreen;
 import hu.hdani1337.marancsicsdash.Screen.ShopScreen;

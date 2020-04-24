@@ -10,6 +10,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
+import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.HealthBar;
 import hu.hdani1337.marancsicsdash.HudActors.InstantBoss;
 import hu.hdani1337.marancsicsdash.HudActors.Jump;
@@ -115,9 +116,13 @@ public class HudStage extends PrettyStage {
          * PONTSZÁMKIJELZŐ FRISSÍTÉSE
          * **/
         if(getScreen() != null && getScreen() instanceof GameScreen){
-            if(!scoreBoard.text.equals(((GameScreen)getScreen()).gameStage.score)) {
-                scoreBoard.setText(((GameScreen)getScreen()).gameStage.score + "");
-                scoreBoard.setX(getViewport().getWorldWidth()/2-scoreBoard.getWidth()/2);
+            if(GameStage.isAct && !Zsolti.isDead) {
+                if (!scoreBoard.text.equals(((GameScreen) getScreen()).gameStage.score)) {
+                    scoreBoard.setText(((GameScreen) getScreen()).gameStage.score + "");
+                    scoreBoard.setX(getViewport().getWorldWidth() / 2 - scoreBoard.getWidth() / 2);
+                }
+            }else{
+                if(scoreBoard.isVisible()) scoreBoard.setVisible(false);
             }
         }
 

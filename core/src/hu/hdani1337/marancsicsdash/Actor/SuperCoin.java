@@ -76,8 +76,10 @@ public class SuperCoin extends OneSpriteAnimatedActor implements CollectableItem
     public synchronized void act(float delta) {
         super.act(delta);
         if(GameStage.isAct) {
-            isCollected(zsolti);
-            if (getX() < 0 - getWidth()) newPosition();//Ha kiér a képből akkor új pozíciót kap
+            if(zsolti!=null) {
+                isCollected(zsolti);
+                if (getX() < 0 - getWidth()) newPosition();//Ha kiér a képből akkor új pozíciót kap
+            }
         }
     }
 

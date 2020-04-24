@@ -96,8 +96,10 @@ public class HealthBar extends MyGroup implements IPrettyStage {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(marancsicsBoss != null && BossStage.isAct) {
-            pirosCsik.setWidth(zoldCsik.getWidth() * ((250-marancsicsBoss.hp) / 250.0f));
+        if(marancsicsBoss != null) {
+            if(pirosCsik.getWidth() < zoldCsik.getWidth() * ((250-marancsicsBoss.hp) / 250.0f)) {
+                pirosCsik.setWidth(pirosCsik.getWidth() + 15);
+            }
             pirosCsik.setX(zoldCsik.getX() + zoldCsik.getWidth() - pirosCsik.getWidth());
         }
     }

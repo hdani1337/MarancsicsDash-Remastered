@@ -33,8 +33,11 @@ public class Marancsics extends OneSpriteAnimatedActor {
         assetList.addSound(SoundManager.KICK_SOUND);
     }
 
+    private boolean playing;
+
     public Marancsics(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, MARANCSICS_ATLAS);
+        playing = false;
         setFps(12);
         setSize(getWidth()*0.011f, getHeight()*0.011f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Marancsics", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
@@ -52,16 +55,17 @@ public class Marancsics extends OneSpriteAnimatedActor {
                             ((GameStage) getStage()).isShakeScreen = true;
                         otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
                         ((Tank)otherHelper.actor).kicked();
-                        if(!muted) {
+                        if(!muted && !playing) {
                             kickSound.play();
                             hee.play();
-                        }
-                    }
-                    else if(otherHelper.getActor() instanceof Coin){
-                        if(!Zsolti.isDead){
-                            if(getRotation() != 0) setRotation(0);
-                            if(getX() != 0.5f) setX(0.5f);
-                            if(!isAct) setY(Background.ground*2);
+                            playing = true;
+                            addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
+                                @Override
+                                public void onStop(Timer sender) {
+                                    super.onStop(sender);
+                                    playing = false;
+                                }
+                            }));
                         }
                     }
                 }
@@ -77,13 +81,6 @@ public class Marancsics extends OneSpriteAnimatedActor {
                                     ((GameStage) getStage()).isShakeScreen = false;
                             }
                         }));
-                    }
-                    else if (otherHelper.getActor() instanceof Coin){
-                        if(!Zsolti.isDead){
-                            if(getRotation() != 0) setRotation(0);
-                            if(getX() != 0.5f) setX(0.5f);
-                            if(!isAct) setY(Background.ground*2);
-                        }
                     }
                 }
 
