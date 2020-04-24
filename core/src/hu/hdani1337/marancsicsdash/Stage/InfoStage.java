@@ -3,6 +3,7 @@ package hu.hdani1337.marancsicsdash.Stage;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import java.util.ArrayList;
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
@@ -37,16 +38,21 @@ public class InfoStage extends PrettyStage {
 
     private OneSpriteStaticActor bg;
     private TextBox back;
-    private TextBox desc;
 
-    private OneSpriteStaticActor en;
-    private MyLabel name;
-    private MyLabel title;
+    private ArrayList<TextBox> textBoxes;
 
     private boolean setBack;
 
     @Override
     public void assignment() {
+        textBoxes = new ArrayList<>();
+        textBoxes.add(new TextBox(game,"Nincs hosszú ö és ü betü a betütípusban\nmielött megkérdeznéd"));
+        textBoxes.add(new TextBox(game,"Vigyázz, mert Marancsics\nneked tudja rúgni az akadályokat!"));
+        textBoxes.add(new TextBox(game,"A Te feladatod az,\nhogy Zsolti minél tovább tudjon menekülni."));
+        textBoxes.add(new TextBox(game,"Marancsics nagyon megharagudott rá, s mindenáron elakarja kapni Zsoltit,\nhogy osztályfönökit adhasson neki."));
+        textBoxes.add(new TextBox(game,"Egy szép napon a föhösünk, Zsolti beszólt szeretett\nosztályfönökünknek, Marancsicsnak."));
+        textBoxes.add(new TextBox(game,"A játék valós eseményeken alapul."));
+
         SoundManager.assign();
         MarancsicsDash.presenceDetail = "Reading some good stuff";
         UpdatePresence();
@@ -54,21 +60,20 @@ public class InfoStage extends PrettyStage {
             SoundManager.menuMusic.play();
         bg = new OneSpriteStaticActor(game,"pic/menuBg.jpg");
         back = new TextBox(game, "Vissza a menübe");
-        desc = new TextBox(game, "A játék valós eseményeken alapul.\nEgy szép napon a föhösünk, Zsolti beszólt szeretett\nosztályfönökünknek, Marancsicsnak.\nMarancsics nagyon megharagudott rá, s mindenáron elakarja kapni Zsoltit,\nhogy osztályfönökit adhasson neki. A Te feladatod az,\nhogy Zsolti minél tovább tudjon menekülni. Vigyázz, mert Marancsics\nneked tudja rúgni az akadályokat!");
         infoLogo = new Logo(game, Logo.LogoType.INFO);
     }
 
     @Override
     public void setSizes() {
         if(getViewport().getWorldWidth() > bg.getWidth()) bg.setWidth(getViewport().getWorldWidth());
+        infoLogo.setSize(infoLogo.getWidth()*0.9f,infoLogo.getHeight()*0.9f);
     }
 
     @Override
     public void setPositions() {
         if(getViewport().getWorldWidth() < bg.getWidth()) bg.setX((getViewport().getWorldWidth()-bg.getWidth())/2);
-        desc.setPosition(getViewport().getWorldWidth()/2-desc.getWidth()/2,getViewport().getWorldHeight()/2-desc.getHeight()/2-20);
         back.setPosition(getViewport().getWorldWidth() - (back.getWidth() + 45),50);
-        infoLogo.setPosition(getViewport().getWorldWidth()/2 - infoLogo.getWidth()/2, getViewport().getWorldHeight() - infoLogo.getHeight()*1.15f);
+        infoLogo.setPosition(getViewport().getWorldWidth()/2 - infoLogo.getWidth()/2, getViewport().getWorldHeight() - infoLogo.getHeight()*1.1f);
     }
 
     @Override
@@ -90,9 +95,24 @@ public class InfoStage extends PrettyStage {
     @Override
     public void addActors() {
         addActor(bg);
-        addActor(infoLogo);
         addActor(back);
-        addActor(desc);
+
+        for (int i = textBoxes.size()-1; i >= 0; i--) {
+            //Minden párosat a jobboldolra, páratlant a baloldalira
+            if(i%2 == 0) textBoxes.get(i).setX(getViewport().getWorldWidth()+125);
+            else textBoxes.get(i).setX(-textBoxes.get(i).getWidth()-125);
+
+            //A legelsőnek adunk fix pozíciót, a többit pedig az előtte lévőhöz igazítjuk az Y tengelyen
+            if(i == textBoxes.size()-1){
+                textBoxes.get(textBoxes.size()-1).setY(650);
+                addActor(textBoxes.get(textBoxes.size()-1));
+            }else {
+                textBoxes.get(i).setY(textBoxes.get(i + 1).getY() - 12 - textBoxes.get(i).getHeight());
+                addActor(textBoxes.get(i));
+            }
+        }
+
+        addActor(infoLogo);
     }
 
     float alpha = 0;
@@ -126,6 +146,17 @@ public class InfoStage extends PrettyStage {
                 }));
             }
         }
+
+        for (int i = textBoxes.size()-1; i >= 0; i--){
+            if (i % 2 == 0) {
+                if (textBoxes.get(i).getX() > getViewport().getWorldWidth() / 2 - textBoxes.get(i).getWidth() / 2)
+                    textBoxes.get(i).setX(textBoxes.get(i).getX() - 15);
+            }
+            else {
+                if (textBoxes.get(i).getX() < getViewport().getWorldWidth() / 2 - textBoxes.get(i).getWidth() / 2)
+                    textBoxes.get(i).setX(textBoxes.get(i).getX() + 15);
+            }
+        }
     }
 
     /**
@@ -134,6 +165,8 @@ public class InfoStage extends PrettyStage {
     private void setAlpha(){
         infoLogo.setAlpha(alpha);
         back.setAlpha(alpha);
-        desc.setAlpha(alpha);
+        for (TextBox tb : textBoxes) {
+            tb.setAlpha(alpha);
+        }
     }
 }

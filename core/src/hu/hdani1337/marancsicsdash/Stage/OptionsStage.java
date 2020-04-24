@@ -330,9 +330,10 @@ public class OptionsStage extends PrettyStage {
         }
         fullscreenButton.setText("Teljes képernyö: " + ((fullscreen) ? "Be" : "Ki"));
 
-        if(fullscreen == Gdx.graphics.isFullscreen() && Resolution.y == Gdx.graphics.getHeight()) change = false;
-        else change = true;
-        System.out.println(change);
+        if(Gdx.app.getType() == Application.ApplicationType.Desktop){
+            if(fullscreen == Gdx.graphics.isFullscreen() && Resolution.y == Gdx.graphics.getHeight()) change = false;
+            else change = true;
+        }
     }
 
     boolean change = false;
