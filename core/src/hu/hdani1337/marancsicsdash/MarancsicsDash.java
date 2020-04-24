@@ -33,10 +33,13 @@ public class MarancsicsDash extends MyGame {
 		super.create();
 		needsLoading = false;//Először az Intro fog bejönni, oda legyen üres a töltőképernyő
 
-		/**Próbáljuk meg betölteni a mentést**/
+		/**Próbáljuk meg betölteni a mentést
+		 * Állítsuk be a felbontást és a teljes képernyős módot
+		 * **/
 		try {
 			preferences = Gdx.app.getPreferences("marancsicsDashSave");
 			muted = preferences.getBoolean("muted");
+			setDisplay();
 		}catch (NullPointerException e){
 			/**Ha NullPointert kapunk, akkor még nincsenek mentett adatok**/
 		}
@@ -46,6 +49,16 @@ public class MarancsicsDash extends MyGame {
 		startTime = System.currentTimeMillis() / 1000l;
 		presenceDetail = "Starting the game...";
 		UpdatePresence();
+	}
+
+	private static void setDisplay(){
+		if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
+			if (preferences.getInteger("windowWidth") != 0 && preferences.getInteger("windowHeight") != 0)
+				Gdx.graphics.setWindowedMode(preferences.getInteger("windowWidth"), preferences.getInteger("windowHeight"));
+			else Gdx.graphics.setWindowedMode(1280, 720);
+			if (preferences.getBoolean("fullscreen"))
+				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+		}
 	}
 
 	public static void UpdatePresence()

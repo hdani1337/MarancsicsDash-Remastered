@@ -175,4 +175,11 @@ public class TextBox extends MyGroup implements IPrettyStage {
         }
         return max;
     }
+
+    /**
+     * LABEL SZÍNÉNEK MÓDOSÍTÁSA
+     * **/
+    public void setColor(Color color){
+        textLabel.setColor(color);
+    }
 }

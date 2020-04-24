@@ -1,5 +1,9 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -36,6 +40,9 @@ public class OptionsStage extends PrettyStage {
     public static int difficulty = preferences.getInteger("difficulty");;
     public static int gamemode = preferences.getInteger("gamemode");
     public static int selectedBackground = preferences.getInteger("selectedBackground");
+    public static int windowWidth = preferences.getInteger("windowWidth");
+    public static int windowHeight = preferences.getInteger("windowHeight");
+    public static boolean fullscreen = preferences.getBoolean("fullscreen");
 
     public OptionsStage(MyGame game) {
         super(new ResponseViewport(900), game);
@@ -50,11 +57,18 @@ public class OptionsStage extends PrettyStage {
     private TextBox gameModeButton;
     private TextBox backgroundTypeButton;
     private TextBox difficultyButton;
+    private TextBox resolutionButton;
+    private TextBox fullscreenButton;
+    private TextBox warningBox;
 
     private boolean setBack;
 
+    private Vector2 Resolution;
+
     @Override
     public void assignment() {
+        Resolution = new Vector2(windowWidth,windowHeight);
+        if(windowHeight == 0 && windowWidth == 0) Resolution = new Vector2(1280,720);
         SoundManager.assign();
         MarancsicsDash.presenceDetail = "Tweaking the settings";
         UpdatePresence();
@@ -67,6 +81,9 @@ public class OptionsStage extends PrettyStage {
         gameModeButton = new TextBox(game, "Játékmód: -NULL-");
         backgroundTypeButton = new TextBox(game, "Háttér: -NULL-");
         difficultyButton = new TextBox(game, "Nehézség: -NULL-");
+        resolutionButton = new TextBox(game, "Felbontás: 720p");
+        fullscreenButton = new TextBox(game, "Teljes képernyö: -NULL-");
+        warningBox = new TextBox(game, "A módosítások a menübe\nlépéskor lépnek érvénybe!");
         optionsLogo = new Logo(game, Logo.LogoType.OPTIONS);
         setTexts();
     }
@@ -79,12 +96,15 @@ public class OptionsStage extends PrettyStage {
     @Override
     public void setPositions() {
         if(getViewport().getWorldWidth() < MenuBackground.getWidth()) MenuBackground.setX((getViewport().getWorldWidth()-MenuBackground.getWidth())/2);
-        muteButton.setPosition(75,200);
-        gameModeButton.setPosition(75,350);
-        backgroundTypeButton.setPosition(75,500);
-        difficultyButton.setPosition(75,650);
+        muteButton.setPosition(75,100);
+        gameModeButton.setPosition(75,225);
+        difficultyButton.setPosition(75,350);
+        backgroundTypeButton.setPosition(75,475);
+        resolutionButton.setPosition(75,600);
+        fullscreenButton.setPosition(75,725);
         backButton.setPosition(getViewport().getWorldWidth() - (backButton.getWidth() + 45),50);
         optionsLogo.setPosition(getViewport().getWorldWidth()/2 - optionsLogo.getWidth()/2, getViewport().getWorldHeight() - optionsLogo.getHeight()*1.15f);
+        warningBox.setPosition(getViewport().getWorldWidth()/2-warningBox.getWidth()/2,-warningBox.getHeight());
     }
 
     @Override
@@ -97,10 +117,17 @@ public class OptionsStage extends PrettyStage {
                 preferences.putInteger("difficulty",difficulty);
                 preferences.putInteger("gamemode",gamemode);
                 preferences.putInteger("selectedBackground",selectedBackground);
+                preferences.putInteger("windowWidth", (int) Resolution.x);
+                preferences.putInteger("windowHeight", (int) Resolution.y);
+                preferences.putBoolean("fullscreen", fullscreen);
                 preferences.putBoolean("muted",muted);
                 preferences.flush();
                 game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
                 setBack = true;
+                windowHeight = (int) Resolution.y;
+                windowWidth = (int) Resolution.x;
+                if(fullscreen && !Gdx.graphics.isFullscreen()) Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                else if(!fullscreen) Gdx.graphics.setWindowedMode((int)Resolution.x,(int)Resolution.y);
             }
         });
 
@@ -163,6 +190,40 @@ public class OptionsStage extends PrettyStage {
                 setTexts();
             }
         });
+
+        resolutionButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                //Switch nem működik, nemtudom miért
+                if(Resolution.x == 1920){
+                    Resolution.x = 640;
+                    Resolution.y = 360;
+                }else if(Resolution.x == 1600){
+                    Resolution.x = 1920;
+                    Resolution.y = 1080;
+                }else if(Resolution.x == 1280){
+                    Resolution.x = 1600;
+                    Resolution.y = 900;
+                }else if(Resolution.x == 854){
+                    Resolution.x = 1280;
+                    Resolution.y = 720;
+                }else if(Resolution.x == 640){
+                    Resolution.x = 854;
+                    Resolution.y = 480;
+                }
+                setTexts();
+            }
+        });
+
+        fullscreenButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                fullscreen = !fullscreen;
+                setTexts();
+            }
+        });
     }
 
     @Override
@@ -178,6 +239,11 @@ public class OptionsStage extends PrettyStage {
         addActor(backButton);
         addActor(muteButton);
         addActor(gameModeButton);
+        addActor(warningBox);
+        if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
+            addActor(resolutionButton);
+            addActor(fullscreenButton);
+        }
         if(boughtSiberia || boughtZala)
         {
             addActor(backgroundTypeButton);
@@ -253,8 +319,23 @@ public class OptionsStage extends PrettyStage {
                 break;
             }
         }
+
+        if(!fullscreen) {
+            resolutionButton.setText("Felbontás: " + (int) Resolution.y + "p");
+            resolutionButton.setColor(Color.WHITE);
+        }
+        else {
+            resolutionButton.setText("Felbontás: " + Gdx.graphics.getHeight() + "p");
+            resolutionButton.setColor(Color.GRAY);
+        }
+        fullscreenButton.setText("Teljes képernyö: " + ((fullscreen) ? "Be" : "Ki"));
+
+        if(fullscreen == Gdx.graphics.isFullscreen() && Resolution.y == Gdx.graphics.getHeight()) change = false;
+        else change = true;
+        System.out.println(change);
     }
 
+    boolean change = false;
     float alpha = 0;
 
     @Override
@@ -286,6 +367,15 @@ public class OptionsStage extends PrettyStage {
                 }));
             }
         }
+        if(change){
+            if(warningBox.getY()<15) {
+                warningBox.setY(warningBox.getY() + 5);
+            }
+        }else{
+            if(warningBox.getY()>-warningBox.getHeight()) {
+                warningBox.setY(warningBox.getY() - 5);
+            }
+        }
     }
 
     /**
@@ -298,5 +388,7 @@ public class OptionsStage extends PrettyStage {
         gameModeButton.setAlpha(alpha);
         backgroundTypeButton.setAlpha(alpha);
         difficultyButton.setAlpha(alpha);
+        resolutionButton.setAlpha(alpha);
+        fullscreenButton.setAlpha(alpha);
     }
 }
