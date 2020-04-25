@@ -224,7 +224,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
         if(getRotation() != 0 && !isDead)
             setRotation(0);
 
-        if(getY() > Background.ground*2+0.25) {
+        if(getY() > Background.ground*2+0.05) {
             /**
              * ZSOLTI ELHAGYJA A TALAJT
              * **/

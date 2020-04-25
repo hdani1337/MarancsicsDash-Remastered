@@ -73,10 +73,10 @@ public class Jump extends OneSpriteStaticActor {
                     if (zsolti.getActorWorldHelper() != null) {
                         if (zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
                             if (touchUp) {
-                                zsolti.remainingJumps--;
                                 if(zsolti.remainingJumps > 0) {
                                     ((Box2DWorldHelper) zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, force), true);
                                 }
+                                zsolti.remainingJumps--;
                                 touchUp = false;
                             }
                         }
