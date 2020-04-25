@@ -26,6 +26,7 @@ import static hu.hdani1337.marancsicsdash.SoundManager.bossMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.menuMusic;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.backgroundType;
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.selectedZsolti;
 
 public class BossStage extends Box2dStage implements IPrettyStage {
 
@@ -199,7 +200,16 @@ public class BossStage extends Box2dStage implements IPrettyStage {
                     addActor(blood.get(blood.size() - 1));
                 }
             }
-            zsolti.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.DEAD_ZSOLTI));
+            switch (selectedZsolti){
+                case ZSOLTI:{
+                    zsolti.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.DEAD_ZSOLTI));
+                    break;
+                }
+                case WARRIOR:{
+                    zsolti.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.DEAD_ZSOLTI_WARRIOR));
+                    break;
+                }
+            }
             offset = 1;
             getViewport().setScreenX(0);
             getViewport().setScreenY(0);

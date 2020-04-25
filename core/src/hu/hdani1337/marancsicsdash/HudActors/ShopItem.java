@@ -313,11 +313,11 @@ public class ShopItem extends MyGroup implements IPrettyStage {
     public void addActors() {
         if(background != null) addActor(background);
         if(name != "") addActor(nameLabel);
+        addActor(item);
         if(!boughtAlready){
             addActor(coinIcon);
             addActor(priceLabel);
         }
-        addActor(item);
     }
 
     private void makeItem(){
@@ -327,7 +327,7 @@ public class ShopItem extends MyGroup implements IPrettyStage {
                     item = new SuperCoin(game, false);
                     item.setSize(item.getWidth()*1.5f,item.getHeight()*1.5f);
                     boughtAlready = boughtCoin;
-                    price = 1500;
+                    price = 1000;
                     break;
                 }
                 case DOUBLEJUMP: {
@@ -341,17 +341,16 @@ public class ShopItem extends MyGroup implements IPrettyStage {
                             if (time >= 0) {
                                 if (time < 0.5) {
                                     setY(getY() + 8);
-                                    setRotation(getRotation() + 5);
                                 } else if (time < 0.7) {
                                     setY(getY() - 8);
-                                    setRotation(getRotation() - 5);
                                 } else if (time < 0.85) {
                                     setY(getY() + 8);
-                                    setRotation(getRotation() + 5);
                                 } else if (time < 1.3) {
                                     setY(getY() - 8);
-                                    setRotation(getRotation() - 5);
-                                } else time = -1.5f;
+                                } else {
+                                    time = -1.5f;
+                                    setY(0);
+                                }
                             }
                         }
                     };

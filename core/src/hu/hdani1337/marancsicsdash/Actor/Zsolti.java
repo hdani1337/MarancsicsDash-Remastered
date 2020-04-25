@@ -82,6 +82,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
                             if (getStage() != null && getStage() instanceof GameStage)
                                 ((GameStage) getStage()).isShakeScreen = true;
                             otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
+                            ((Tank)otherHelper.actor).kicked();
                         }else {
                             setFps(0);
                             isDead = true;

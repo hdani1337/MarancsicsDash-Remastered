@@ -14,6 +14,8 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.hdani1337.marancsicsdash.Stage.BossStage;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
+import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.difficulty;
+
 public class Background extends OneSpriteStaticActor {
 
     public static final String CSERNOBIL_TEXTURE = "pic/backgrounds/bg.png";
@@ -103,9 +105,9 @@ public class Background extends OneSpriteStaticActor {
     public void act(float delta) {
         if(getStage() != null){
             if(getStage() instanceof GameStage){
-                if(GameStage.isAct) setX(getX()-0.1f);//HÁTTÉR FOLYAMATOS MOZGATÁSA
+                if(GameStage.isAct) setX(getX()-(difficulty*0.08f));//HÁTTÉR FOLYAMATOS MOZGATÁSA
             }else if(getStage() instanceof BossStage){
-                if(BossStage.isAct) setX(getX()-0.1f);//HÁTTÉR FOLYAMATOS MOZGATÁSA
+                if(BossStage.isAct) setX(getX()-(difficulty*0.08f));//HÁTTÉR FOLYAMATOS MOZGATÁSA
             }
         }
     }

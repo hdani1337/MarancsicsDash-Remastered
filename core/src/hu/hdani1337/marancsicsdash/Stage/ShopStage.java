@@ -376,7 +376,6 @@ public class ShopStage extends PrettyStage {
                 for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(0);
                 for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(alpha);
                 for (int i = 0; i < categories.size(); i++) categories.get(i).setAlpha(alpha);
-                System.out.println();
                 break;
             }
             case ABILITIES: {

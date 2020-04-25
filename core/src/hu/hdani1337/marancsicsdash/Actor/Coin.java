@@ -30,7 +30,7 @@ public class Coin extends OneSpriteAnimatedActor implements CollectableItem {
         super(game, COIN_ATLAS);
         setFps(60);
         setSize(getWidth()*0.006f, getHeight()*0.006f);
-        setX((float) (stage.getViewport().getWorldWidth()+Math.random()*18));
+        setX((float) (stage.getViewport().getWorldWidth()+Math.random()*36));
         setY((float) ((stage.marancsics.getY()+stage.marancsics.getHeight()/2)+Math.random()*4.5f));
         this.isAct = true;
         this.zsolti = stage.zsolti;

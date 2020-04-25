@@ -110,7 +110,6 @@ public class MenuBackgroundStage extends PrettyStage {
 
     private Zsolti.ZsoltiType getRandomZsolti(){
         double random = Math.random();
-        System.out.println(random);
         if(random<0.5)
             return Zsolti.ZsoltiType.WARRIOR;
         else

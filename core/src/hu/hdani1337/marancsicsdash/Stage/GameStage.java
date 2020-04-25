@@ -28,6 +28,7 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.menuMusic;
+import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.difficulty;
 
 public class GameStage extends Box2dStage implements IPrettyStage {
 
@@ -82,6 +83,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
 
     @Override
     public void assignment() {
+        if(difficulty == 0) difficulty = 2;
         if(selectedMarancsics == null) selectedMarancsics = Marancsics.MarancsicsType.MARANCSICS;
         if(selectedZsolti == null) selectedZsolti = Zsolti.ZsoltiType.ZSOLTI;
         SoundManager.assign();
@@ -139,7 +141,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
 
     @Override
     public void setPositions() {
-        zsolti.setPosition(2.5f,3);
+        zsolti.setPosition(2.5f,1);
         mushroom.newPosition();
         superCoin.newPosition();
     }
@@ -171,10 +173,11 @@ public class GameStage extends Box2dStage implements IPrettyStage {
             gameMusic.setVolume(0.7f);
             gameMusic.play();
         }
+        zsolti.superTime = 3;
     }
 
     public void addCoins(){
-        for (int i = 0; i < 512; i++) {
+        for (int i = 0; i < 250; i++) {
             coins.add(new Coin(game, this));
             addActor(coins.get(coins.size() - 1));
         }

@@ -10,11 +10,15 @@ import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.MyFixtureDef;
 import hu.csanyzeg.master.MyBaseClasses.Box2dWorld.WorldBodyEditorLoader;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteAnimatedActor;
+import hu.hdani1337.marancsicsdash.Screen.BossScreen;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
+import hu.hdani1337.marancsicsdash.Stage.LoadingStage;
 
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.SoundManager.crashSound;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
+import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.difficulty;
+import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.gamemode;
 
 public class Tank extends OneSpriteAnimatedActor {
 
@@ -33,7 +37,7 @@ public class Tank extends OneSpriteAnimatedActor {
         setFps(15);
         setSize(getWidth()*0.007f, getHeight()*0.007f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Tank", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
-        setX((float) (Math.random()*5+20));
+        setX((float) (Math.random()*15+20));
         setY(Background.ground);
     }
 
@@ -41,7 +45,7 @@ public class Tank extends OneSpriteAnimatedActor {
     public void act(float delta) {
         super.act(delta);
         if(isAct) {
-            setX(getX() - 0.15f);
+            setX(getX() - (difficulty*0.1f));
             if(getStage() != null)
                 if(getX() > getStage().getViewport().getWorldWidth() && contacted)
                     remove();
@@ -59,6 +63,9 @@ public class Tank extends OneSpriteAnimatedActor {
         if(getStage() != null && getStage() instanceof GameStage) {
             ((GameStage) getStage()).tanks.remove(this);
             ((GameStage) getStage()).score++;
+            if(((GameStage)getStage()).score >= 25 && gamemode == 2){
+                game.setScreenWithPreloadAssets(BossScreen.class,false, new LoadingStage(game));
+            }
         }
         return super.remove();
     }

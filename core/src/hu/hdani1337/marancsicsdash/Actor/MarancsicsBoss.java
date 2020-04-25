@@ -23,6 +23,7 @@ import static hu.hdani1337.marancsicsdash.SoundManager.crashSound;
 import static hu.hdani1337.marancsicsdash.SoundManager.glassSound;
 import static hu.hdani1337.marancsicsdash.SoundManager.hee;
 import static hu.hdani1337.marancsicsdash.SoundManager.kickSound;
+import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.difficulty;
 
 public class MarancsicsBoss extends OneSpriteAnimatedActor {
 
@@ -138,7 +139,7 @@ public class MarancsicsBoss extends OneSpriteAnimatedActor {
     public void newPosition() {
         if(getStage() != null && getStage() instanceof BossStage) {
             setPosition((float) (Math.random() * 16 + getStage().getViewport().getWorldWidth()), Background.ground*2);
-            speed = (float) (Math.random()/4)+0.15f;
+            speed = (float) (Math.random()*(difficulty*0.15))+(difficulty*0.08f)+0.05f;
             setFps(speed*150);
             setRotation(0);
         }

@@ -49,7 +49,7 @@ public class OptionsStage extends PrettyStage {
         SoundManager.load(assetList);
     }
 
-    public static int difficulty = preferences.getInteger("difficulty");;
+    public static int difficulty = preferences.getInteger("difficulty");
     public static int gamemode = preferences.getInteger("gamemode");
     public static int selectedBackground = preferences.getInteger("selectedBackground");
     public static int windowWidth = preferences.getInteger("windowWidth");
@@ -332,7 +332,7 @@ public class OptionsStage extends PrettyStage {
                             marancsicsPreviewText.setText("Beteg");
                             break;
                         }
-                        else marancsID++;
+                        else marancsID = 0;
                     }
                     default:{
                         marancsicsPreview.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Marancsics.MARANCSICS_ATLAS));
@@ -361,7 +361,7 @@ public class OptionsStage extends PrettyStage {
                             zsoltiPreviewText.setText("Harcos");
                             break;
                         }
-                        else zsoltID++;
+                        else zsoltID = 0;
                     }
                     default:{
                         zsoltiPreview.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.ZSOLTI_ATLAS));
@@ -433,8 +433,9 @@ public class OptionsStage extends PrettyStage {
                 break;
             }
             default:{
-                System.out.println("A fejlesztő egy buzi.");
-                difficultyButton.setText("Nehézség: Hiba");
+                difficultyButton.setText("Nehézség: Normál");
+                preferences.putInteger("difficulty",2);
+                preferences.flush();
                 break;
             }
         }
