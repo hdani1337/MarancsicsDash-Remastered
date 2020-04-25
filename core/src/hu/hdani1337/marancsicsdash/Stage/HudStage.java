@@ -141,6 +141,7 @@ public class HudStage extends PrettyStage {
                 if (!scoreBoard.text.equals(((GameScreen) getScreen()).gameStage.score)) {
                     scoreBoard.setText(((GameScreen) getScreen()).gameStage.score + "");
                     scoreBoard.setX(getViewport().getWorldWidth() / 2 - scoreBoard.getWidth() / 2);
+                    if(!scoreBoard.isVisible()) scoreBoard.setVisible(true);
                     if(((GameScreen)getScreen()).gameStage.score >= 25 && gamemode == 1) game.setScreenWithPreloadAssets(BossScreen.class,false, new LoadingStage(game));
                 }
             }else{

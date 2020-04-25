@@ -200,7 +200,8 @@ public class Zsolti extends OneSpriteAnimatedActor {
             /**
              * SUPER ZSOLTI
              * **/
-            superTime -= delta;
+            if(getStage() != null && getStage() instanceof GameStage && GameStage.isAct)
+                superTime -= delta;
             if(getTextureAtlas() != game.getMyAssetManager().getTextureAtlas(SUPER_ZSOLTI_ATLAS))
                 setTextureAtlas(game.getMyAssetManager().getTextureAtlas(SUPER_ZSOLTI_ATLAS));
         }
