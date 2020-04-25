@@ -25,4 +25,10 @@ public class Blood extends OneSpriteStaticActor {
         setPosition(zsolti.getX() + (float) (Math.random()*zsolti.getWidth()), zsolti.getY() + (float) Math.random()*(zsolti.getHeight()*0.6f));
         setActorWorldHelper(new Box2DWorldHelper(world, this, ShapeType.Circle, new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
     }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(getStage() != null) if(getX() < -getWidth() || getX() > getStage().getViewport().getWorldHeight()) remove();
+    }
 }

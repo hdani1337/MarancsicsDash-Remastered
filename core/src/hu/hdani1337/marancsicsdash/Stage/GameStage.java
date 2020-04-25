@@ -14,6 +14,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.IPrettyStage;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Blood;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
+import hu.hdani1337.marancsicsdash.Actor.Ground;
 import hu.hdani1337.marancsicsdash.Actor.Marancsics;
 import hu.hdani1337.marancsicsdash.Actor.MarancsicsBoss;
 import hu.hdani1337.marancsicsdash.Actor.Mushroom;
@@ -60,6 +61,7 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     public ArrayList<Background> backgrounds;//HÁTTÉR LISTA
     public ArrayList<Tank> tanks;//TANK LISTA
     public ArrayList<Blood> blood;//VÉR LISTA
+    public ArrayList<Ground> grounds;//TALAJ LISTA
 
     public static boolean isAct;
     public static Background.BackgroundType backgroundType;
@@ -131,7 +133,9 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         mushroom = new Mushroom(game,this);
         superCoin = new SuperCoin(game,this);
         backgrounds = new ArrayList<>();
+        grounds = new ArrayList<>();
         generateBaseBackgrounds();
+        generateBaseGrounds();
     }
 
     @Override
@@ -189,8 +193,8 @@ public class GameStage extends Box2dStage implements IPrettyStage {
         /**
          * SZINUSZ-KOSZINUSZ FÜGGVÉNYEK SEGÍTSÉGÉVEL MOZGATJUK A VIEVPORTOT
          * **/
-        getViewport().setScreenX((int) (Math.sin(offset)*15));
-        getViewport().setScreenY((int) (Math.cos(offset)*15));
+        getViewport().setScreenX((int) (Math.sin(offset)*3));
+        getViewport().setScreenY((int) (Math.cos(offset)*3));
         offset++;
         Gdx.input.vibrate(100);
     }
@@ -204,6 +208,18 @@ public class GameStage extends Box2dStage implements IPrettyStage {
             backgrounds.get(i).setX(backgrounds.get(i).getWidth()*i);
             addActor(backgrounds.get(i));
             backgrounds.get(i).setZIndex(0);
+        }
+    }
+
+    private void generateBaseGrounds(){
+        /**
+         * KEZDETNEK 3 HÁTTÉR ELÉG
+         * **/
+        for (int i = 0; i < 3; i++){
+            grounds.add(new Ground(game, backgroundType, getViewport()));
+            grounds.get(i).setX(grounds.get(i).getWidth()*i);
+            addActor(grounds.get(i));
+            grounds.get(i).setZIndex(1);
         }
     }
 
@@ -239,6 +255,16 @@ public class GameStage extends Box2dStage implements IPrettyStage {
                 backgrounds.get(backgrounds.size() - 1).setX(backgrounds.get(backgrounds.size() - 2).getX() + backgrounds.get(backgrounds.size() - 2).getWidth());
                 addActor(backgrounds.get(backgrounds.size() - 1));
                 backgrounds.get(backgrounds.size() - 1).setZIndex(0);
+            }
+
+            /**
+             * HA AZ UTOLSÓ ELŐTTI TALAJ MÁR ÉPPENHOGY BEÉR A KÉPERNYŐRE, AKKOR RAKJUNK BE ÚJ TALAJT
+             * */
+            if (grounds.get(grounds.size() - 2).getX() < getViewport().getWorldWidth()) {
+                grounds.add(new Ground(game, backgroundType, getViewport()));
+                grounds.get(grounds.size() - 1).setX(grounds.get(grounds.size() - 2).getX() + grounds.get(grounds.size() - 2).getWidth());
+                addActor(grounds.get(grounds.size() - 1));
+                grounds.get(grounds.size() - 1).setZIndex(0);
             }
 
             /**
@@ -288,6 +314,17 @@ public class GameStage extends Box2dStage implements IPrettyStage {
                 if (background.getX() < -background.getWidth() * 2) {
                     background.remove();
                     backgrounds.remove(background);
+                    break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
+                }
+            }
+
+            /**
+             * HA A TALAJ MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
+             * **/
+            for (Ground g : grounds) {
+                if (g.getX() < -g.getWidth() * 2) {
+                    g.remove();
+                    grounds.remove(g);
                     break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
                 }
             }

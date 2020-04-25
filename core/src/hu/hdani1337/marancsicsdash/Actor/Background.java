@@ -18,11 +18,11 @@ import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.difficulty;
 
 public class Background extends OneSpriteStaticActor {
 
-    public static final String CSERNOBIL_TEXTURE = "pic/backgrounds/bg.png";
-    public static final String SZIBERIA_TEXTURE = "pic/backgrounds/bg2.png";
-    public static final String ZALA_TEXTURE = "pic/backgrounds/bg3.jpg";
-    public static final String SZAHARA_TEXTURE = "pic/backgrounds/bg4.png";
-    public static final String OCEAN_TEXTURE = "pic/backgrounds/bg5.jpg";
+    public static final String CSERNOBIL_TEXTURE = "pic/backgrounds/back/bg.png";
+    public static final String SZIBERIA_TEXTURE = "pic/backgrounds/back/bg2.png";
+    public static final String ZALA_TEXTURE = "pic/backgrounds/back/bg3.jpg";
+    public static final String SZAHARA_TEXTURE = "pic/backgrounds/back/bg4.png";
+    public static final String OCEAN_TEXTURE = "pic/backgrounds/back/bg5.jpg";
 
     public static AssetList assetList = new AssetList();
     static {
@@ -52,7 +52,7 @@ public class Background extends OneSpriteStaticActor {
              * **/
             case CSERNOBIL:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(CSERNOBIL_TEXTURE));
-                ground = 0.45f;
+                ground = 0.42f;
                 break;
             }
             case SZIBERIA:{
@@ -93,11 +93,11 @@ public class Background extends OneSpriteStaticActor {
             groundBody.createFixture(groundBox, 0.0f);
 
             BodyDef groundBodyDef2 = new BodyDef();
-            groundBodyDef2.position.set(new Vector2(0, 12));
-            Body groundBody2 = world.createBody(groundBodyDef);
+            groundBodyDef2.position.set(new Vector2(0, 15));
+            Body groundBody2 = world.createBody(groundBodyDef2);
             PolygonShape groundBox2 = new PolygonShape();
-            groundBox.setAsBox(16 * 2, ground);
-            groundBody.createFixture(groundBox, 0.0f);
+            groundBox2.setAsBox(16 * 2, ground);
+            groundBody2.createFixture(groundBox2, 0.0f);
         }
     }
 
@@ -105,9 +105,9 @@ public class Background extends OneSpriteStaticActor {
     public void act(float delta) {
         if(getStage() != null){
             if(getStage() instanceof GameStage){
-                if(GameStage.isAct) setX(getX()-(difficulty*0.08f));//HÁTTÉR FOLYAMATOS MOZGATÁSA
+                if(GameStage.isAct) setX(getX()-(difficulty*0.005f));//HÁTTÉR FOLYAMATOS MOZGATÁSA
             }else if(getStage() instanceof BossStage){
-                if(BossStage.isAct) setX(getX()-(difficulty*0.08f));//HÁTTÉR FOLYAMATOS MOZGATÁSA
+                if(BossStage.isAct) setX(getX()-(difficulty*0.005f));//HÁTTÉR FOLYAMATOS MOZGATÁSA
             }
         }
     }

@@ -78,6 +78,7 @@ public class OptionsStage extends PrettyStage {
     private ShopBackgroundPreview backgroundPreview;
     private TextBox backgroundPreviewText;
     private TextBox disclaimer;
+    private TextBox disclaimer2;
     private Zsolti zsoltiPreview;
     private TextBox zsoltiPreviewText;
     private Marancsics marancsicsPreview;
@@ -108,6 +109,7 @@ public class OptionsStage extends PrettyStage {
         backgroundPreviewBackground = new TextBox(game, " ");
         backgroundPreview.step(selectedBackground);
         disclaimer = new TextBox(game,"A háttér vagy kinézet változtatásához\nkattints a képére\n(Ha nem változik meg,\nakkor még nem vásároltál egyet sem)",0.5f);
+        disclaimer2 = new TextBox(game,"A kívánt beállítás megváltoztatásához\nkattints a szövegére",0.5f);
         backgroundPreviewText = new TextBox(game,"Csernobil,Szahara,Szibéria,Zala,Atlanti-óceán".split(",")[selectedBackground]);
         marancsicsPreviewText = new TextBox(game,"Programozó,Boxoló,Építész,Beteg".split(",")[preferences.getInteger("selectedMarancsics")]);
         zsoltiPreviewText = new TextBox(game,"Kalandor,Harcos".split(",")[preferences.getInteger("selectedZsolti")]);
@@ -125,11 +127,6 @@ public class OptionsStage extends PrettyStage {
     @Override
     public void setPositions() {
         if(getViewport().getWorldWidth() < MenuBackground.getWidth()) MenuBackground.setX((getViewport().getWorldWidth()-MenuBackground.getWidth())/2);
-        muteButton.setPosition(75,100);
-        gameModeButton.setPosition(75,225);
-        difficultyButton.setPosition(75,350);
-        resolutionButton.setPosition(75,600);
-        fullscreenButton.setPosition(75,725);
         backButton.setPosition(getViewport().getWorldWidth() - (backButton.getWidth() + 45),50);
         optionsLogo.setPosition(getViewport().getWorldWidth()/2 - optionsLogo.getWidth()/2, getViewport().getWorldHeight() - optionsLogo.getHeight()*1.15f);
         warningBox.setPosition(getViewport().getWorldWidth()/2-warningBox.getWidth()/2,-warningBox.getHeight());
@@ -143,6 +140,10 @@ public class OptionsStage extends PrettyStage {
         zsoltiPreview.setPosition(marancsicsPreview.getX()+marancsicsPreview.getWidth()+100,backgroundPreviewBackground.getY()+backgroundPreviewBackground.getHeight()/2-zsoltiPreview.getHeight()/2);
         zsoltiPreviewText.setPosition(zsoltiPreview.getX()+zsoltiPreview.getWidth()/2-zsoltiPreviewText.getWidth()/2,zsoltiPreview.getY()-zsoltiPreviewText.getHeight()-16);
         marancsicsPreviewText.setPosition(marancsicsPreview.getX()+marancsicsPreview.getWidth()/2-marancsicsPreviewText.getWidth()/2-8,zsoltiPreviewText.getY());
+        muteButton.setPosition(backgroundPreviewBackground.getX()/2-muteButton.getWidth()/2,getViewport().getWorldHeight()-535);
+        gameModeButton.setPosition(backgroundPreviewBackground.getX()/2-gameModeButton.getWidth()/2,getViewport().getWorldHeight()-410);
+        difficultyButton.setPosition(backgroundPreviewBackground.getX()/2-difficultyButton.getWidth()/2,getViewport().getWorldHeight()-285);
+        disclaimer2.setPosition(16,getViewport().getWorldHeight()-disclaimer2.getHeight()-16);
     }
 
     int bgID = selectedBackground;
@@ -259,7 +260,7 @@ public class OptionsStage extends PrettyStage {
                 switch (bgID){
                     case 1:{
                         if(boughtDesert) {
-                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.SZAHARA_TEXTURE));
+                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(ShopBackgroundPreview.SZAHARA_PREVIEW_TEXTURE));
                             backgroundPreviewText.setText("Szahara");
                             break;
                         }
@@ -267,7 +268,7 @@ public class OptionsStage extends PrettyStage {
                     }
                     case 2:{
                         if(boughtSiberia) {
-                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.SZIBERIA_TEXTURE));
+                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(ShopBackgroundPreview.SZIBERIA_PREVIEW_TEXTURE));
                             backgroundPreviewText.setText("Szibéria");
                             break;
                         }
@@ -275,7 +276,7 @@ public class OptionsStage extends PrettyStage {
                     }
                     case 3:{
                         if(boughtZala) {
-                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.ZALA_TEXTURE));
+                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(ShopBackgroundPreview.ZALA_PREVIEW_TEXTURE));
                             backgroundPreviewText.setText("Zala");
                             break;
                         }
@@ -283,14 +284,14 @@ public class OptionsStage extends PrettyStage {
                     }
                     case 4:{
                         if(boughtOcean) {
-                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.OCEAN_TEXTURE));
+                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(ShopBackgroundPreview.OCEAN_PREVIEW_TEXTURE));
                             backgroundPreviewText.setText("Atlanti-óceán");
                             break;
                         }
                         else bgID = 0;
                     }
                     default:{
-                        backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.CSERNOBIL_TEXTURE));
+                        backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(ShopBackgroundPreview.CSERNOBIL_PREVIEW_TEXTURE));
                         backgroundPreviewText.setText("Csernobil");
                         break;
                     }
@@ -395,6 +396,7 @@ public class OptionsStage extends PrettyStage {
         addActor(backgroundPreview);
         addActor(backgroundPreviewText);
         addActor(disclaimer);
+        addActor(disclaimer2);
         addActor(marancsicsPreview);
         addActor(zsoltiPreview);
         addActor(zsoltiPreviewText);
@@ -451,6 +453,10 @@ public class OptionsStage extends PrettyStage {
                 break;
             }
         }
+
+        muteButton.setPosition(backgroundPreviewBackground.getX()/2-muteButton.getWidth()/2,getViewport().getWorldHeight()-535);
+        gameModeButton.setPosition(backgroundPreviewBackground.getX()/2-gameModeButton.getWidth()/2,getViewport().getWorldHeight()-410);
+        difficultyButton.setPosition(backgroundPreviewBackground.getX()/2-difficultyButton.getWidth()/2,getViewport().getWorldHeight()-285);
 
         if(!fullscreen) {
             resolutionButton.setText("Felbontás: " + (int) Resolution.y + "p");
@@ -536,6 +542,7 @@ public class OptionsStage extends PrettyStage {
         backgroundPreview.setAlpha(alpha);
         backgroundPreviewText.setAlpha(alpha);
         disclaimer.setAlpha(alpha);
+        disclaimer2.setAlpha(alpha);
         zsoltiPreviewText.setAlpha(alpha);
         marancsicsPreviewText.setAlpha(alpha);
     }

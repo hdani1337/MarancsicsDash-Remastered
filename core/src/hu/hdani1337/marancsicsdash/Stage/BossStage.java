@@ -15,6 +15,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Blood;
 import hu.hdani1337.marancsicsdash.Actor.Fire;
+import hu.hdani1337.marancsicsdash.Actor.Ground;
 import hu.hdani1337.marancsicsdash.Actor.MarancsicsBoss;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
@@ -50,6 +51,7 @@ public class BossStage extends Box2dStage implements IPrettyStage {
     public ArrayList<Background> backgrounds;//HÁTTÉR LISTA
     public ArrayList<Blood> blood;//VÉR LISTA
     public ArrayList<Fire> flames;//LÁNG LISTA
+    public ArrayList<Ground> grounds;//TALAJ LISTA
 
     public BossStage(MyGame game) {
         super(new ResponseViewport(9), game);
@@ -74,9 +76,11 @@ public class BossStage extends Box2dStage implements IPrettyStage {
         backgrounds = new ArrayList<>();
         blood = new ArrayList<>();
         flames = new ArrayList<>();
+        grounds = new ArrayList<>();
         isAct = true;
         for (int i = 0; i < 18; i++) flames.add(new Fire(game));
         generateBaseBackgrounds();
+        generateBaseGrounds();
     }
 
     @Override
@@ -118,6 +122,18 @@ public class BossStage extends Box2dStage implements IPrettyStage {
         }
     }
 
+    private void generateBaseGrounds(){
+        /**
+         * KEZDETNEK 3 HÁTTÉR ELÉG
+         * **/
+        for (int i = 0; i < 3; i++){
+            grounds.add(new Ground(game, backgroundType, getViewport()));
+            grounds.get(i).setX(grounds.get(i).getWidth()*i);
+            addActor(grounds.get(i));
+            grounds.get(i).setZIndex(1);
+        }
+    }
+
     public void afterInit() {
         if(!muted) {
             gameMusic.stop();
@@ -134,8 +150,8 @@ public class BossStage extends Box2dStage implements IPrettyStage {
         /**
          * SZINUSZ-KOSZINUSZ FÜGGVÉNYEK SEGÍTSÉGÉVEL MOZGATJUK A VIEVPORTOT
          * **/
-        getViewport().setScreenX((int) (Math.sin(offset)*15));
-        getViewport().setScreenY((int) (Math.cos(offset)*15));
+        getViewport().setScreenX((int) (Math.sin(offset)*3));
+        getViewport().setScreenY((int) (Math.cos(offset)*3));
         offset++;
         Gdx.input.vibrate(100);
     }
@@ -165,12 +181,33 @@ public class BossStage extends Box2dStage implements IPrettyStage {
             }
 
             /**
+             * HA AZ UTOLSÓ ELŐTTI TALAJ MÁR ÉPPENHOGY BEÉR A KÉPERNYŐRE, AKKOR RAKJUNK BE ÚJ TALAJT
+             * */
+            if (grounds.get(grounds.size() - 2).getX() < getViewport().getWorldWidth()) {
+                grounds.add(new Ground(game, backgroundType, getViewport()));
+                grounds.get(grounds.size() - 1).setX(grounds.get(grounds.size() - 2).getX() + grounds.get(grounds.size() - 2).getWidth());
+                addActor(grounds.get(grounds.size() - 1));
+                grounds.get(grounds.size() - 1).setZIndex(0);
+            }
+
+            /**
              * HA A HÁTTÉR MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
              * **/
             for (Background background : backgrounds) {
                 if (background.getX() < -background.getWidth() * 2) {
                     background.remove();
                     backgrounds.remove(background);
+                    break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
+                }
+            }
+
+            /**
+             * HA A TALAJ MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
+             * **/
+            for (Ground g : grounds) {
+                if (g.getX() < -g.getWidth() * 2) {
+                    g.remove();
+                    grounds.remove(g);
                     break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
                 }
             }

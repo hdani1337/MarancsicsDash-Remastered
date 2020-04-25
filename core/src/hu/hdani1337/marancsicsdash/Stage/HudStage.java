@@ -3,6 +3,8 @@ package hu.hdani1337.marancsicsdash.Stage;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
+import java.util.ArrayList;
+
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
@@ -10,6 +12,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
+import hu.hdani1337.marancsicsdash.Actor.Ground;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.HealthBar;
 import hu.hdani1337.marancsicsdash.HudActors.InstantBoss;
@@ -19,6 +22,7 @@ import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
 import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.backgroundType;
 
 public class HudStage extends PrettyStage {
 
@@ -37,6 +41,7 @@ public class HudStage extends PrettyStage {
     private MyLabel coinLabel;
     private InstantBoss instantBoss;
     private HealthBar healthBar;
+    public ArrayList<Ground> grounds;
 
     public HudStage(MyGame game) {
         super(new ResponseViewport(900), game);
@@ -63,6 +68,8 @@ public class HudStage extends PrettyStage {
                 else setText("0");
             }
         };
+        grounds = new ArrayList<>();
+        generateBaseGrounds();
     }
 
     @Override
@@ -109,6 +116,18 @@ public class HudStage extends PrettyStage {
         }
     }
 
+    private void generateBaseGrounds(){
+        /**
+         * KEZDETNEK 3 HÁTTÉR ELÉG
+         * **/
+        for (int i = 0; i < 3; i++){
+            grounds.add(new Ground(game, backgroundType, getViewport()));
+            grounds.get(i).setX(grounds.get(i).getWidth()*i);
+            addActor(grounds.get(i));
+            grounds.get(i).setZIndex(0);
+        }
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -123,6 +142,27 @@ public class HudStage extends PrettyStage {
                 }
             }else{
                 if(scoreBoard.isVisible()) scoreBoard.setVisible(false);
+            }
+        }
+
+        /**
+         * HA AZ UTOLSÓ ELŐTTI HÁTTÉR MÁR ÉPPENHOGY BEÉR A KÉPERNYŐRE, AKKOR RAKJUNK BE ÚJ HÁTTERET
+         * */
+        if (grounds.get(grounds.size() - 2).getX() < getViewport().getWorldWidth()) {
+            grounds.add(new Ground(game, backgroundType, getViewport()));
+            grounds.get(grounds.size() - 1).setX(grounds.get(grounds.size() - 2).getX() + grounds.get(grounds.size() - 2).getWidth());
+            addActor(grounds.get(grounds.size() - 1));
+            grounds.get(grounds.size() - 1).setZIndex(0);
+        }
+
+        /**
+         * HA A TALAJ MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
+         * **/
+        for (Ground g : grounds) {
+            if (g.getX() < -g.getWidth() * 2) {
+                g.remove();
+                grounds.remove(g);
+                break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
             }
         }
 
