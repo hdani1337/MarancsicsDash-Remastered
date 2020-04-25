@@ -63,9 +63,6 @@ public class Tank extends OneSpriteAnimatedActor {
         if(getStage() != null && getStage() instanceof GameStage) {
             ((GameStage) getStage()).tanks.remove(this);
             ((GameStage) getStage()).score++;
-            if(((GameStage)getStage()).score >= 25 && gamemode == 2){
-                game.setScreenWithPreloadAssets(BossScreen.class,false, new LoadingStage(game));
-            }
         }
         return super.remove();
     }

@@ -26,6 +26,7 @@ public class Jump extends OneSpriteStaticActor {
     }
 
     private boolean touchDown;
+    private boolean touchUp;
     private int force;
     private Zsolti zsolti;
 
@@ -55,6 +56,7 @@ public class Jump extends OneSpriteStaticActor {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 touchDown = false;
+                touchUp = true;
                 super.touchUp(event, x, y, pointer, button);
             }
         });
@@ -70,8 +72,12 @@ public class Jump extends OneSpriteStaticActor {
                 if(zsolti != null) {
                     if (zsolti.getActorWorldHelper() != null) {
                         if (zsolti.getActorWorldHelper() instanceof Box2DWorldHelper) {
-                            if (!zsolti.inAir) {
-                                ((Box2DWorldHelper) zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, force), true);
+                            if (touchUp) {
+                                zsolti.remainingJumps--;
+                                if(zsolti.remainingJumps > 0) {
+                                    ((Box2DWorldHelper) zsolti.getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(0, force), true);
+                                }
+                                touchUp = false;
                             }
                         }
                     }

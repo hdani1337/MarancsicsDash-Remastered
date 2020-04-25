@@ -19,10 +19,12 @@ import hu.hdani1337.marancsicsdash.HudActors.InstantBoss;
 import hu.hdani1337.marancsicsdash.HudActors.Jump;
 import hu.hdani1337.marancsicsdash.HudActors.Pause;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
+import hu.hdani1337.marancsicsdash.Screen.BossScreen;
 import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 
 import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.backgroundType;
+import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.gamemode;
 
 public class HudStage extends PrettyStage {
 
@@ -106,7 +108,7 @@ public class HudStage extends PrettyStage {
         addActor(jump);
         addActor(pause);
         if(stage instanceof GameStage) {
-            if (ShopStage.boughtInstantBoss && OptionsStage.gamemode == 1) addActor(instantBoss);
+            if (ShopStage.boughtInstantBoss && gamemode == 1) addActor(instantBoss);
             else instantBoss = null;
             addActor(scoreBoard);
             addActor(coin);
@@ -139,6 +141,7 @@ public class HudStage extends PrettyStage {
                 if (!scoreBoard.text.equals(((GameScreen) getScreen()).gameStage.score)) {
                     scoreBoard.setText(((GameScreen) getScreen()).gameStage.score + "");
                     scoreBoard.setX(getViewport().getWorldWidth() / 2 - scoreBoard.getWidth() / 2);
+                    if(((GameScreen)getScreen()).gameStage.score >= 25 && gamemode == 1) game.setScreenWithPreloadAssets(BossScreen.class,false, new LoadingStage(game));
                 }
             }else{
                 if(scoreBoard.isVisible()) scoreBoard.setVisible(false);

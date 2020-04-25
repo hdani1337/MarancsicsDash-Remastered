@@ -22,6 +22,7 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.SoundManager.crashSound;
 import static hu.hdani1337.marancsicsdash.SoundManager.kickSound;
 import static hu.hdani1337.marancsicsdash.SoundManager.powerUpSound;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDouble;
 
 public class Zsolti extends OneSpriteAnimatedActor {
 
@@ -46,6 +47,7 @@ public class Zsolti extends OneSpriteAnimatedActor {
 
     public static boolean isDead;
     public static boolean inAir;
+    public int remainingJumps;
     private boolean playing;
 
     /**
@@ -69,6 +71,8 @@ public class Zsolti extends OneSpriteAnimatedActor {
         isDead = false;
         inAir = true;
         playing = false;
+        if(boughtDouble) remainingJumps = 2;
+        else remainingJumps = 1;
 
         /**
          * ÜTKÖZÉSFIGYELÉSEK
@@ -229,6 +233,8 @@ public class Zsolti extends OneSpriteAnimatedActor {
             /**
              * ZSOLTI VISSZAESIK A TALAJRA VAGY NAGYON A KÖZELÉBE
              * **/
+            if(boughtDouble) remainingJumps = 2;
+            else remainingJumps = 1;
             inAir = false;
         }
 
