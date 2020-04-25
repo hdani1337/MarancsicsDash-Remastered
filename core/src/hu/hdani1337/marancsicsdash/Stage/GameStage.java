@@ -64,6 +64,9 @@ public class GameStage extends Box2dStage implements IPrettyStage {
     public static Background.BackgroundType backgroundType;
     public static long score;
 
+    public static Marancsics.MarancsicsType selectedMarancsics = Marancsics.MarancsicsType.values()[preferences.getInteger("selectedMarancsics")];
+    public static Zsolti.ZsoltiType selectedZsolti = Zsolti.ZsoltiType.values()[preferences.getInteger("selectedZsolti")];
+
     public GameStage(MyGame game) {
         super(new ResponseViewport(9), game);
         MarancsicsDash.presenceDetail = "In Game";
@@ -79,6 +82,8 @@ public class GameStage extends Box2dStage implements IPrettyStage {
 
     @Override
     public void assignment() {
+        if(selectedMarancsics == null) selectedMarancsics = Marancsics.MarancsicsType.MARANCSICS;
+        if(selectedZsolti == null) selectedZsolti = Zsolti.ZsoltiType.ZSOLTI;
         SoundManager.assign();
         score = 0;
         switch (preferences.getInteger("selectedBackground")){
@@ -88,19 +93,19 @@ public class GameStage extends Box2dStage implements IPrettyStage {
                 UpdatePresence();
                 break;
             }
-            case 1: {
+            case 2: {
                 backgroundType = Background.BackgroundType.SZIBERIA;
                 MarancsicsDash.presenceDetail = "In Game - Siberia";
                 UpdatePresence();
                 break;
             }
-            case 2: {
+            case 3: {
                 backgroundType = Background.BackgroundType.ZALA;
                 MarancsicsDash.presenceDetail = "In Game - Zala County";
                 UpdatePresence();
                 break;
             }
-            case 3: {
+            case 1: {
                 backgroundType = Background.BackgroundType.SZAHARA;
                 MarancsicsDash.presenceDetail = "In Game - Sahara";
                 UpdatePresence();
@@ -316,7 +321,16 @@ public class GameStage extends Box2dStage implements IPrettyStage {
                     addActor(blood.get(blood.size() - 1));
                 }
             }
-            zsolti.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.DEAD_ZSOLTI));
+            switch (selectedZsolti){
+                case ZSOLTI:{
+                    zsolti.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.DEAD_ZSOLTI));
+                    break;
+                }
+                case WARRIOR:{
+                    zsolti.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.DEAD_ZSOLTI_WARRIOR));
+                    break;
+                }
+            }
             offset = 1;
             getViewport().setScreenX(0);
             getViewport().setScreenY(0);

@@ -25,7 +25,10 @@ import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
 
 public class Marancsics extends OneSpriteAnimatedActor {
 
-    public static final String MARANCSICS_ATLAS = "atlas/marancsics.atlas";
+    public static final String MARANCSICS_ATLAS = "atlas/marancsics/marancsics.atlas";
+    public static final String MARANCSICS_BOX = "atlas/marancsics/marancsicsBox.atlas";
+    public static final String MARANCSICS_CONSTRUCTOR = "atlas/marancsics/marancsicsConstr.atlas";
+    public static final String MARANCSICS_CORONA = "atlas/marancsics/marancsicsCoron.atlas";
 
     public static AssetList assetList = new AssetList();
     static {
@@ -35,8 +38,30 @@ public class Marancsics extends OneSpriteAnimatedActor {
 
     private boolean playing;
 
+    public enum MarancsicsType{
+        MARANCSICS, BOX, CONSTRUCTOR, CORONA
+    }
+
     public Marancsics(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, MARANCSICS_ATLAS);
+        switch (GameStage.selectedMarancsics){
+            case BOX:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(MARANCSICS_BOX));
+                break;
+            }
+            case CORONA:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(MARANCSICS_CORONA));
+                break;
+            }
+            case MARANCSICS:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(MARANCSICS_ATLAS));
+                break;
+            }
+            case CONSTRUCTOR:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(MARANCSICS_CONSTRUCTOR));
+                break;
+            }
+        }
         playing = false;
         setFps(12);
         setSize(getWidth()*0.011f, getHeight()*0.011f);
@@ -97,8 +122,26 @@ public class Marancsics extends OneSpriteAnimatedActor {
         }
     }
 
-    public Marancsics(MyGame game){
+    public Marancsics(MyGame game, MarancsicsType type){
         super(game, MARANCSICS_ATLAS);
+        switch (type){
+            case BOX:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(MARANCSICS_BOX));
+                break;
+            }
+            case CORONA:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(MARANCSICS_CORONA));
+                break;
+            }
+            case MARANCSICS:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(MARANCSICS_ATLAS));
+                break;
+            }
+            case CONSTRUCTOR:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(MARANCSICS_CONSTRUCTOR));
+                break;
+            }
+        }
         setFps(12);
     }
 

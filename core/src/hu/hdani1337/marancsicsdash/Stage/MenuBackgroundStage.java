@@ -29,8 +29,8 @@ public class MenuBackgroundStage extends PrettyStage {
     @Override
     public void assignment() {
         MenuBackground = new OneSpriteStaticActor(game,MENU_BG_TEXTURE);
-        marancsics = new Marancsics(game);
-        zsolti = new Zsolti(game);
+        marancsics = new Marancsics(game, getRandomMarancsics());
+        zsolti = new Zsolti(game, getRandomZsolti());
 
         zsolti.setFps(30);
         marancsics.setFps(24);
@@ -75,12 +75,45 @@ public class MenuBackgroundStage extends PrettyStage {
             marancsics.setX(marancsics.getX() + 12);
             zsolti.setX(zsolti.getX() + 14);
         }else{
+            assignment();
+            setPositions();
+            setSizes();
+            addActors();
             int random = (int)(Math.random()*2500+1500);
+            zsolti.setFps(30);
+            marancsics.setFps(24);
             marancsics.setX(-500-random);
             zsolti.setX(-320-random);
             random = (int)(Math.random()*350);
             marancsics.setY(random);
             zsolti.setY(random);
         }
+    }
+
+    private Marancsics.MarancsicsType getRandomMarancsics(){
+        int random = (int)(Math.random()*4);
+        switch (random){
+            case 1:{
+                return Marancsics.MarancsicsType.BOX;
+            }
+            case 2:{
+                return Marancsics.MarancsicsType.CONSTRUCTOR;
+            }
+            case 3:{
+                return Marancsics.MarancsicsType.CORONA;
+            }
+            default:{
+                return Marancsics.MarancsicsType.MARANCSICS;
+            }
+        }
+    }
+
+    private Zsolti.ZsoltiType getRandomZsolti(){
+        double random = Math.random();
+        System.out.println(random);
+        if(random<0.5)
+            return Zsolti.ZsoltiType.WARRIOR;
+        else
+            return Zsolti.ZsoltiType.ZSOLTI;
     }
 }

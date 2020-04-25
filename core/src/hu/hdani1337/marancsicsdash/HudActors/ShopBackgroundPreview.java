@@ -55,13 +55,28 @@ public class ShopBackgroundPreview extends OneSpriteStaticActor {
     /**
      * Háttér változtatása konkrét ID alapján (0-4 között)
      * **/
-    public void step(byte id){
+    public void step(int id){
         switch (id % 5){
-            case 0: sprite.setTexture(game.getMyAssetManager().getTexture(CSERNOBIL_TEXTURE));
-            case 1: sprite.setTexture(game.getMyAssetManager().getTexture(SZIBERIA_TEXTURE));
-            case 2: sprite.setTexture(game.getMyAssetManager().getTexture(ZALA_TEXTURE));
-            case 3: sprite.setTexture(game.getMyAssetManager().getTexture(SZAHARA_TEXTURE));
-            case 4: sprite.setTexture(game.getMyAssetManager().getTexture(OCEAN_TEXTURE));
+            case 0: {
+                sprite.setTexture(game.getMyAssetManager().getTexture(CSERNOBIL_TEXTURE));
+                break;
+            }
+            case 1: {
+                sprite.setTexture(game.getMyAssetManager().getTexture(SZAHARA_TEXTURE));
+                break;
+            }
+            case 2: {
+                sprite.setTexture(game.getMyAssetManager().getTexture(SZIBERIA_TEXTURE));
+                break;
+            }
+            case 3: {
+                sprite.setTexture(game.getMyAssetManager().getTexture(ZALA_TEXTURE));
+                break;
+            }
+            case 4: {
+                sprite.setTexture(game.getMyAssetManager().getTexture(OCEAN_TEXTURE));
+                break;
+            }
         }
     }
 

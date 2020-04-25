@@ -14,13 +14,18 @@ public class LoadingStage extends hu.csanyzeg.master.MyBaseClasses.Assets.Loadin
     static
     {
         assetList.addTextureAtlas(Marancsics.MARANCSICS_ATLAS).protect = true;
+        assetList.addTextureAtlas(Marancsics.MARANCSICS_CORONA).protect = true;
+        assetList.addTextureAtlas(Marancsics.MARANCSICS_BOX).protect = true;
+        assetList.addTextureAtlas(Marancsics.MARANCSICS_CONSTRUCTOR).protect = true;
         assetList.addTextureAtlas(Zsolti.ZSOLTI_ATLAS).protect = true;
+        assetList.addTextureAtlas(Zsolti.ZSOLTI_WARRIOR).protect = true;
+        assetList.addTextureAtlas(Zsolti.SUPER_ZSOLTI_ATLAS).protect = true;
     }
 
     public LoadingStage(MyGame game) {
         super(new ResponseViewport(900), game);
         if(MarancsicsDash.needsLoading) {
-            addActor(new OneSpriteAnimatedActor(game, (Math.random() < 0.5f) ? Marancsics.MARANCSICS_ATLAS : Zsolti.ZSOLTI_ATLAS) {
+            addActor(new OneSpriteAnimatedActor(game, getRandomHash()) {
                 @Override
                 public void init() {
                     super.init();
@@ -40,5 +45,32 @@ public class LoadingStage extends hu.csanyzeg.master.MyBaseClasses.Assets.Loadin
     @Override
     public AssetList getAssetList() {
         return assetList;
+    }
+
+    private String getRandomHash(){
+        int random = (int)(Math.random()*6);
+        switch (random){
+            case 0:{
+                return Marancsics.MARANCSICS_CORONA;
+            }
+            case 1:{
+                return Marancsics.MARANCSICS_BOX;
+            }
+            case 2:{
+                return Zsolti.ZSOLTI_WARRIOR;
+            }
+            case 3:{
+                return Marancsics.MARANCSICS_CONSTRUCTOR;
+            }
+            case 4:{
+                return Zsolti.SUPER_ZSOLTI_ATLAS;
+            }
+            case 5:{
+                return Marancsics.MARANCSICS_ATLAS;
+            }
+            default:{
+                return Zsolti.ZSOLTI_ATLAS;
+            }
+        }
     }
 }

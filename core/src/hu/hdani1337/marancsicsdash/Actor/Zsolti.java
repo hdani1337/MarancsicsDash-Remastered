@@ -25,15 +25,23 @@ import static hu.hdani1337.marancsicsdash.SoundManager.powerUpSound;
 
 public class Zsolti extends OneSpriteAnimatedActor {
 
-    public static final String ZSOLTI_ATLAS = "atlas/zsolti.atlas";
-    public static final String DEAD_ZSOLTI = "atlas/zsoltiDead.atlas";
-    public static final String SUPER_ZSOLTI_ATLAS = "atlas/superZsolti.atlas";
+    public static final String ZSOLTI_ATLAS = "atlas/zsolti/zsolti.atlas";
+    public static final String DEAD_ZSOLTI = "atlas/zsolti/zsoltiDead.atlas";
+    public static final String ZSOLTI_WARRIOR = "atlas/zsolti/zsoltiKard.atlas";
+    public static final String DEAD_ZSOLTI_WARRIOR = "atlas/zsolti/zsoltiKardDead.atlas";
+    public static final String SUPER_ZSOLTI_ATLAS = "atlas/zsolti/superZsolti.atlas";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTextureAtlas(ZSOLTI_ATLAS);
         assetList.addTextureAtlas(DEAD_ZSOLTI);
+        assetList.addTextureAtlas(ZSOLTI_WARRIOR);
+        assetList.addTextureAtlas(DEAD_ZSOLTI_WARRIOR);
         assetList.addTextureAtlas(SUPER_ZSOLTI_ATLAS);
+    }
+
+    public enum ZsoltiType{
+        ZSOLTI, WARRIOR
     }
 
     public static boolean isDead;
@@ -45,6 +53,16 @@ public class Zsolti extends OneSpriteAnimatedActor {
      * **/
     public Zsolti(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, ZSOLTI_ATLAS);
+        switch (GameStage.selectedZsolti){
+            case ZSOLTI:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS));
+                break;
+            }
+            case WARRIOR:{
+                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(ZSOLTI_WARRIOR));
+                break;
+            }
+        }
         setFps(12);
         setSize(getWidth()*0.011f, getHeight()*0.011f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Zsolti", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
@@ -153,8 +171,18 @@ public class Zsolti extends OneSpriteAnimatedActor {
     /**
      * Scene2D konstruktor
      * **/
-    public Zsolti(MyGame game){
+    public Zsolti(MyGame game, ZsoltiType type){
         super(game, ZSOLTI_ATLAS);
+        switch (type){
+            case WARRIOR:{
+                textureAtlas = game.getMyAssetManager().getTextureAtlas(ZSOLTI_WARRIOR);
+                break;
+            }
+            case ZSOLTI:{
+                textureAtlas = game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS);
+                break;
+            }
+        }
         setFps(12);
     }
 
@@ -176,8 +204,12 @@ public class Zsolti extends OneSpriteAnimatedActor {
              * ÁTLAGOS ZSOLTI
              * **/
             superTime = 0;
-            if(getTextureAtlas() != game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS))
-                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS));
+            if(getStage() != null) {
+                if(getStage() instanceof GameStage || getStage() instanceof BossStage) {
+                    if (getTextureAtlas() != game.getMyAssetManager().getTextureAtlas(atlasByType()))
+                        setTextureAtlas(game.getMyAssetManager().getTextureAtlas(atlasByType()));
+                }
+            }
         }
 
         /**
@@ -213,5 +245,18 @@ public class Zsolti extends OneSpriteAnimatedActor {
             setOrigin(0,0);
             getActorWorldHelper().setBodyPosition(getX()+0.3f,getY());
         }
+    }
+
+    private String atlasByType(){
+        if(GameStage.selectedZsolti != null){
+            switch (GameStage.selectedZsolti){
+                case WARRIOR:{
+                    return ZSOLTI_WARRIOR;
+                }
+                default:{
+                    return ZSOLTI_ATLAS;
+                }
+            }
+        }else return ZSOLTI_ATLAS;
     }
 }

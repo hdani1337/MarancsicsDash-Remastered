@@ -26,7 +26,7 @@ import static hu.hdani1337.marancsicsdash.SoundManager.kickSound;
 
 public class MarancsicsBoss extends OneSpriteAnimatedActor {
 
-    public static final String MARANCSICSBOSS_ATLAS = "atlas/marancsicsBoss.atlas";
+    public static final String MARANCSICSBOSS_ATLAS = "atlas/marancsics/marancsicsBoss.atlas";
 
     public static AssetList assetList = new AssetList();
     static {

@@ -1,0 +1,32 @@
+marancsicsConstr.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+0
+  rotate: false
+  xy: 0, 0
+  size: 129, 253
+  orig: 129, 253
+  offset: 0, 0
+  index: -1
+1
+  rotate: false
+  xy: 129, 0
+  size: 129, 253
+  orig: 129, 253
+  offset: 0, 0
+  index: -1
+2
+  rotate: false
+  xy: 258, 0
+  size: 129, 253
+  orig: 129, 253
+  offset: 0, 0
+  index: -1
+3
+  rotate: false
+  xy: 387, 0
+  size: 129, 253
+  orig: 129, 253
+  offset: 0, 0
+  index: -1

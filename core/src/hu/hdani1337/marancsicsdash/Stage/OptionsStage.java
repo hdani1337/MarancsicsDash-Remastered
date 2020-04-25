@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import java.util.ArrayList;
+
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
@@ -15,7 +17,11 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
+import hu.hdani1337.marancsicsdash.Actor.Background;
+import hu.hdani1337.marancsicsdash.Actor.Marancsics;
+import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
+import hu.hdani1337.marancsicsdash.HudActors.ShopBackgroundPreview;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
 import hu.hdani1337.marancsicsdash.SoundManager;
@@ -23,10 +29,16 @@ import hu.hdani1337.marancsicsdash.SoundManager;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.selectedMarancsics;
+import static hu.hdani1337.marancsicsdash.Stage.GameStage.selectedZsolti;
 import static hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage.MENU_BG_TEXTURE;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtBox;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtConstructor;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtCorona;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDesert;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtOcean;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtSiberia;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtWarrior;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtZala;
 
 public class OptionsStage extends PrettyStage {
@@ -55,13 +67,21 @@ public class OptionsStage extends PrettyStage {
     private TextBox backButton;
     private TextBox muteButton;
     private TextBox gameModeButton;
-    private TextBox backgroundTypeButton;
     private TextBox difficultyButton;
     private TextBox resolutionButton;
     private TextBox fullscreenButton;
     private TextBox warningBox;
 
     private boolean setBack;
+
+    private TextBox backgroundPreviewBackground;
+    private ShopBackgroundPreview backgroundPreview;
+    private TextBox backgroundPreviewText;
+    private TextBox disclaimer;
+    private Zsolti zsoltiPreview;
+    private TextBox zsoltiPreviewText;
+    private Marancsics marancsicsPreview;
+    private TextBox marancsicsPreviewText;
 
     private Vector2 Resolution;
 
@@ -79,18 +99,27 @@ public class OptionsStage extends PrettyStage {
         backButton = new TextBox(game,"Vissza a menübe");
         muteButton = new TextBox(game, "Némítás: -NULL-");
         gameModeButton = new TextBox(game, "Játékmód: -NULL-");
-        backgroundTypeButton = new TextBox(game, "Háttér: -NULL-");
         difficultyButton = new TextBox(game, "Nehézség: -NULL-");
         resolutionButton = new TextBox(game, "Felbontás: 720p");
         fullscreenButton = new TextBox(game, "Teljes képernyö: -NULL-");
         warningBox = new TextBox(game, "A módosítások a menübe\nlépéskor lépnek érvénybe!");
         optionsLogo = new Logo(game, Logo.LogoType.OPTIONS);
+        backgroundPreview = new ShopBackgroundPreview(game);
+        backgroundPreviewBackground = new TextBox(game, " ");
+        backgroundPreview.step(selectedBackground);
+        disclaimer = new TextBox(game,"A háttér vagy kinézet változtatásához\nkattints a képére\n(Ha nem változik meg,\nakkor még nem vásároltál egyet sem)",0.5f);
+        backgroundPreviewText = new TextBox(game,"Csernobil,Szahara,Szibéria,Zala,Atlanti-óceán".split(",")[selectedBackground]);
+        marancsicsPreviewText = new TextBox(game,"Programozó,Boxoló,Építész,Beteg".split(",")[preferences.getInteger("selectedMarancsics")]);
+        zsoltiPreviewText = new TextBox(game,"Kalandor,Harcos".split(",")[preferences.getInteger("selectedZsolti")]);
+        marancsicsPreview = new Marancsics(game, selectedMarancsics);
+        zsoltiPreview = new Zsolti(game, GameStage.selectedZsolti);
         setTexts();
     }
 
     @Override
     public void setSizes() {
         if(getViewport().getWorldWidth() > MenuBackground.getWidth()) MenuBackground.setWidth(getViewport().getWorldWidth());
+        backgroundPreviewBackground.setSize(backgroundPreview.getWidth()+16,backgroundPreview.getHeight()+18);
     }
 
     @Override
@@ -99,13 +128,26 @@ public class OptionsStage extends PrettyStage {
         muteButton.setPosition(75,100);
         gameModeButton.setPosition(75,225);
         difficultyButton.setPosition(75,350);
-        backgroundTypeButton.setPosition(75,475);
         resolutionButton.setPosition(75,600);
         fullscreenButton.setPosition(75,725);
         backButton.setPosition(getViewport().getWorldWidth() - (backButton.getWidth() + 45),50);
         optionsLogo.setPosition(getViewport().getWorldWidth()/2 - optionsLogo.getWidth()/2, getViewport().getWorldHeight() - optionsLogo.getHeight()*1.15f);
         warningBox.setPosition(getViewport().getWorldWidth()/2-warningBox.getWidth()/2,-warningBox.getHeight());
+        backgroundPreview.setPosition(getViewport().getWorldWidth()/2-backgroundPreview.getWidth()/2,getViewport().getWorldHeight()/2-backgroundPreview.getHeight()/2+72);
+        backgroundPreviewBackground.setPosition(backgroundPreview.getX()-8,backgroundPreview.getY()-9);
+        backgroundPreviewText.setPosition(backgroundPreviewBackground.getX()+backgroundPreviewBackground.getWidth()/2-backgroundPreviewText.getWidth()/2,backgroundPreviewBackground.getY()-backgroundPreviewText.getHeight()-18);
+        disclaimer.setPosition(getViewport().getWorldWidth()-disclaimer.getWidth()-16,getViewport().getWorldHeight()-disclaimer.getHeight()-16);
+        fullscreenButton.setPosition(getViewport().getWorldWidth()/2-fullscreenButton.getWidth()/2,backgroundPreviewText.getY()-fullscreenButton.getHeight()-64);
+        resolutionButton.setPosition(getViewport().getWorldWidth()/2-resolutionButton.getWidth()/2,fullscreenButton.getY()-resolutionButton.getHeight()-16);
+        marancsicsPreview.setPosition(getViewport().getWorldWidth()*0.7f,backgroundPreviewBackground.getY()+backgroundPreviewBackground.getHeight()/2-marancsicsPreview.getHeight()/2+16);
+        zsoltiPreview.setPosition(marancsicsPreview.getX()+marancsicsPreview.getWidth()+100,backgroundPreviewBackground.getY()+backgroundPreviewBackground.getHeight()/2-zsoltiPreview.getHeight()/2);
+        zsoltiPreviewText.setPosition(zsoltiPreview.getX()+zsoltiPreview.getWidth()/2-zsoltiPreviewText.getWidth()/2,zsoltiPreview.getY()-zsoltiPreviewText.getHeight()-16);
+        marancsicsPreviewText.setPosition(marancsicsPreview.getX()+marancsicsPreview.getWidth()/2-marancsicsPreviewText.getWidth()/2-8,zsoltiPreviewText.getY());
     }
+
+    int bgID = selectedBackground;
+    int marancsID = preferences.getInteger("selectedMarancsics");
+    int zsoltID = preferences.getInteger("selectedZsolti");
 
     @Override
     public void addListeners() {
@@ -160,22 +202,6 @@ public class OptionsStage extends PrettyStage {
             }
         });
 
-        backgroundTypeButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-
-                if(selectedBackground < 4) selectedBackground++;
-                else selectedBackground = 0;
-
-                if(selectedBackground == 1 && !boughtSiberia) selectedBackground = 2;
-                if(selectedBackground == 2 && !boughtZala) selectedBackground = 3;
-                if(selectedBackground == 3 && !boughtDesert) selectedBackground = 4;
-                if(selectedBackground == 4 && !boughtOcean) selectedBackground = 0;
-                setTexts();
-            }
-        });
-
         difficultyButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -223,6 +249,132 @@ public class OptionsStage extends PrettyStage {
                 setTexts();
             }
         });
+
+        backgroundPreview.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                bgID++;
+                if(bgID > 4) bgID = 0;
+                switch (bgID){
+                    case 1:{
+                        if(boughtDesert) {
+                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.SZAHARA_TEXTURE));
+                            backgroundPreviewText.setText("Szahara");
+                            break;
+                        }
+                        else bgID++;
+                    }
+                    case 2:{
+                        if(boughtSiberia) {
+                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.SZIBERIA_TEXTURE));
+                            backgroundPreviewText.setText("Szibéria");
+                            break;
+                        }
+                        else bgID++;
+                    }
+                    case 3:{
+                        if(boughtZala) {
+                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.ZALA_TEXTURE));
+                            backgroundPreviewText.setText("Zala");
+                            break;
+                        }
+                        else bgID++;
+                    }
+                    case 4:{
+                        if(boughtOcean) {
+                            backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.OCEAN_TEXTURE));
+                            backgroundPreviewText.setText("Atlanti-óceán");
+                            break;
+                        }
+                        else bgID = 0;
+                    }
+                    default:{
+                        backgroundPreview.sprite.setTexture(game.getMyAssetManager().getTexture(Background.CSERNOBIL_TEXTURE));
+                        backgroundPreviewText.setText("Csernobil");
+                        break;
+                    }
+                }
+                backgroundPreviewText.setPosition(backgroundPreviewBackground.getX()+backgroundPreviewBackground.getWidth()/2-backgroundPreviewText.getWidth()/2,backgroundPreviewBackground.getY()-backgroundPreviewText.getHeight()-18);
+                selectedBackground = bgID;
+            }
+        });
+
+        marancsicsPreview.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                marancsID++;
+                if(marancsID > 3) marancsID = 0;
+                switch (marancsID){
+                    case 1:{
+                        if(boughtBox) {
+                            marancsicsPreview.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Marancsics.MARANCSICS_BOX));
+                            selectedMarancsics = Marancsics.MarancsicsType.BOX;
+                            marancsicsPreviewText.setText("Boxoló");
+                            break;
+                        }
+                        else marancsID++;
+                    }
+                    case 2:{
+                        if(boughtConstructor) {
+                            marancsicsPreview.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Marancsics.MARANCSICS_CONSTRUCTOR));
+                            selectedMarancsics = Marancsics.MarancsicsType.CONSTRUCTOR;
+                            marancsicsPreviewText.setText("Építész");
+                            break;
+                        }
+                        else marancsID++;
+                    }
+                    case 3:{
+                        if(boughtCorona) {
+                            marancsicsPreview.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Marancsics.MARANCSICS_CORONA));
+                            selectedMarancsics = Marancsics.MarancsicsType.CORONA;
+                            marancsicsPreviewText.setText("Beteg");
+                            break;
+                        }
+                        else marancsID++;
+                    }
+                    default:{
+                        marancsicsPreview.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Marancsics.MARANCSICS_ATLAS));
+                        selectedMarancsics = Marancsics.MarancsicsType.MARANCSICS;
+                        marancsicsPreviewText.setText("Programozó");
+                        break;
+                    }
+                }
+                marancsicsPreviewText.setPosition(marancsicsPreview.getX()+marancsicsPreview.getWidth()/2-marancsicsPreviewText.getWidth()/2-8,zsoltiPreviewText.getY());
+                preferences.putInteger("selectedMarancsics",marancsID);
+                preferences.flush();
+            }
+        });
+
+        zsoltiPreview.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                zsoltID++;
+                if(zsoltID > 1) zsoltID = 0;
+                switch (zsoltID){
+                    case 1:{
+                        if(boughtWarrior) {
+                            zsoltiPreview.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.ZSOLTI_WARRIOR));
+                            GameStage.selectedZsolti = Zsolti.ZsoltiType.WARRIOR;
+                            zsoltiPreviewText.setText("Harcos");
+                            break;
+                        }
+                        else zsoltID++;
+                    }
+                    default:{
+                        zsoltiPreview.setTextureAtlas(game.getMyAssetManager().getTextureAtlas(Zsolti.ZSOLTI_ATLAS));
+                        GameStage.selectedZsolti = Zsolti.ZsoltiType.ZSOLTI;
+                        zsoltiPreviewText.setText("Kalandor");
+                        break;
+                    }
+                }
+                zsoltiPreviewText.setPosition(zsoltiPreview.getX()+zsoltiPreview.getWidth()/2-zsoltiPreviewText.getWidth()/2,zsoltiPreview.getY()-zsoltiPreviewText.getHeight()-16);
+                preferences.putInteger("selectedZsolti",zsoltID);
+                preferences.flush();
+            }
+        });
     }
 
     @Override
@@ -239,13 +391,17 @@ public class OptionsStage extends PrettyStage {
         addActor(muteButton);
         addActor(gameModeButton);
         addActor(warningBox);
+        addActor(backgroundPreviewBackground);
+        addActor(backgroundPreview);
+        addActor(backgroundPreviewText);
+        addActor(disclaimer);
+        addActor(marancsicsPreview);
+        addActor(zsoltiPreview);
+        addActor(zsoltiPreviewText);
+        addActor(marancsicsPreviewText);
         if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
             addActor(resolutionButton);
             addActor(fullscreenButton);
-        }
-        if(boughtSiberia || boughtZala)
-        {
-            addActor(backgroundTypeButton);
         }
     }
 
@@ -291,30 +447,6 @@ public class OptionsStage extends PrettyStage {
             }
             default:{
                 gameModeButton.setText("Játékmód: Endless");
-                break;
-            }
-        }
-
-        //Háttér
-        switch (selectedBackground){
-            case 0:{
-                backgroundTypeButton.setText("Háttér: Csernobil");
-                break;
-            }
-            case 1:{
-                backgroundTypeButton.setText("Háttér: Szibéria");
-                break;
-            }
-            case 2:{
-                backgroundTypeButton.setText("Háttér: Zala");
-                break;
-            }
-            case 3:{
-                backgroundTypeButton.setText("Háttér: Szahara");
-                break;
-            }
-            case 4:{
-                backgroundTypeButton.setText("Háttér: Atlanti-óceán");
                 break;
             }
         }
@@ -394,9 +526,16 @@ public class OptionsStage extends PrettyStage {
         backButton.setAlpha(alpha);
         muteButton.setAlpha(alpha);
         gameModeButton.setAlpha(alpha);
-        backgroundTypeButton.setAlpha(alpha);
         difficultyButton.setAlpha(alpha);
         resolutionButton.setAlpha(alpha);
         fullscreenButton.setAlpha(alpha);
+        zsoltiPreview.setAlpha(alpha);
+        marancsicsPreview.setAlpha(alpha);
+        backgroundPreviewBackground.setAlpha(alpha);
+        backgroundPreview.setAlpha(alpha);
+        backgroundPreviewText.setAlpha(alpha);
+        disclaimer.setAlpha(alpha);
+        zsoltiPreviewText.setAlpha(alpha);
+        marancsicsPreviewText.setAlpha(alpha);
     }
 }

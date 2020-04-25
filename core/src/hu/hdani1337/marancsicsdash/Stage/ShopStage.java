@@ -21,6 +21,7 @@ import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
+import hu.hdani1337.marancsicsdash.Actor.Marancsics;
 import hu.hdani1337.marancsicsdash.Actor.SuperCoin;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.InstantBoss;
@@ -72,6 +73,10 @@ public class ShopStage extends PrettyStage {
     public static boolean boughtZsolti = preferences.getBoolean("boughtZsolti");
     public static boolean boughtDouble = preferences.getBoolean("boughtDouble");
     public static boolean boughtCoin = preferences.getBoolean("boughtCoin");
+    public static boolean boughtWarrior = preferences.getBoolean("boughtWarrior");
+    public static boolean boughtBox = preferences.getBoolean("boughtBox");
+    public static boolean boughtCorona = preferences.getBoolean("boughtCorona");
+    public static boolean boughtConstructor = preferences.getBoolean("boughtConstructor");
 
     /**
      * Actorok
@@ -87,6 +92,7 @@ public class ShopStage extends PrettyStage {
      * **/
     private ArrayList<ShopItem> backgrounds;//Hátterek
     private ArrayList<ShopItem> abilities;//Képességek
+    private ArrayList<ShopItem> skins;//Skinek
     private ArrayList<ShopCategory> categories;//Kategóriák
 
     public ShopCategoryType selectedCategory;
@@ -114,6 +120,7 @@ public class ShopStage extends PrettyStage {
         backgrounds = new ArrayList<>();
         abilities = new ArrayList<>();
         categories = new ArrayList<>();
+        skins = new ArrayList<>();
         makeItems();
     }
 
@@ -129,6 +136,12 @@ public class ShopStage extends PrettyStage {
         abilities.add(new ShopItem(game, false, ShopItemType.INSTANTBOSS, "Instant Boss"));
         abilities.add(new ShopItem(game, false, ShopItemType.SUPERCOIN, "Pénzesö"));
         abilities.add(new ShopItem(game, false, ShopItemType.SUPERZSOLTI, "Super Zsolti"));
+
+        /**Skinek**/
+        skins.add(new ShopItem(game, Marancsics.MarancsicsType.BOX,"Boxoló"));
+        skins.add(new ShopItem(game, Marancsics.MarancsicsType.CONSTRUCTOR,"Építész"));
+        skins.add(new ShopItem(game, Marancsics.MarancsicsType.CORONA,"Beteg"));
+        skins.add(new ShopItem(game, Zsolti.ZsoltiType.WARRIOR,"Harcos"));
 
         /**Kategóriák**/
         categories.add(new ShopCategory(game, ShopCategoryType.SKINS));
@@ -195,6 +208,13 @@ public class ShopStage extends PrettyStage {
                 abilities.get(i).setPosition(getViewport().getWorldWidth()/2 - 475 + i * 275, getViewport().getWorldHeight() / 2 - 100);
             }
         }
+        for (int i = 0; i < skins.size(); i++){
+            if(getViewport().getWorldWidth()/getViewport().getWorldHeight()<2){
+                skins.get(i).setPosition(categories.get(1).getX()+categories.get(1).getWidth()+120+i*275,getViewport().getWorldHeight() / 2 - 100);
+            }else {
+                skins.get(i).setPosition(getViewport().getWorldWidth()/2 - 475 + i * 275, getViewport().getWorldHeight() / 2 - 100);
+            }
+        }
     }
 
     @Override
@@ -219,6 +239,10 @@ public class ShopStage extends PrettyStage {
                 preferences.putBoolean("boughtZsolti", boughtZsolti);
                 preferences.putBoolean("boughtDouble", boughtDouble);
                 preferences.putBoolean("boughtCoin", boughtCoin);
+                preferences.putBoolean("boughtConstructor", boughtConstructor);
+                preferences.putBoolean("boughtCorona", boughtCorona);
+                preferences.putBoolean("boughtBox", boughtBox);
+                preferences.putBoolean("boughtWarrior", boughtWarrior);
                 preferences.flush();
                 setBack = true;//Kifele áttűnés
             }
@@ -243,6 +267,7 @@ public class ShopStage extends PrettyStage {
         MenuBackground.setAlpha(0.25f);
         for (int i = 0; i < backgrounds.size(); i++) addActor(backgrounds.get(i));
         for (int i = 0; i < abilities.size(); i++) addActor(abilities.get(i));
+        for (int i = 0; i < skins.size(); i++) addActor(skins.get(i));
         for (int i = 0; i < categories.size(); i++) {
             categories.get(i).setColor(Color.GRAY);
             addActor(categories.get(i));
@@ -291,6 +316,7 @@ public class ShopStage extends PrettyStage {
                 case NULL: {
                     for (int i = 0; i < backgrounds.size(); i++) backgrounds.get(i).setAlpha(0);
                     for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(0);
+                    for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(0);
                     for (int i = 0; i < categories.size(); i++)
                         if (categories.get(i).getColor() != Color.GRAY)
                             categories.get(i).setColor(Color.GRAY);
@@ -299,6 +325,7 @@ public class ShopStage extends PrettyStage {
                 case SKINS: {
                     for (int i = 0; i < backgrounds.size(); i++) backgrounds.get(i).setAlpha(0);
                     for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(0);
+                    for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(1);
                     for (int i = 0; i < categories.size(); i++)
                         categories.get(i).setColor(Color.GRAY);
                     categories.get(0).setColor(1, 1, 1, 1);
@@ -308,6 +335,7 @@ public class ShopStage extends PrettyStage {
                 case ABILITIES: {
                     for (int i = 0; i < backgrounds.size(); i++) backgrounds.get(i).setAlpha(0);
                     for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(1);
+                    for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(0);
                     for (int i = 0; i < categories.size(); i++)
                         categories.get(i).setColor(Color.GRAY);
                     categories.get(1).setColor(1, 1, 1, 1);
@@ -316,6 +344,7 @@ public class ShopStage extends PrettyStage {
                 case BACKGROUND: {
                     for (int i = 0; i < backgrounds.size(); i++) backgrounds.get(i).setAlpha(1);
                     for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(0);
+                    for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(0);
                     for (int i = 0; i < categories.size(); i++)
                         categories.get(i).setColor(Color.GRAY);
                     categories.get(2).setColor(1, 1, 1, 1);
@@ -338,24 +367,28 @@ public class ShopStage extends PrettyStage {
             case NULL: {
                 for (int i = 0; i < backgrounds.size(); i++) backgrounds.get(i).setAlpha(0);
                 for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(0);
+                for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(0);
                 for (int i = 0; i < categories.size(); i++) categories.get(i).setAlpha(alpha);
                 break;
             }
             case SKINS: {
                 for (int i = 0; i < backgrounds.size(); i++) backgrounds.get(i).setAlpha(0);
                 for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(0);
+                for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(alpha);
                 for (int i = 0; i < categories.size(); i++) categories.get(i).setAlpha(alpha);
                 System.out.println();
                 break;
             }
             case ABILITIES: {
                 for (int i = 0; i < backgrounds.size(); i++) backgrounds.get(i).setAlpha(0);
+                for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(0);
                 for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(alpha);
                 for (int i = 0; i < categories.size(); i++) categories.get(i).setAlpha(alpha);
                 break;
             }
             case BACKGROUND: {
                 for (int i = 0; i < backgrounds.size(); i++) backgrounds.get(i).setAlpha(alpha);
+                for (int i = 0; i < skins.size(); i++) skins.get(i).setAlpha(0);
                 for (int i = 0; i < abilities.size(); i++) abilities.get(i).setAlpha(0);
                 for (int i = 0; i < categories.size(); i++) categories.get(i).setAlpha(alpha);
                 break;

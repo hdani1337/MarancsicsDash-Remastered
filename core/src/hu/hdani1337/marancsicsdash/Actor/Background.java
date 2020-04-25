@@ -36,7 +36,7 @@ public class Background extends OneSpriteStaticActor {
      * EGYSZERŰBB MINT INTEGEREKKEL SZERENCSÉTLENKEDNI
      * **/
     public enum BackgroundType{
-        CSERNOBIL, SZIBERIA, ZALA, SZAHARA, OCEAN
+        CSERNOBIL, SZAHARA, SZIBERIA, ZALA, OCEAN
     }
 
     public static float ground;//TALAJ Y KOORDINÁTÁJA

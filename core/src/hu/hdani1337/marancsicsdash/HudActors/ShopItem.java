@@ -16,6 +16,7 @@ import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
+import hu.hdani1337.marancsicsdash.Actor.Marancsics;
 import hu.hdani1337.marancsicsdash.Actor.SuperCoin;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.SoundManager;
@@ -24,12 +25,16 @@ import hu.hdani1337.marancsicsdash.Stage.ShopStage;
 import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtBox;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtCoin;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtConstructor;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtCorona;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDesert;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDouble;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtInstantBoss;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtOcean;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtSiberia;
+import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtWarrior;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtZala;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtZsolti;
 
@@ -51,6 +56,8 @@ public class ShopItem extends MyGroup implements IPrettyStage {
     private MyLabel nameLabel;
     private ShopItemType type;
     private Background.BackgroundType backgroundType;
+    private Marancsics.MarancsicsType marancsicsType;
+    private Zsolti.ZsoltiType zsoltiType;
 
     private boolean setBackground;
     private boolean boughtAlready;
@@ -67,6 +74,8 @@ public class ShopItem extends MyGroup implements IPrettyStage {
         this.setBackground = setBackground;
         this.type = type;
         this.backgroundType = null;
+        this.zsoltiType = null;
+        this.marancsicsType = null;
         this.name = name;
         assignment();
         setSizes();
@@ -82,8 +91,46 @@ public class ShopItem extends MyGroup implements IPrettyStage {
         super(game);
         this.setBackground = true;
         this.type = null;
+        this.zsoltiType = null;
+        this.marancsicsType = null;
         this.backgroundType = backgroundType;
         this.name = "";
+        assignment();
+        setSizes();
+        setPositions();
+        addListeners();
+        addActors();
+    }
+
+    /**
+     * MARANCSICS SKIN KONSTRUKTOR
+     * **/
+    public ShopItem(MyGame game, Marancsics.MarancsicsType marancsicsType, String name) {
+        super(game);
+        this.setBackground = false;
+        this.type = null;
+        this.zsoltiType = null;
+        this.marancsicsType = marancsicsType;
+        this.backgroundType = null;
+        this.name = name;
+        assignment();
+        setSizes();
+        setPositions();
+        addListeners();
+        addActors();
+    }
+
+    /**
+     * ZSOLTI SKIN KONSTRUKTOR
+     * **/
+    public ShopItem(MyGame game, Zsolti.ZsoltiType zsoltiType, String name) {
+        super(game);
+        this.setBackground = false;
+        this.type = null;
+        this.zsoltiType = zsoltiType;
+        this.marancsicsType = null;
+        this.backgroundType = null;
+        this.name = name;
         assignment();
         setSizes();
         setPositions();
@@ -132,12 +179,13 @@ public class ShopItem extends MyGroup implements IPrettyStage {
             nameLabel.setPosition(item.getX()+item.getWidth()/2-nameLabel.getWidth()/2,item.getY()+item.getHeight()+15);
             coinIcon.setPosition(item.getX() + item.getWidth()/2 - coinIcon.getWidth()-16, item.getY() - coinIcon.getHeight());
             priceLabel.setPosition(coinIcon.getX() + coinIcon.getWidth()+8, coinIcon.getY() + coinIcon.getHeight() / 2 - priceLabel.getHeight() / 2);
+            if(marancsicsType != null) nameLabel.setY(nameLabel.getY()-25);
         }
     }
 
     @Override
     public void addListeners() {
-        addListener(new ClickListener(){
+        this.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -210,6 +258,40 @@ public class ShopItem extends MyGroup implements IPrettyStage {
                                         break;
                                     }
                                 }
+                            } else if (marancsicsType != null){
+                                switch (marancsicsType){
+                                    case BOX:{
+                                        boughtBox = true;
+                                        preferences.putLong("coin", Coin.coin);
+                                        preferences.putBoolean("boughtBox", boughtBox);
+                                        preferences.flush();
+                                        break;
+                                    }
+                                    case CORONA:{
+                                        boughtCorona = true;
+                                        preferences.putLong("coin", Coin.coin);
+                                        preferences.putBoolean("boughtCorona", boughtCorona);
+                                        preferences.flush();
+                                        break;
+                                    }
+                                    case CONSTRUCTOR:{
+                                        boughtConstructor = true;
+                                        preferences.putLong("coin", Coin.coin);
+                                        preferences.putBoolean("boughtConstructor", boughtConstructor);
+                                        preferences.flush();
+                                        break;
+                                    }
+                                }
+                            } else if (zsoltiType != null){
+                                switch (zsoltiType){
+                                    case WARRIOR:{
+                                        boughtWarrior = true;
+                                        preferences.putLong("coin", Coin.coin);
+                                        preferences.putBoolean("boughtWarrior", boughtWarrior);
+                                        preferences.flush();
+                                        break;
+                                    }
+                                }
                             }
                             boughtAlready = true;
                             item.setColor(1, 1, 1, 1);
@@ -230,12 +312,12 @@ public class ShopItem extends MyGroup implements IPrettyStage {
     @Override
     public void addActors() {
         if(background != null) addActor(background);
-        addActor(item);
         if(name != "") addActor(nameLabel);
         if(!boughtAlready){
             addActor(coinIcon);
             addActor(priceLabel);
         }
+        addActor(item);
     }
 
     private void makeItem(){
@@ -249,7 +331,7 @@ public class ShopItem extends MyGroup implements IPrettyStage {
                     break;
                 }
                 case DOUBLEJUMP: {
-                    item = new Zsolti(game) {
+                    item = new Zsolti(game, Zsolti.ZsoltiType.ZSOLTI) {
                         float time = -0.5f;
 
                         @Override
@@ -286,7 +368,7 @@ public class ShopItem extends MyGroup implements IPrettyStage {
                 case SUPERZSOLTI: {
                     boughtAlready = boughtZsolti;
                     price = 250;
-                    item = new Zsolti(game);
+                    item = new Zsolti(game, Zsolti.ZsoltiType.ZSOLTI);
                     ((Zsolti)item).superTime = 3;
                     addTimer(new TickTimer(5,true,new TickTimerListener(){
                         @Override
@@ -320,6 +402,36 @@ public class ShopItem extends MyGroup implements IPrettyStage {
                     break;
                 }
             }
+        }else if (marancsicsType != null){
+            switch (marancsicsType){
+                case BOX:{
+                    boughtAlready = boughtBox;
+                    item = new Marancsics(game, Marancsics.MarancsicsType.BOX);
+                    price = 250;
+                    break;
+                }
+                case CORONA:{
+                    boughtAlready = boughtCorona;
+                    item = new Marancsics(game, Marancsics.MarancsicsType.CORONA);
+                    price = 300;
+                    break;
+                }
+                case CONSTRUCTOR:{
+                    boughtAlready = boughtConstructor;
+                    item = new Marancsics(game, Marancsics.MarancsicsType.CONSTRUCTOR);
+                    price = 250;
+                    break;
+                }
+            }
+        } else if (zsoltiType != null){
+            switch (zsoltiType){
+                case WARRIOR:{
+                    boughtAlready = boughtWarrior;
+                    item = new Zsolti(game, Zsolti.ZsoltiType.WARRIOR);
+                    price = 500;
+                    break;
+                }
+            }
         }
     }
 
@@ -330,8 +442,14 @@ public class ShopItem extends MyGroup implements IPrettyStage {
         priceLabel.setColor(priceLabel.getColor().r,priceLabel.getColor().g,priceLabel.getColor().b,alpha);
         nameLabel.setColor(priceLabel.getColor().r,priceLabel.getColor().g,priceLabel.getColor().b,alpha);
 
-        if(alpha == 0) touch = false;
-        else touch = true;
+        if(alpha == 0) {
+            setZIndex(0);
+            touch = false;
+        }
+        else{
+            setZIndex(100);
+            touch = true;
+        }
     }
 
     @Override
