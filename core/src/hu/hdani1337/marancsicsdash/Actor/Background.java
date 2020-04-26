@@ -17,7 +17,16 @@ import hu.hdani1337.marancsicsdash.Stage.GameStage;
 import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.difficulty;
 
 public class Background extends OneSpriteStaticActor {
-
+    //region Háttér típus Enum
+    /**
+     * HÁTTÉR TÍPUSAINAK ENUM
+     * EGYSZERŰBB MINT INTEGEREKKEL SZERENCSÉTLENKEDNI
+     * **/
+    public enum BackgroundType{
+        CSERNOBIL, SZAHARA, SZIBERIA, ZALA, OCEAN
+    }
+    //endregion
+    //region AssetList
     public static final String CSERNOBIL_TEXTURE = "pic/backgrounds/back/bg.png";
     public static final String SZIBERIA_TEXTURE = "pic/backgrounds/back/bg2.png";
     public static final String ZALA_TEXTURE = "pic/backgrounds/back/bg3.jpg";
@@ -32,24 +41,31 @@ public class Background extends OneSpriteStaticActor {
         assetList.addTexture(SZAHARA_TEXTURE);
         assetList.addTexture(OCEAN_TEXTURE);
     }
-
-    /**
-     * HÁTTÉR TÍPUSAINAK ENUM
-     * EGYSZERŰBB MINT INTEGEREKKEL SZERENCSÉTLENKEDNI
-     * **/
-    public enum BackgroundType{
-        CSERNOBIL, SZAHARA, SZIBERIA, ZALA, OCEAN
-    }
-
+    //endregion
+    //region Változók
     public static float ground;//TALAJ Y KOORDINÁTÁJA
-
+    //endregion
+    //region Konstruktor
     public Background(MyGame game, BackgroundType backgroundType, World world, Viewport viewport) {
         super(game, CSERNOBIL_TEXTURE);
         setSize(viewport.getWorldWidth(), viewport.getWorldHeight());
+        setTexture(backgroundType);
+        /**
+         * NULLKEZELÉS
+         * AKI NEM CSINÁL NULLKEZELÉST AZ BUZI ÉS MÉG MEG IS ÜTÖM
+         * **/
+        if(world != null){
+            makeGround(world);
+            makeCeiling(world);
+        }
+    }
+    //endregion
+    //region Textúra beállító metódus
+    /**
+     * HÁTTÉR TÍPUSÁTÓL FÜGGŐEN BEÁLLÍTJUK A TEXTÚRÁKAT ÉS A TALAJ Y KOORDINÁTÁJÁT
+     * **/
+    private void setTexture(BackgroundType backgroundType){
         switch (backgroundType){
-            /**
-             * HÁTTÉR TÍPUSÁTÓL FÜGGŐEN BEÁLLÍTJUK A TEXTÚRÁKAT ÉS A TALAJ Y KOORDINÁTÁJÁT
-             * **/
             case CSERNOBIL:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(CSERNOBIL_TEXTURE));
                 ground = 0.42f;
@@ -79,30 +95,44 @@ public class Background extends OneSpriteStaticActor {
                 Gdx.app.log("Background", "Paraméterként megadott háttértípus érvénytelen, alapértelmezettként a Csernobil háttér kerül beállításra!");
             }
         }
-
-        /**
-         * NULLKEZELÉS
-         * AKI NEM CSINÁL NULLKEZELÉST AZ BUZI ÉS MÉG MEG IS ÜTÖM
-         * **/
-        if(world != null){
-            BodyDef groundBodyDef = new BodyDef();
-            groundBodyDef.position.set(new Vector2(0, ground));
-            Body groundBody = world.createBody(groundBodyDef);
-            PolygonShape groundBox = new PolygonShape();
-            groundBox.setAsBox(16 * 2, ground);
-            groundBody.createFixture(groundBox, 0.0f);
-
-            BodyDef groundBodyDef2 = new BodyDef();
-            groundBodyDef2.position.set(new Vector2(0, 15));
-            Body groundBody2 = world.createBody(groundBodyDef2);
-            PolygonShape groundBox2 = new PolygonShape();
-            groundBox2.setAsBox(16 * 2, ground);
-            groundBody2.createFixture(groundBox2, 0.0f);
-        }
+    }
+    //endregion
+    //region Világ metódusai
+    /**
+     * Talaj készítése a világba
+     * **/
+    private void makeGround(World world){
+        BodyDef groundBodyDef = new BodyDef();
+        groundBodyDef.position.set(new Vector2(0, ground));
+        Body groundBody = world.createBody(groundBodyDef);
+        PolygonShape groundBox = new PolygonShape();
+        groundBox.setAsBox(16 * 2, ground);
+        groundBody.createFixture(groundBox, 0.0f);
     }
 
+    /**
+     * Plafon készítése a világba, hogy Zsolti ne repülhessen a végtelenbe
+     * **/
+    private void makeCeiling(World world){
+        BodyDef groundBodyDef2 = new BodyDef();
+        groundBodyDef2.position.set(new Vector2(0, 15));
+        Body groundBody2 = world.createBody(groundBodyDef2);
+        PolygonShape groundBox2 = new PolygonShape();
+        groundBox2.setAsBox(16 * 2, ground);
+        groundBody2.createFixture(groundBox2, 0.0f);
+    }
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
+        move();
+    }
+
+    /**
+     * Csak a GameStagen és BossStagen mozogjon
+     * Sebesség a világ méretéhez igazítva
+     * **/
+    private void move(){
         if(getStage() != null){
             if(getStage() instanceof GameStage){
                 if(GameStage.isAct) setX(getX()-(difficulty*0.005f));//HÁTTÉR FOLYAMATOS MOZGATÁSA
@@ -111,4 +141,5 @@ public class Background extends OneSpriteStaticActor {
             }
         }
     }
+    //endregion
 }

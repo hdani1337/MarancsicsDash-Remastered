@@ -10,7 +10,7 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.SoundManager.coinSound;
 
 public class Coin extends OneSpriteAnimatedActor implements CollectableItem {
-
+    //region AssetList
     public static final String COIN_ATLAS = "atlas/coin.atlas";
     public static long coin = preferences.getLong("coin");
 
@@ -18,10 +18,12 @@ public class Coin extends OneSpriteAnimatedActor implements CollectableItem {
     static {
         assetList.addTextureAtlas(COIN_ATLAS);
     }
-
+    //endregion
+    //region Változók
     private boolean isAct;
     private Zsolti zsolti;
-
+    //endregion
+    //region Konstruktorok
     /**
      * GameStage konstruktor
      * @param stage A GameStage, hogy hozzáférjünk Zsoltihoz
@@ -43,25 +45,26 @@ public class Coin extends OneSpriteAnimatedActor implements CollectableItem {
     public Coin(MyGame game, boolean act){
         super(game, COIN_ATLAS);
         this.isAct = false;
-        if (act) {
-            setFps(60);
-        } else {
-            setFps(0);
-        }
+        if (act) setFps(60);
+        else setFps(0);
     }
-
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(this.isAct && GameStage.isAct) {
-            isCollected(zsolti);
-        }
+        /**
+         * Akkor vizsgáljuk az ütközést, ha megy a játék és a pénzérmének is beállítottuk a vizsgálat szükségességét
+         **/
+        if(this.isAct && GameStage.isAct) isCollected(zsolti);
     }
-
+    //endregion
+    //region Interfészek metódusai
     @Override
     public void collected() {
         Coin.coin++;
         if (!muted) coinSound.play();
         remove();
     }
+    //endregion
 }

@@ -7,7 +7,7 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 
 public class Logo extends OneSpriteStaticActor {
-
+    //region AssetList
     public static final String LOGO_TEXTURE = "pic/logos/logo.png";
     public static final String MARANCSHOP_TEXTURE = "pic/logos/marancshop.png";
     public static final String OPTIONS_TEXTURE = "pic/logos/options.png";
@@ -20,13 +20,20 @@ public class Logo extends OneSpriteStaticActor {
         assetList.addTexture(OPTIONS_TEXTURE);
         assetList.addTexture(INFO_TEXTURE);
     }
-
+    //endregion
+    //region Logo típus Enum
     public enum LogoType{
         MENU, SHOP, OPTIONS, INFO
     }
-
+    //endregion
+    //region Konstruktor
     public Logo(MyGame game, LogoType logotype) {
         super(game, LOGO_TEXTURE);
+        setTexture(logotype);
+    }
+    //endregion
+    //region Textúre beállító metódus
+    private void setTexture(LogoType logotype){
         switch (logotype){
             case MENU:{
                 sprite.setTexture(game.getMyAssetManager().getTexture(LOGO_TEXTURE));
@@ -52,7 +59,8 @@ public class Logo extends OneSpriteStaticActor {
             }
         }
     }
-
+    //endregion
+    //region Act metódusai
     private int speed = 2;
 
     @Override
@@ -60,9 +68,9 @@ public class Logo extends OneSpriteStaticActor {
         super.act(delta);
         setRotation(getRotation() + delta * speed);
 
-        if(getRotation() >= 12 || getRotation() <= -12){
+        if (getRotation() >= 12 || getRotation() <= -12) {
             speed *= -1;
         }
-
     }
+    //endregion
 }

@@ -21,6 +21,7 @@ import static hu.hdani1337.marancsicsdash.SoundManager.bossMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
 
 public class VictoryStage extends PrettyStage {
+    //region AssetList
     public static final String BLACK_TEXTURE = "pic/fekete.png";
 
     public static AssetList assetList = new AssetList();
@@ -28,18 +29,21 @@ public class VictoryStage extends PrettyStage {
         assetList.collectAssetDescriptor(TextBox.class,assetList);
         assetList.addTexture(BLACK_TEXTURE);
     }
-
+    //endregion
+    //region Változók
     private TextBox info;
     private TextBox pontok;
     private TextBox again;
     private TextBox menu;
 
     private OneSpriteStaticActor black;
-
+    //endregion
+    //region Konstruktor
     public VictoryStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void assignment() {
         info = new TextBox(game, "Gratulálok,\nlegyözted Marancsicsot!",1.75f);
@@ -132,10 +136,8 @@ public class VictoryStage extends PrettyStage {
         menu.remove();
         addedActors = false;
     }
-
-    private boolean addedActors;
-    private float alpha;
-
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -152,6 +154,8 @@ public class VictoryStage extends PrettyStage {
         }
     }
 
+    private boolean addedActors;
+    private float alpha;
     private void makeStage(){
         pontok.setText("Elért pontszámod\n"+GameStage.score);
         setPositions();
@@ -173,4 +177,5 @@ public class VictoryStage extends PrettyStage {
         menu.setAlpha(alpha);
         //Áttűnés vége
     }
+    //endregion
 }

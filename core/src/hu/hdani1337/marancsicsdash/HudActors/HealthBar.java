@@ -17,7 +17,7 @@ import hu.hdani1337.marancsicsdash.Stage.BossStage;
 import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
 
 public class HealthBar extends MyGroup implements IPrettyStage {
-
+    //region AssetList
     public static final String PIROS = "pic/piros.png";
     public static final String ZOLD = "pic/zold.png";
 
@@ -27,12 +27,14 @@ public class HealthBar extends MyGroup implements IPrettyStage {
         assetList.addTexture(ZOLD);
         assetList.addFont(RETRO_FONT, RETRO_FONT, 32, Color.WHITE, AssetList.CHARS);
     }
-
+    //endregion
+    //region Változók
     private OneSpriteStaticActor pirosCsik;
     private OneSpriteStaticActor zoldCsik;
     private MyLabel marancsicsElete;
     private MarancsicsBoss marancsicsBoss;
-
+    //endregion
+    //region Konstruktor
     public HealthBar(MyGame game, MyStage stage) {
         super(game);
         if(stage != null && stage instanceof BossStage) this.marancsicsBoss = ((BossStage)stage).marancsics;
@@ -41,7 +43,8 @@ public class HealthBar extends MyGroup implements IPrettyStage {
         setPositions();
         addActors();
     }
-
+    //endregion
+    //region Interfész metódusai
     @Override
     public void assignment() {
         pirosCsik = new OneSpriteStaticActor(game,PIROS);
@@ -82,7 +85,8 @@ public class HealthBar extends MyGroup implements IPrettyStage {
         addActor(pirosCsik);
         addActor(marancsicsElete);
     }
-
+    //endregion
+    //region Override-ok
     @Override
     public float getWidth() {
         return zoldCsik.getWidth();
@@ -92,7 +96,8 @@ public class HealthBar extends MyGroup implements IPrettyStage {
     public float getHeight() {
         return zoldCsik.getHeight();
     }
-
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -103,4 +108,5 @@ public class HealthBar extends MyGroup implements IPrettyStage {
             pirosCsik.setX(zoldCsik.getX() + zoldCsik.getWidth() - pirosCsik.getWidth());
         }
     }
+    //endregion
 }

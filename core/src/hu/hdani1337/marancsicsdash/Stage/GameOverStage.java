@@ -20,7 +20,7 @@ import static hu.hdani1337.marancsicsdash.SoundManager.bossMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
 
 public class GameOverStage extends PrettyStage {
-
+    //region AssetList
     public static final String BLACK_TEXTURE = "pic/fekete.png";
 
     public static AssetList assetList = new AssetList();
@@ -28,18 +28,21 @@ public class GameOverStage extends PrettyStage {
         assetList.collectAssetDescriptor(TextBox.class,assetList);
         assetList.addTexture(BLACK_TEXTURE);
     }
-
+    //endregion
+    //region Változók
     private TextBox info;
     private TextBox pontok;
     private TextBox again;
     private TextBox menu;
 
     private OneSpriteStaticActor black;
-
+    //endregion
+    //region Konstruktor
     public GameOverStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void assignment() {
         info = new TextBox(game, "Vesztettél!",2f);
@@ -132,10 +135,8 @@ public class GameOverStage extends PrettyStage {
         menu.remove();
         addedActors = false;
     }
-
-    private boolean addedActors;
-    private float alpha;
-
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -157,6 +158,8 @@ public class GameOverStage extends PrettyStage {
         }
     }
 
+    private float alpha;
+    private boolean addedActors;
     private void makeStage(){
         pontok.setText("Elért pontszámod\n"+GameStage.score);
         setPositions();
@@ -178,4 +181,5 @@ public class GameOverStage extends PrettyStage {
         menu.setAlpha(alpha);
         //Áttűnés vége
     }
+    //endregion
 }

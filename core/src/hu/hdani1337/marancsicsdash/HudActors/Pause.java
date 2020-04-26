@@ -13,20 +13,22 @@ import hu.hdani1337.marancsicsdash.Stage.BossStage;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 public class Pause extends OneSpriteStaticActor {
-
+    //region AssetList
     public static final String PAUSE_TEXTURE = "pic/ui/pause.png";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(PAUSE_TEXTURE);
     }
-
+    //endregion
+    //region Konstruktor
     public Pause(MyGame game) {
         super(game, PAUSE_TEXTURE);
         addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                //Csak akkor állítjuk meg a játékmenetet, ha a Pause gomb a GameScreenen vagy BossScreenen van
                 if(getStage() != null && getStage() instanceof MyStage) {
                     if (((MyStage) getStage()).getScreen() != null) {
                         if (((MyStage) getStage()).getScreen() instanceof GameScreen)
@@ -38,4 +40,5 @@ public class Pause extends OneSpriteStaticActor {
             }
         });
     }
+    //endregion
 }

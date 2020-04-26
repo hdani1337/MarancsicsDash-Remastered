@@ -9,7 +9,7 @@ import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
 
 public class LoadingStage extends hu.csanyzeg.master.MyBaseClasses.Assets.LoadingStage {
-
+    //region AssetList
     public static AssetList assetList = new AssetList();
     static
     {
@@ -21,7 +21,8 @@ public class LoadingStage extends hu.csanyzeg.master.MyBaseClasses.Assets.Loadin
         assetList.addTextureAtlas(Zsolti.ZSOLTI_WARRIOR).protect = true;
         assetList.addTextureAtlas(Zsolti.SUPER_ZSOLTI_ATLAS).protect = true;
     }
-
+    //endregion
+    //region Konstruktor
     public LoadingStage(MyGame game) {
         super(new ResponseViewport(900), game);
         if(MarancsicsDash.needsLoading) {
@@ -41,12 +42,14 @@ public class LoadingStage extends hu.csanyzeg.master.MyBaseClasses.Assets.Loadin
             });
         }
     }
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public AssetList getAssetList() {
         return assetList;
     }
-
+    //endregion
+    //region Random skin hash-t visszaadó metódus
     private String getRandomHash(){
         int random = (int)(Math.random()*6);
         switch (random){
@@ -73,4 +76,5 @@ public class LoadingStage extends hu.csanyzeg.master.MyBaseClasses.Assets.Loadin
             }
         }
     }
+    //endregion
 }

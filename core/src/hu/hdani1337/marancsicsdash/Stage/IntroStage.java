@@ -17,7 +17,7 @@ import static hu.hdani1337.marancsicsdash.HudActors.TextBox.RETRO_FONT;
 import static hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage.MENU_BG_TEXTURE;
 
 public class IntroStage extends PrettyStage {
-
+    //region AssetList
     public static final String GDX_TEXTURE = "pic/logos/gdx.png";
     public static final String CSANY_TEXTURE = "pic/logos/csany.png";
 
@@ -28,16 +28,19 @@ public class IntroStage extends PrettyStage {
         assetList.addTexture(CSANY_TEXTURE);
         assetList.addFont(RETRO_FONT, RETRO_FONT, 32, Color.WHITE, AssetList.CHARS);
     }
-
+    //endregion
+    //region Változók
     private OneSpriteStaticActor bg;
     private OneSpriteStaticActor gdxLogo;
     private OneSpriteStaticActor csanyLogo;
     private MyLabel copyright;
-
+    //endregion
+    //region Konstruktor
     public IntroStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void assignment() {
         bg = new OneSpriteStaticActor(game, MENU_BG_TEXTURE);
@@ -86,8 +89,11 @@ public class IntroStage extends PrettyStage {
 
         for (Actor actor : getActors()) actor.setColor(1,1,1,0);
     }
-
-    float alpha = 0;
+    //endregion
+    //region Áttűnés metódusai
+    private float pElapsed;
+    private byte index = 0;
+    private float alpha = 0;
 
     private void fadeIn(OneSpriteStaticActor... actor) {
         if (alpha < 0.95) alpha += 0.05;
@@ -112,10 +118,8 @@ public class IntroStage extends PrettyStage {
             actor1.setAlpha(alpha);
         }
     }
-
-    private float pElapsed;
-    private byte index = 0;
-
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -151,4 +155,5 @@ public class IntroStage extends PrettyStage {
             game.setScreenWithPreloadAssets(MenuScreen.class, true, new LoadingStage(game));
         }
     }
+    //endregion
 }

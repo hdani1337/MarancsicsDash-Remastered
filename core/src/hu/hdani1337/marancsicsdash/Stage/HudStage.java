@@ -27,14 +27,15 @@ import static hu.hdani1337.marancsicsdash.Stage.GameStage.backgroundType;
 import static hu.hdani1337.marancsicsdash.Stage.OptionsStage.gamemode;
 
 public class HudStage extends PrettyStage {
-
+    //region AssetList
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(Jump.class,assetList);
         assetList.collectAssetDescriptor(Pause.class,assetList);
         assetList.collectAssetDescriptor(InstantBoss.class,assetList);
     }
-
+    //endregion
+    //region Változók
     public static MyStage stage;
     private Jump jump;
     private Pause pause;
@@ -44,11 +45,13 @@ public class HudStage extends PrettyStage {
     private InstantBoss instantBoss;
     private HealthBar healthBar;
     public ArrayList<Ground> grounds;
-
+    //endregion
+    //region Konstruktor
     public HudStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void beforeInit() {
         super.beforeInit();
@@ -117,10 +120,11 @@ public class HudStage extends PrettyStage {
             addActor(healthBar);
         }
     }
-
+    //endregion
+    //region Alap talajokat létrehozó metódus
     private void generateBaseGrounds(){
         /**
-         * KEZDETNEK 3 HÁTTÉR ELÉG
+         * KEZDETNEK 3 TALAJ ELÉG
          * **/
         for (int i = 0; i < 3; i++){
             grounds.add(new Ground(game, backgroundType, getViewport()));
@@ -129,13 +133,21 @@ public class HudStage extends PrettyStage {
             grounds.get(i).setZIndex(0);
         }
     }
-
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
         super.act(delta);
-        /**
-         * PONTSZÁMKIJELZŐ FRISSÍTÉSE
-         * **/
+        refreshScore();
+        placeNewGround();
+        removeGroundIfNotVisible();
+        refreshCoin();
+    }
+
+    /**
+     * Pontszámkijelző frissítése
+     * **/
+    private void refreshScore(){
         if(getScreen() != null && getScreen() instanceof GameScreen){
             if(GameStage.isAct && !Zsolti.isDead) {
                 if (!scoreBoard.text.equals(((GameScreen) getScreen()).gameStage.score)) {
@@ -148,20 +160,24 @@ public class HudStage extends PrettyStage {
                 if(scoreBoard.isVisible()) scoreBoard.setVisible(false);
             }
         }
+    }
 
-        /**
-         * HA AZ UTOLSÓ ELŐTTI HÁTTÉR MÁR ÉPPENHOGY BEÉR A KÉPERNYŐRE, AKKOR RAKJUNK BE ÚJ HÁTTERET
-         * */
+    /**
+     * Ha az utolsó előtti talaj épp beér a képernyőre, akkor rakjunk be egy újat
+     * */
+    private void placeNewGround(){
         if (grounds.get(grounds.size() - 2).getX() < getViewport().getWorldWidth()) {
             grounds.add(new Ground(game, backgroundType, getViewport()));
             grounds.get(grounds.size() - 1).setX(grounds.get(grounds.size() - 2).getX() + grounds.get(grounds.size() - 2).getWidth());
             addActor(grounds.get(grounds.size() - 1));
             grounds.get(grounds.size() - 1).setZIndex(0);
         }
+    }
 
-        /**
-         * HA A TALAJ MÁR BŐVEN NEM LÁTSZIK, AKKOR TÁVOLÍTSUK EL
-         * **/
+    /**
+     * Ha a talaj már bőven nem látszik, akkor távolítsuk el
+     * **/
+    private void removeGroundIfNotVisible(){
         for (Ground g : grounds) {
             if (g.getX() < -g.getWidth() * 2) {
                 g.remove();
@@ -169,11 +185,14 @@ public class HudStage extends PrettyStage {
                 break;//LISTA HOSSZÁNAK VÁLTOZÁSA MIATTI EXCEPTION ELKERÜLÉSE EGY BREAKKEL
             }
         }
+    }
 
-        /**
-         * PÉNZKIJELZŐ FRISSÍTÉSE
-         * **/
+    /**
+     * Pénzkijelző frissítése
+     * **/
+    private void refreshCoin(){
         if(!coinLabel.getText().equals(Coin.coin))
             coinLabel.setText(""+Coin.coin);
     }
+    //endregion
 }

@@ -9,7 +9,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.hdani1337.marancsicsdash.Stage.ShopStage;
 
 public class ShopCategory extends OneSpriteStaticActor {
-
+    //region Assetlist
     public static final String CATEGORY_HATTEREK = "pic/ui/hatterek.png";
     public static final String CATEGORY_KEPESSEGEK = "pic/ui/kepessegek.png";
     public static final String CATEGORY_SKINEK = "pic/ui/skinek.png";
@@ -20,16 +20,19 @@ public class ShopCategory extends OneSpriteStaticActor {
         assetList.addTexture(CATEGORY_KEPESSEGEK);
         assetList.addTexture(CATEGORY_SKINEK);
     }
-
+    //endregion
+    //region Változók
     private ShopCategoryType type;
-
+    //endregion
+    //region Konstruktor
     public ShopCategory(MyGame game, ShopCategoryType type) {
         super(game, CATEGORY_HATTEREK);
         this.type = type;
         setTexture();
         addListeners();
     }
-
+    //endregion
+    //region Textúra beállító metódus
     private void setTexture(){
         switch (type){
             case BACKGROUND:{
@@ -52,12 +55,14 @@ public class ShopCategory extends OneSpriteStaticActor {
             }
         }
     }
-
+    //endregion
+    //region Listener hozzáadó metódus
     private void addListeners(){
         addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                //Csak akkor állítjuk át a kiválasztott kategóriát, ha a ShopStagen van a gomb
                 if(getStage() != null && getStage() instanceof ShopStage) {
                     if(((ShopStage) getStage()).selectedCategory != type) {
                         ((ShopStage) getStage()).selectedCategory = type;
@@ -68,9 +73,5 @@ public class ShopCategory extends OneSpriteStaticActor {
             }
         });
     }
-
-    public void setType(ShopCategoryType type){
-        this.type = type;
-        setTexture();
-    }
+    //endregion
 }

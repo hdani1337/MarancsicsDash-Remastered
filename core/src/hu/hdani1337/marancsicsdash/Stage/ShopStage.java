@@ -1,8 +1,5 @@
 package hu.hdani1337.marancsicsdash.Stage;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -22,13 +19,8 @@ import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Coin;
 import hu.hdani1337.marancsicsdash.Actor.Marancsics;
-import hu.hdani1337.marancsicsdash.Actor.SuperCoin;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
-import hu.hdani1337.marancsicsdash.HudActors.InstantBoss;
-import hu.hdani1337.marancsicsdash.HudActors.Left;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
-import hu.hdani1337.marancsicsdash.HudActors.Right;
-import hu.hdani1337.marancsicsdash.HudActors.ShopBackgroundPreview;
 import hu.hdani1337.marancsicsdash.HudActors.ShopCategory;
 import hu.hdani1337.marancsicsdash.HudActors.ShopCategoryType;
 import hu.hdani1337.marancsicsdash.HudActors.ShopItem;
@@ -44,24 +36,21 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage.MENU_BG_TEXTURE;
 
 public class ShopStage extends PrettyStage {
-
-    public static final String PAYSOUND = "sound/pay.mp3";
-    public static final String NOMONEY = "sound/error.mp3";
-
+    //region AssetList
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(MENU_BG_TEXTURE);
-        assetList.addSound(PAYSOUND);
-        assetList.addSound(NOMONEY);
         SoundManager.load(assetList);
         assetList.collectAssetDescriptor(ShopItem.class,assetList);
         assetList.collectAssetDescriptor(ShopCategory.class,assetList);
     }
-
+    //endregion
+    //region Konstruktor
     public ShopStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
-
+    //endregion
+    //region Változók
     /**
      * Változók a mentésből
      * **/
@@ -96,7 +85,8 @@ public class ShopStage extends PrettyStage {
     private ArrayList<ShopCategory> categories;//Kategóriák
 
     public ShopCategoryType selectedCategory;
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void assignment() {
         selectedCategory = ShopCategoryType.NULL;
@@ -273,7 +263,8 @@ public class ShopStage extends PrettyStage {
             addActor(categories.get(i));
         }
     }
-
+    //endregion
+    //region Act metódusai
     float alpha = 0;
     float bgAlpha = 1;
     boolean setBack = false;
@@ -281,36 +272,17 @@ public class ShopStage extends PrettyStage {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(!setBack) {
-            //Áttűnéssel jönnek be az actorok
-            if (alpha < 0.95) {
-                alpha += 0.05;
-                setAlpha();
-            }
-            else alpha = 1;
-        }
-        else
-        {
-            //Áttűnéssel mennek ki az actorok
-            if (alpha > 0.05) {
-                setAlpha();
-                alpha -= 0.05;
-                if(bgAlpha<0.95) bgAlpha+= 0.05;
-                MenuBackground.setAlpha(bgAlpha);
-            } else {
-                //Ha már nem látszanak akkor megyünk vissza a menübe
-                alpha = 0;
-                setAlpha();
-                game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
-                addTimer(new TickTimer(1,false,new TickTimerListener(){
-                    @Override
-                    public void onTick(Timer sender, float correction) {
-                        super.onTick(sender, correction);
-                        setBack = false;
-                    }
-                }));
-            }
-        }
+        if(!setBack) fadeIn();
+        else fadeOut();
+        switchCategory();
+        setBackgroundFade();
+    }
+    //endregion
+    //region Kategória váltására szolgáló metódus
+    /**
+     * Kategória váltása
+     * **/
+    private void switchCategory(){
         if(alpha == 1) {
             switch (selectedCategory) {
                 case NULL: {
@@ -352,13 +324,9 @@ public class ShopStage extends PrettyStage {
                 }
             }
         }
-
-        if(bgAlpha>0.25 && !setBack){
-            bgAlpha-=0.025;
-            MenuBackground.setAlpha(bgAlpha);
-        }
     }
-
+    //endregion
+    //region Áttűnések metódusai
     /**
      * Actorok átlátszóságának egyidejű beállítása
      * **/
@@ -398,4 +366,50 @@ public class ShopStage extends PrettyStage {
         shopLogo.setColor(1, 1, 1, alpha);
         back.setAlpha(alpha);
     }
+
+    /**
+     * Áttűnéssel jönnek be az actorok
+     * **/
+    private void fadeIn(){
+        if (alpha < 0.95) {
+            alpha += 0.05;
+            setAlpha();
+        }
+        else alpha = 1;
+    }
+
+    /**
+     * Áttűnéssel mennek ki az actorok
+     * **/
+    private void fadeOut(){
+        if (alpha > 0.05) {
+            setAlpha();
+            alpha -= 0.05;
+            if(bgAlpha<0.95) bgAlpha+= 0.05;
+            MenuBackground.setAlpha(bgAlpha);
+        } else {
+            //Ha már nem látszanak akkor megyünk vissza a menübe
+            alpha = 0;
+            setAlpha();
+            game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
+            addTimer(new TickTimer(1,false,new TickTimerListener(){
+                @Override
+                public void onTick(Timer sender, float correction) {
+                    super.onTick(sender, correction);
+                    setBack = false;
+                }
+            }));
+        }
+    }
+
+    /**
+     * Háttér átlátszóságának beállítása
+     * **/
+    private void setBackgroundFade(){
+        if(bgAlpha>0.25 && !setBack){
+            bgAlpha-=0.025;
+            MenuBackground.setAlpha(bgAlpha);
+        }
+    }
+    //endregion
 }

@@ -10,18 +10,21 @@ import hu.hdani1337.marancsicsdash.Stage.PauseStage;
 import hu.hdani1337.marancsicsdash.Stage.VictoryStage;
 
 public class BossScreen extends MyScreen {
-
+    //region AssetList
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(BossStage.class, assetList);
     }
-
+    //endregion
+    //region Konstruktor
     public BossScreen(MyGame game) {
         super(game);
     }
-
+    //endregion
+    //region Változók
     public BossStage bossStage;
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     protected void afterAssetsLoaded() {
         bossStage = new BossStage(game);
@@ -42,4 +45,5 @@ public class BossScreen extends MyScreen {
     public void init() {
 
     }
+    //endregion
 }

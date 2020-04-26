@@ -7,8 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import java.util.ArrayList;
-
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
@@ -17,7 +15,6 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
-import hu.hdani1337.marancsicsdash.Actor.Background;
 import hu.hdani1337.marancsicsdash.Actor.Marancsics;
 import hu.hdani1337.marancsicsdash.Actor.Zsolti;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
@@ -30,7 +27,6 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.UpdatePresence;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.preferences;
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.selectedMarancsics;
-import static hu.hdani1337.marancsicsdash.Stage.GameStage.selectedZsolti;
 import static hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage.MENU_BG_TEXTURE;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtBox;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtConstructor;
@@ -42,23 +38,25 @@ import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtWarrior;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtZala;
 
 public class OptionsStage extends PrettyStage {
-
+    //region AssetList
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(MENU_BG_TEXTURE);
+        assetList.collectAssetDescriptor(TextBox.class,assetList);
+        assetList.collectAssetDescriptor(Logo.class,assetList);
+        assetList.collectAssetDescriptor(ShopBackgroundPreview.class,assetList);
+        assetList.collectAssetDescriptor(Marancsics.class,assetList);
+        assetList.collectAssetDescriptor(Zsolti.class,assetList);
         SoundManager.load(assetList);
     }
-
+    //endregion
+    //region Változók
     public static int difficulty = preferences.getInteger("difficulty");
     public static int gamemode = preferences.getInteger("gamemode");
     public static int selectedBackground = preferences.getInteger("selectedBackground");
     public static int windowWidth = preferences.getInteger("windowWidth");
     public static int windowHeight = preferences.getInteger("windowHeight");
     public static boolean fullscreen = preferences.getBoolean("fullscreen");
-
-    public OptionsStage(MyGame game) {
-        super(new ResponseViewport(900), game);
-    }
 
     private OneSpriteStaticActor MenuBackground;
 
@@ -85,7 +83,13 @@ public class OptionsStage extends PrettyStage {
     private TextBox marancsicsPreviewText;
 
     private Vector2 Resolution;
-
+    //endregion
+    //region Konstruktor
+    public OptionsStage(MyGame game) {
+        super(new ResponseViewport(900), game);
+    }
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void assignment() {
         Resolution = new Vector2(windowWidth,windowHeight);
@@ -406,10 +410,8 @@ public class OptionsStage extends PrettyStage {
             addActor(fullscreenButton);
         }
     }
-
-    /**
-     * Tudom hogy Switchel szebb és hatékonyabb, kuss
-     * **/
+    //endregion
+    //region Gombok szövegeinek átállító metódusa
     private void setTexts(){
         //Némítás
         if(muted){
@@ -473,42 +475,57 @@ public class OptionsStage extends PrettyStage {
             else change = true;
         }
     }
-
+    //endregion
+    //region Act metódusai
     boolean change = false;
     float alpha = 0;
     float bgAlpha = 1;
-
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(!setBack) {
-            //Áttűnéssel jönnek be az actorok
-            if (alpha < 0.95) alpha += 0.025;
-            else alpha = 1;
+        if(!setBack) fadeIn();
+        else fadeOut();
+        checkChangedSettingsOnPc();
+        setBackgroundAlpha();
+    }
+
+    /**
+     * Áttűnéssel jönnek be az actorok
+     * **/
+    private void fadeIn(){
+        if (alpha < 0.95) alpha += 0.025;
+        else alpha = 1;
+        setAlpha();
+    }
+
+    /**
+     * Áttűnéssel mennek ki az actorok
+     * **/
+    private void fadeOut(){
+        if (alpha > 0.05) {
             setAlpha();
+            alpha -= 0.05;
+            if(bgAlpha<0.95) bgAlpha+= 0.05;
+            MenuBackground.setAlpha(bgAlpha);
+        } else {
+            //Ha már nem látszanak akkor megyünk vissza a menübe
+            alpha = 0;
+            setAlpha();
+            game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
+            addTimer(new TickTimer(1,false,new TickTimerListener(){
+                @Override
+                public void onTick(Timer sender, float correction) {
+                    super.onTick(sender, correction);
+                    setBack = false;
+                }
+            }));
         }
-        else
-        {
-            //Áttűnéssel mennek ki az actorok
-            if (alpha > 0.05) {
-                setAlpha();
-                alpha -= 0.05;
-                if(bgAlpha<0.95) bgAlpha+= 0.05;
-                MenuBackground.setAlpha(bgAlpha);
-            } else {
-                //Ha már nem látszanak akkor megyünk vissza a menübe
-                alpha = 0;
-                setAlpha();
-                game.setScreenBackByStackPopWithPreloadAssets(new LoadingStage(game));
-                addTimer(new TickTimer(1,false,new TickTimerListener(){
-                    @Override
-                    public void onTick(Timer sender, float correction) {
-                        super.onTick(sender, correction);
-                        setBack = false;
-                    }
-                }));
-            }
-        }
+    }
+
+    /**
+     * Ez a figyelmeztető doboz csak akkor jön elő, ha PC-n játszuk a játékot
+     * **/
+    private void checkChangedSettingsOnPc(){
         if(change){
             if(warningBox.getY()<15) {
                 warningBox.setY(warningBox.getY() + 5);
@@ -518,7 +535,12 @@ public class OptionsStage extends PrettyStage {
                 warningBox.setY(warningBox.getY() - 5);
             }
         }
+    }
 
+    /**
+     * Háttér átlátszóságát állítja be
+     * **/
+    private void setBackgroundAlpha(){
         if(bgAlpha>0.25 && !setBack){
             bgAlpha-=0.025;
             MenuBackground.setAlpha(bgAlpha);
@@ -546,4 +568,5 @@ public class OptionsStage extends PrettyStage {
         zsoltiPreviewText.setAlpha(alpha);
         marancsicsPreviewText.setAlpha(alpha);
     }
+    //endregion
 }

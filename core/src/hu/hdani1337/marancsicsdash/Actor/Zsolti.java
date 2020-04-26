@@ -17,6 +17,7 @@ import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.hdani1337.marancsicsdash.Stage.BossStage;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
+import hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage;
 
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.SoundManager.crashSound;
@@ -25,7 +26,12 @@ import static hu.hdani1337.marancsicsdash.SoundManager.powerUpSound;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDouble;
 
 public class Zsolti extends OneSpriteAnimatedActor {
-
+    //region Zsolti típus Enum
+    public enum ZsoltiType{
+        ZSOLTI, WARRIOR
+    }
+    //endregion
+    //region AssetList
     public static final String ZSOLTI_ATLAS = "atlas/zsolti/zsolti.atlas";
     public static final String DEAD_ZSOLTI = "atlas/zsolti/zsoltiDead.atlas";
     public static final String ZSOLTI_WARRIOR = "atlas/zsolti/zsoltiKard.atlas";
@@ -40,31 +46,20 @@ public class Zsolti extends OneSpriteAnimatedActor {
         assetList.addTextureAtlas(DEAD_ZSOLTI_WARRIOR);
         assetList.addTextureAtlas(SUPER_ZSOLTI_ATLAS);
     }
-
-    public enum ZsoltiType{
-        ZSOLTI, WARRIOR
-    }
-
-    public static boolean isDead;
-    public static boolean inAir;
-    public int remainingJumps;
-    private boolean playing;
-
+    //endregion
+    //region Változók
+    public static boolean isDead;//Zsolti halott e
+    public static boolean inAir;//Zsolti a levegőben van e
+    public int remainingJumps;//Megmaradt ugrások száma (alapból egy, doubleJump-nál 2)
+    private boolean playing;//Játszódik le éppen valamilyen hang (azért kell, hogy többször ne menjen ugyanaz a hang)
+    //endregion
+    //region Konstruktorok
     /**
      * Box2D konstruktor ContactListenerrel
      * **/
     public Zsolti(MyGame game, World world, WorldBodyEditorLoader loader) {
         super(game, ZSOLTI_ATLAS);
-        switch (GameStage.selectedZsolti){
-            case ZSOLTI:{
-                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(ZSOLTI_ATLAS));
-                break;
-            }
-            case WARRIOR:{
-                setTextureAtlas(game.getMyAssetManager().getTextureAtlas(ZSOLTI_WARRIOR));
-                break;
-            }
-        }
+        setTextureAtlas(game.getMyAssetManager().getTextureAtlas(atlasByType()));
         setFps(12);
         setSize(getWidth()*0.011f, getHeight()*0.011f);
         setActorWorldHelper(new Box2DWorldHelper(world, this, loader, "Zsolti", new MyFixtureDef(), BodyDef.BodyType.DynamicBody));
@@ -75,89 +70,20 @@ public class Zsolti extends OneSpriteAnimatedActor {
         else remainingJumps = 1;
 
         /**
-         * ÜTKÖZÉSFIGYELÉSEK
+         * ÜTKÖZÉSFIGYELÉSEK HOZZÁRENDELÉSE A WORLDHELPERHEZ
          * **/
         if(getActorWorldHelper() != null && getActorWorldHelper() instanceof Box2DWorldHelper) {
             ((Box2DWorldHelper) getActorWorldHelper()).addContactListener(new MyContactListener() {
                 @Override
                 public void beginContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-                    if (otherHelper.getActor() instanceof Tank) {
-                        if (superTime > 0) {
-                            if (getStage() != null && getStage() instanceof GameStage)
-                                ((GameStage) getStage()).isShakeScreen = true;
-                            otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
-                            ((Tank)otherHelper.actor).kicked();
-                        }else {
-                            setFps(0);
-                            isDead = true;
-                            GameStage.isAct = false;
-                        }
-                        if(!muted && !playing) {
-                            crashSound.play();
-                            playing = true;
-                            addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
-                                @Override
-                                public void onStop(Timer sender) {
-                                    super.onStop(sender);
-                                    playing = false;
-                                }
-                            }));
-                        }
-
-                    } else if (otherHelper.getActor() instanceof Mushroom) {
-                        /**
-                         * GOMBA
-                         * **/
-
-                        otherHelper.actor.remove();
-                        superTime = 8;
-                        if(!muted && !playing) {
-                            powerUpSound.play();
-                            playing = true;
-                            addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
-                                @Override
-                                public void onStop(Timer sender) {
-                                    super.onStop(sender);
-                                    playing = false;
-                                }
-                            }));
-                        }
-                    } else if (otherHelper.getActor() instanceof Marancsics) {
-                        ((Marancsics) otherHelper.getActor()).setFps(24);
-                        otherHelper.getBody().applyForceToCenter(new Vector2(-900,0),true);
-                        ((Box2DWorldHelper)getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(700,0),true);
-                        if(getStage() != null) {
-                            if (!muted && getX() < getStage().getViewport().getWorldWidth() + 2 && !playing) {
-                                kickSound.play();
-                                playing = true;
-                                addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
-                                    @Override
-                                    public void onStop(Timer sender) {
-                                        super.onStop(sender);
-                                        playing = false;
-                                    }
-                                }));
-                            }
-                        }
-                    }
+                    collisionTank(otherHelper);
+                    collisionMushroom(otherHelper);
+                    collisionMarancsics(otherHelper);
                 }
 
                 @Override
                 public void endContact(Contact contact, Box2DWorldHelper myHelper, Box2DWorldHelper otherHelper) {
-                    if (otherHelper.getActor() instanceof Tank) {
-                        /**
-                         * TANK
-                         * **/
-
-                        addTimer(new TickTimer(0.3f, false, new TickTimerListener() {
-                            @Override
-                            public void onTick(Timer sender, float correction) {
-                                super.onTick(sender, correction);
-                                if (getStage() != null && getStage() instanceof GameStage)
-                                    ((GameStage) getStage()).isShakeScreen = false;
-                            }
-                        }));
-                    }
+                    endCollisionTank(otherHelper);
                 }
 
                 @Override
@@ -190,12 +116,93 @@ public class Zsolti extends OneSpriteAnimatedActor {
         }
         setFps(12);
     }
+    //endregion
+    //region Ütközésfigyelések
+    //region Ütközések kezdete
+    private void collisionTank(Box2DWorldHelper otherHelper){
+        if (otherHelper.getActor() instanceof Tank) {
+            if (superTime > 0) {
+                if (getStage() != null && getStage() instanceof GameStage)
+                    ((GameStage) getStage()).isShakeScreen = true;
+                otherHelper.getBody().applyForceToCenter(new Vector2(5000, 1000), true);
+                ((Tank)otherHelper.actor).kicked();
+            }else {
+                setFps(0);
+                isDead = true;
+                GameStage.isAct = false;
+            }
+            if(!muted && !playing) {
+                crashSound.play();
+                playing = true;
+                addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
+                    @Override
+                    public void onStop(Timer sender) {
+                        super.onStop(sender);
+                        playing = false;
+                    }
+                }));
+            }
 
+        }
+    }
+
+    private void collisionMushroom(Box2DWorldHelper otherHelper){
+        if (otherHelper.getActor() instanceof Mushroom) {
+            otherHelper.actor.remove();
+            superTime = 8;
+            if (!muted && !playing) {
+                powerUpSound.play();
+                playing = true;
+                addTimer(new TickTimer(0.15f, false, new TickTimerListener() {
+                    @Override
+                    public void onStop(Timer sender) {
+                        super.onStop(sender);
+                        playing = false;
+                    }
+                }));
+            }
+        }
+    }
+
+    private void collisionMarancsics(Box2DWorldHelper otherHelper){
+        if (otherHelper.getActor() instanceof Marancsics) {
+            ((Marancsics) otherHelper.getActor()).setFps(24);
+            otherHelper.getBody().applyForceToCenter(new Vector2(-900,0),true);
+            ((Box2DWorldHelper)getActorWorldHelper()).getBody().applyForceToCenter(new Vector2(700,0),true);
+            if(getStage() != null) {
+                if (!muted && getX() < getStage().getViewport().getWorldWidth() + 2 && !playing) {
+                    kickSound.play();
+                    playing = true;
+                    addTimer(new TickTimer(0.15f,false,new TickTimerListener(){
+                        @Override
+                        public void onStop(Timer sender) {
+                            super.onStop(sender);
+                            playing = false;
+                        }
+                    }));
+                }
+            }
+        }
+    }
+    //endregion
+    //region Ütközések vége
+    private void endCollisionTank(Box2DWorldHelper otherHelper){
+        if (otherHelper.getActor() instanceof Tank) {
+            addTimer(new TickTimer(0.3f, false, new TickTimerListener() {
+                @Override
+                public void onTick(Timer sender, float correction) {
+                    super.onTick(sender, correction);
+                    if (getStage() != null && getStage() instanceof GameStage)
+                        ((GameStage) getStage()).isShakeScreen = false;
+                }
+            }));
+        }
+    }
+    //endregion
+    //endregion
+    //region Act metódusai
     public float superTime = 0;
-
-    @Override
-    public void act(float delta) {
-        super.act(delta);
+    private void checkSuperTime(float delta){
         if(superTime > 0){
             /**
              * SUPER ZSOLTI
@@ -217,24 +224,38 @@ public class Zsolti extends OneSpriteAnimatedActor {
                 }
             }
         }
+    }
 
+    private void checkZsolti(float delta){
+        checkSuperTime(delta);
+        /**
+         * Ha a menüben futkozik, ott ne ellenőrizzük le, hogy a talajon van e vagy forog e
+         * **/
+        if(getStage() != null && !(getStage() instanceof MenuBackgroundStage)) {
+            checkZsoltiIsRotated();
+            checkZsoltiIsOnGround();
+        }
+    }
+
+    private void checkZsoltiIsRotated(){
         /**
          * ZSOLTI NE BORULJON FEL AMÍG ÉL
          * **/
-        if(getRotation() != 0 && !isDead)
+        if (getRotation() != 0 && !isDead)
             setRotation(0);
+    }
 
-        if(getY() > Background.ground*2+0.05) {
+    private void checkZsoltiIsOnGround(){
+        if (getY() > Background.ground * 2 + 0.05) {
             /**
              * ZSOLTI ELHAGYJA A TALAJT
              * **/
             inAir = true;
-        }
-        else {
+        } else {
             /**
              * ZSOLTI VISSZAESIK A TALAJRA VAGY NAGYON A KÖZELÉBE
              * **/
-            if(boughtDouble) remainingJumps = 2;
+            if (boughtDouble) remainingJumps = 2;
             else remainingJumps = 1;
             inAir = false;
         }
@@ -242,19 +263,29 @@ public class Zsolti extends OneSpriteAnimatedActor {
         /**
          * FIGYELJÜK HOGY ZSOLTI A TALAJON VAN E VAGY SEM
          * **/
-        if(getX() != 2.5f && !isDead && getStage() instanceof GameStage) {
+        if (getX() != 2.5f && !isDead && getStage() instanceof GameStage) {
             setX(2.5f);
-            setOrigin(0,0);
-            getActorWorldHelper().setBodyPosition(getX()+0.3f,getY());
+            setOrigin(0, 0);
+            getActorWorldHelper().setBodyPosition(getX() + 0.3f, getY());
         }
 
-        if(getX() != 1 && !isDead && getStage() instanceof BossStage){
+        if (getX() != 1 && !isDead && getStage() instanceof BossStage) {
             setX(1);
-            setOrigin(0,0);
-            getActorWorldHelper().setBodyPosition(getX()+0.3f,getY());
+            setOrigin(0, 0);
+            getActorWorldHelper().setBodyPosition(getX() + 0.3f, getY());
         }
     }
 
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        checkZsolti(delta);
+    }
+    //endregion
+    //region Egyéb metódusok
+    /**
+     * Visszaadja a játékos által kiválasztott skin hash-ét
+     * **/
     private String atlasByType(){
         if(GameStage.selectedZsolti != null){
             switch (GameStage.selectedZsolti){
@@ -267,4 +298,5 @@ public class Zsolti extends OneSpriteAnimatedActor {
             }
         }else return ZSOLTI_ATLAS;
     }
+    //endregion
 }

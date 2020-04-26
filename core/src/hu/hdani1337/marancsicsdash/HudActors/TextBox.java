@@ -12,7 +12,7 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.IPrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 
 public class TextBox extends MyGroup implements IPrettyStage {
-
+    //region AssetList
     public static final String TEXTBOX_TEXTURE = "pic/ui/textBG.png";
     public static final String RETRO_FONT = "font/fontstyle.ttf";
 
@@ -21,13 +21,14 @@ public class TextBox extends MyGroup implements IPrettyStage {
         assetList.addTexture(TEXTBOX_TEXTURE);
         assetList.addFont(RETRO_FONT, RETRO_FONT, 32, Color.WHITE, AssetList.CHARS);
     }
-
+    //endregion
+    //region Változók
     public String text;//Szöveg
-
     private OneSpriteStaticActor textBackground;//Szöveg háttere
     private MyLabel textLabel;//Szöveg label
     private float scale;//Méretezési skála
-
+    //endregion
+    //region Konstruktorok
     /**
      * SKÁLÁZÁS NÉLKÜLI KONSTRUKTOR
      * **/
@@ -49,7 +50,8 @@ public class TextBox extends MyGroup implements IPrettyStage {
         setZIndexes();
         addActors();
     }
-
+    //endregion
+    //region Interfész metódusai
     @Override
     public void assignment() {
         textBackground = new OneSpriteStaticActor(game, TEXTBOX_TEXTURE);
@@ -89,16 +91,8 @@ public class TextBox extends MyGroup implements IPrettyStage {
         addActor(textBackground);
         addActor(textLabel);
     }
-
-    /**
-     * MÉRETEK MÓDOSÍTÁSA SKÁLA ALAPJÁN
-     * A SKÁLÁT A KONSTRUKTORBAN KELL ÁTADNI, ALAPESETBEN EZ 1 MARAD
-     * **/
-    private void setScales(){
-        textBackground.setSize(textBackground.getWidth()*scale, textBackground.getHeight()*scale);
-        textLabel.setFontScale(scale);
-    }
-
+    //endregion
+    //region Override-ok
     /**
      * VISSZAADJA A HÁTTÉR SZÉLESSÉGÉT
      * **/
@@ -133,13 +127,23 @@ public class TextBox extends MyGroup implements IPrettyStage {
         textBackground.setHeight(height);
         setPositions();
     }
-
+    //endregion
+    //region Egyéb metódusok
     /**
      * TEXTBOX ÁTLÁTSZÓSÁGÁNAK BEÁLLÍTÁSA
      * **/
     public void setAlpha(float alpha){
         textBackground.setAlpha(alpha);
         textLabel.setColor(textLabel.getColor().r,textLabel.getColor().g,textLabel.getColor().b,alpha);
+    }
+
+    /**
+     * MÉRETEK MÓDOSÍTÁSA SKÁLA ALAPJÁN
+     * A SKÁLÁT A KONSTRUKTORBAN KELL ÁTADNI, ALAPESETBEN EZ 1 MARAD
+     * **/
+    private void setScales(){
+        textBackground.setSize(textBackground.getWidth()*scale, textBackground.getHeight()*scale);
+        textLabel.setFontScale(scale);
     }
 
     /**
@@ -182,4 +186,5 @@ public class TextBox extends MyGroup implements IPrettyStage {
     public void setColor(Color color){
         textLabel.setColor(color);
     }
+    //endregion
 }

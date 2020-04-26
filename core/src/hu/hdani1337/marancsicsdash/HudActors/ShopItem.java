@@ -39,7 +39,7 @@ import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtZala;
 import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtZsolti;
 
 public class ShopItem extends MyGroup implements IPrettyStage {
-
+    //region AssetList
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(TextBox.class,assetList);
@@ -48,7 +48,8 @@ public class ShopItem extends MyGroup implements IPrettyStage {
         assetList.addFont(RETRO_FONT, RETRO_FONT, 32, Color.WHITE, AssetList.CHARS);
         SoundManager.load(assetList);
     }
-
+    //endregion
+    //region Változók
     private TextBox background;
     private OneSpriteActor item;
     private Coin coinIcon;
@@ -65,7 +66,8 @@ public class ShopItem extends MyGroup implements IPrettyStage {
     private String name;
 
     private boolean touch;
-
+    //endregion
+    //region Konstruktorok
     /**
      * ITEM KONSTRUKTOR
      * **/
@@ -137,7 +139,8 @@ public class ShopItem extends MyGroup implements IPrettyStage {
         addListeners();
         addActors();
     }
-
+    //endregion
+    //region Interfész metódusai
     @Override
     public void assignment() {
         makeItem();
@@ -319,12 +322,13 @@ public class ShopItem extends MyGroup implements IPrettyStage {
             addActor(priceLabel);
         }
     }
-
+    //endregion
+    //region Tárgy létrehozása
     private void makeItem(){
         if(type != null) {
             switch (type) {
                 case SUPERCOIN: {
-                    item = new SuperCoin(game, false);
+                    item = new SuperCoin(game);
                     item.setSize(item.getWidth()*1.5f,item.getHeight()*1.5f);
                     boughtAlready = boughtCoin;
                     price = 1000;
@@ -433,7 +437,8 @@ public class ShopItem extends MyGroup implements IPrettyStage {
             }
         }
     }
-
+    //endregion
+    //region Áttűnés metódusa
     public void setAlpha(float alpha){
         if(background!=null) background.setAlpha(alpha);
         item.setAlpha(alpha);
@@ -450,7 +455,8 @@ public class ShopItem extends MyGroup implements IPrettyStage {
             touch = true;
         }
     }
-
+    //endregion
+    //region Override-ok
     @Override
     public float getWidth() {
         if(background != null) return background.getWidth();
@@ -462,4 +468,5 @@ public class ShopItem extends MyGroup implements IPrettyStage {
         if(background != null) return background.getHeight();
         else return item.getHeight();
     }
+    //endregion
 }

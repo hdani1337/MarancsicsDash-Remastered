@@ -6,13 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
+import hu.hdani1337.marancsicsdash.Screen.MenuScreen;
 import hu.hdani1337.marancsicsdash.SoundManager;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
@@ -28,19 +28,20 @@ import static hu.hdani1337.marancsicsdash.SoundManager.uraim;
 import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 
 public class MenuStage extends PrettyStage {
-
+    //region AssetList
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(Logo.class, assetList);
         assetList.collectAssetDescriptor(TextBox.class, assetList);
         SoundManager.load(assetList);
     }
-
+    //endregion
+    //region Konstruktor
     public MenuStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
-
-
+    //endregion
+    //region Változók
     private Logo logo;
     private TextBox start;
     private TextBox info;
@@ -48,7 +49,8 @@ public class MenuStage extends PrettyStage {
     private TextBox options;
     private TextBox exit;
     private TextBox version;
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void assignment() {
         SoundManager.assign();
@@ -193,6 +195,45 @@ public class MenuStage extends PrettyStage {
             menuMusic.play();
         }
     }
+    //endregion
+    //region Act metódusai
+    float alpha = 0;
+    boolean fadeOut = false;
+    boolean fadeIn = true;
+    float time = 0;
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if(fadeIn) setFadeIn();
+        if(fadeOut) setFadeOut(delta);
+    }
+    //endregion
+    //region Áttűnések metódusai
+    private void setFadeIn(){
+        if (alpha < 0.95) {
+            alpha += 0.05f;
+            setAlpha(alpha);
+        }
+        else {
+            alpha = 1;
+            setAlpha(alpha);
+            fadeIn = false;
+        }
+    }
+
+    private void setFadeOut(float delta){
+        time += delta;
+        if (alpha > 0.05f) {
+            alpha -= 0.05f;
+            setAlpha(alpha);
+        }
+        else {
+            alpha = 0;
+            setAlpha(alpha);
+            fadeOut = false;
+        }
+    }
 
     private void setAlpha(float alpha){
         logo.setAlpha(alpha);
@@ -202,39 +243,12 @@ public class MenuStage extends PrettyStage {
         options.setAlpha(alpha);
         exit.setAlpha(alpha);
         version.setAlpha(alpha);
-    }
-
-    float alpha = 0;
-    boolean fadeOut = false;
-    boolean fadeIn = true;
-    float time = 0;
-
-    @Override
-    public void act(float delta) {
-        super.act(delta);
-        if(fadeIn) {
-            if (alpha < 0.95) {
-                alpha += 0.05f;
-                setAlpha(alpha);
-            }
-            else {
-                alpha = 1;
-                setAlpha(alpha);
-                fadeIn = false;
-            }
-        }
-
-        if(fadeOut) {
-            time += delta;
-            if (alpha > 0.05f) {
-                alpha -= 0.05f;
-                setAlpha(alpha);
-            }
-            else {
-                alpha = 0;
-                setAlpha(alpha);
-                fadeOut = false;
+        if(getScreen() != null){
+            if(getScreen() instanceof MenuScreen){
+                ((MenuScreen)getScreen()).menuBackgroundStage.marancsics.setAlpha(alpha);
+                ((MenuScreen)getScreen()).menuBackgroundStage.zsolti.setAlpha(alpha);
             }
         }
     }
+    //endregion
 }

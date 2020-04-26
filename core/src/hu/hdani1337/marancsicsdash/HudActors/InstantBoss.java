@@ -15,20 +15,28 @@ import hu.hdani1337.marancsicsdash.Stage.LoadingStage;
 import hu.hdani1337.marancsicsdash.Stage.ShopStage;
 
 public class InstantBoss extends OneSpriteStaticActor {
-
+    //region AssetList
     public static final String INSTANTBOSS_TEXTURE = "pic/ui/instantBoss.png";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(INSTANTBOSS_TEXTURE);
     }
-
+    //endregion
+    //region Konstruktor
     public InstantBoss(MyGame game) {
         super(game, INSTANTBOSS_TEXTURE);
         addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                /**
+                 * BossStagere váltás feltételei
+                 *  - Zsolti ne legyen halott
+                 *  - A gomb ne a boltban viselkedjen előnézeti képként
+                 *  - A GameScreenen kell lennie
+                 *  - A játékmenetnel futnia kell
+                 * **/
                 if(getStage() != null && !(getStage() instanceof ShopStage) && !Zsolti.isDead) {
                     if(((MyStage)getStage()).getScreen() != null){
                         if(((MyStage)getStage()).getScreen() instanceof GameScreen){
@@ -41,4 +49,5 @@ public class InstantBoss extends OneSpriteStaticActor {
             }
         });
     }
+    //endregion
 }

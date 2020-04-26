@@ -14,22 +14,23 @@ import hu.hdani1337.marancsicsdash.Stage.BossStage;
 import hu.hdani1337.marancsicsdash.Stage.GameStage;
 
 import static hu.hdani1337.marancsicsdash.Stage.GameStage.isAct;
-import static hu.hdani1337.marancsicsdash.Stage.ShopStage.boughtDouble;
 
 public class Jump extends OneSpriteStaticActor {
-
+    //region AssetList
     public static final String JUMP_TEXTURE = "pic/ui/jump.png";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(JUMP_TEXTURE);
     }
-
+    //endregion
+    //region Változók
     private boolean touchDown;
     private boolean touchUp;
     private int force;
     private Zsolti zsolti;
-
+    //endregion
+    //region Konstruktor
     /**
      * @param stage Átadom neki a GameStaget/BossStaget, mert abból gond nélkül eltudom érni Zsoltit
      * **/
@@ -61,13 +62,21 @@ public class Jump extends OneSpriteStaticActor {
             }
         });
     }
-
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
         super.act(delta);
         if(touchDown){
+            //Amíg nyomva tartjuk, addig növeljük az erőt (maximum 7500-ig, minimum 4000-ig)
             if(force < 7500) force+=250;
         } else{
+            /**
+             * Ugrás feltételei:
+             *  - Menjen a játékmenet
+             *  - Zsoltinak mindenképp kell lennie WorldHelperje
+             *  - Legyen hátralévő ugrása (alapesetben egyet ugorhat, ha pedig a játékos megveszi a doubleJumpot, akkor kettőt)
+             * **/
             if(isAct) {
                 if(zsolti != null) {
                     if (zsolti.getActorWorldHelper() != null) {
@@ -86,4 +95,5 @@ public class Jump extends OneSpriteStaticActor {
             force = 0;
         }
     }
+    //endregion
 }

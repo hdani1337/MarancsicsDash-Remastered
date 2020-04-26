@@ -8,37 +8,42 @@ import club.minnced.discord.rpc.DiscordEventHandlers;
 import club.minnced.discord.rpc.DiscordRPC;
 import club.minnced.discord.rpc.DiscordRichPresence;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.hdani1337.marancsicsdash.Actor.Marancsics;
-import hu.hdani1337.marancsicsdash.Screen.BossScreen;
-import hu.hdani1337.marancsicsdash.Screen.GameScreen;
 import hu.hdani1337.marancsicsdash.Screen.IntroScreen;
-import hu.hdani1337.marancsicsdash.Screen.ShopScreen;
 import hu.hdani1337.marancsicsdash.Stage.LoadingStage;
 
 public class MarancsicsDash extends MyGame {
-
-	public static String presenceDetail;
-	private static long startTime;
-
+	//region Konstruktorok
 	public MarancsicsDash() {
 	}
 
 	public MarancsicsDash(boolean debug) {
 		super(debug);
 	}
-
+	//endregion
+	//region Változók
 	public static boolean needsLoading;//Kell e a töltőképernyőre grafika
 	public static Preferences preferences;//Mentés
 	public static boolean muted;//Némítva van e a játék
-
+	public static String presenceDetail;
+	private static long startTime;
+	//endregion
+	//region Create metódus
 	@Override
 	public void create() {
 		super.create();
+		loadPreferences();
+		setLoadingStage(new LoadingStage(this));
+		setScreen(new IntroScreen(this));
+		SoundManager.game = this;
+		setDiscordRichPresence();
+	}
+	//endregion
+	//region Mentés betöltő metódus
+	/**Próbáljuk meg betölteni a mentést
+	 * Állítsuk be a felbontást és a teljes képernyős módot
+	 * **/
+	private static void loadPreferences(){
 		needsLoading = false;//Először az Intro fog bejönni, oda legyen üres a töltőképernyő
-
-		/**Próbáljuk meg betölteni a mentést
-		 * Állítsuk be a felbontást és a teljes képernyős módot
-		 * **/
 		try {
 			preferences = Gdx.app.getPreferences("marancsicsDashSave");
 			muted = preferences.getBoolean("muted");
@@ -46,12 +51,15 @@ public class MarancsicsDash extends MyGame {
 		}catch (NullPointerException e){
 			/**Ha NullPointert kapunk, akkor még nincsenek mentett adatok**/
 		}
-		setLoadingStage(new LoadingStage(this));
-		setScreen(new IntroScreen(this));
-		SoundManager.game = this;
-		startTime = System.currentTimeMillis() / 1000l;
-		presenceDetail = "Starting the game...";
-		UpdatePresence();
+	}
+	//endregion
+	//region Discord Rich Presence metódusai
+	private static void setDiscordRichPresence(){
+		if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
+			startTime = System.currentTimeMillis() / 1000l;
+			presenceDetail = "Starting the game...";
+			UpdatePresence();
+		}
 	}
 
 	private static void setDisplay(){
@@ -90,4 +98,5 @@ public class MarancsicsDash extends MyGame {
 			}, "RPC-Callback-Handler").start();
 		}
 	}
+	//endregion
 }

@@ -12,7 +12,6 @@ import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimer;
 import hu.csanyzeg.master.MyBaseClasses.Timers.TickTimerListener;
 import hu.csanyzeg.master.MyBaseClasses.Timers.Timer;
-import hu.csanyzeg.master.MyBaseClasses.UI.MyLabel;
 import hu.hdani1337.marancsicsdash.HudActors.Logo;
 import hu.hdani1337.marancsicsdash.HudActors.TextBox;
 import hu.hdani1337.marancsicsdash.MarancsicsDash;
@@ -23,18 +22,20 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.Stage.MenuBackgroundStage.MENU_BG_TEXTURE;
 
 public class InfoStage extends PrettyStage {
-
+    //region AssetList
     public static AssetList assetList = new AssetList();
     static {
         assetList.collectAssetDescriptor(TextBox.class, assetList);
         assetList.addTexture(MENU_BG_TEXTURE);
         SoundManager.load(assetList);
     }
-
+    //endregion
+    //region Konstruktor
     public InfoStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
-
+    //endregion
+    //region Változók
     private Logo infoLogo;
 
     private OneSpriteStaticActor bg;
@@ -43,7 +44,8 @@ public class InfoStage extends PrettyStage {
     private ArrayList<TextBox> textBoxes;
 
     private boolean setBack;
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void assignment() {
         textBoxes = new ArrayList<>();
@@ -115,7 +117,8 @@ public class InfoStage extends PrettyStage {
 
         addActor(infoLogo);
     }
-
+    //endregion
+    //region Act metódusai
     float alpha = 0;
     float bgAlpha = 1;
 
@@ -178,4 +181,5 @@ public class InfoStage extends PrettyStage {
             tb.setAlpha(alpha);
         }
     }
+    //endregion
 }

@@ -12,18 +12,20 @@ import static hu.hdani1337.marancsicsdash.MarancsicsDash.muted;
 import static hu.hdani1337.marancsicsdash.SoundManager.powerUpSound;
 
 public class Mushroom extends OneSpriteStaticActor implements CollectableItem {
-
+    //region AssetList
     public static final String MUSHROOM_TEXTURE = "pic/ui/mushroom.png";
 
     public static AssetList assetList = new AssetList();
     static {
         assetList.addTexture(MUSHROOM_TEXTURE);
     }
-
+    //endregion
+    //region Változók
     private boolean isAct;
     private boolean playing;
     private Zsolti zsolti;
-
+    //endregion
+    //region Konstruktor
     public Mushroom(MyGame game, GameStage stage) {
         super(game, MUSHROOM_TEXTURE);
         setSize(getWidth()*0.003f, getHeight()*0.003f);
@@ -31,7 +33,8 @@ public class Mushroom extends OneSpriteStaticActor implements CollectableItem {
         this.isAct = true;
         this.playing = false;
     }
-
+    //endregion
+    //region Act metódusai
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -60,4 +63,5 @@ public class Mushroom extends OneSpriteStaticActor implements CollectableItem {
     public void newPosition(){
         setPosition((float)(72+Math.random()*168),(float)(Math.random()*6+Background.ground*2));
     }
+    //endregion
 }

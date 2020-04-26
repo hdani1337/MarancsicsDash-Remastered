@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import hu.csanyzeg.master.MyBaseClasses.Assets.AssetList;
 import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
-import hu.csanyzeg.master.MyBaseClasses.Scene2D.MyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.PrettyStage;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.ResponseViewport;
@@ -25,6 +24,7 @@ import static hu.hdani1337.marancsicsdash.SoundManager.bossMusic;
 import static hu.hdani1337.marancsicsdash.SoundManager.gameMusic;
 
 public class PauseStage extends PrettyStage {
+    //region AssetList
     public static final String BLACK_TEXTURE = "pic/fekete.png";
 
     public static AssetList assetList = new AssetList();
@@ -32,18 +32,21 @@ public class PauseStage extends PrettyStage {
         assetList.collectAssetDescriptor(TextBox.class,assetList);
         assetList.addTexture(BLACK_TEXTURE);
     }
-
+    //endregion
+    //region Változók
     private TextBox info;
     private TextBox pontok;
     private TextBox again;
     private TextBox menu;
 
     private OneSpriteStaticActor black;
-
+    //endregion
+    //region Konstruktor
     public PauseStage(MyGame game) {
         super(new ResponseViewport(900), game);
     }
-
+    //endregion
+    //region Absztrakt metódusok
     @Override
     public void assignment() {
         info = new TextBox(game, "Megállítva",2f);
@@ -142,7 +145,8 @@ public class PauseStage extends PrettyStage {
         menu.remove();
         addedActors = false;
     }
-
+    //endregion
+    //region Act metódusai
     private boolean addedActors;
     private float alpha;
 
@@ -212,4 +216,5 @@ public class PauseStage extends PrettyStage {
             addedActors = false;
         }
     }
+    //endregion
 }

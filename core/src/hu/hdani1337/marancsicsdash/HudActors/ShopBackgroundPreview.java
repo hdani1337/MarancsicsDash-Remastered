@@ -7,14 +7,8 @@ import hu.csanyzeg.master.MyBaseClasses.Game.MyGame;
 import hu.csanyzeg.master.MyBaseClasses.Scene2D.OneSpriteStaticActor;
 import hu.hdani1337.marancsicsdash.Actor.Background;
 
-import static hu.hdani1337.marancsicsdash.Actor.Background.CSERNOBIL_TEXTURE;
-import static hu.hdani1337.marancsicsdash.Actor.Background.OCEAN_TEXTURE;
-import static hu.hdani1337.marancsicsdash.Actor.Background.SZAHARA_TEXTURE;
-import static hu.hdani1337.marancsicsdash.Actor.Background.SZIBERIA_TEXTURE;
-import static hu.hdani1337.marancsicsdash.Actor.Background.ZALA_TEXTURE;
-
 public class ShopBackgroundPreview extends OneSpriteStaticActor {
-
+    //region AssetList
     public static final String CSERNOBIL_PREVIEW_TEXTURE = "pic/backgrounds/preview/bg.png";
     public static final String SZIBERIA_PREVIEW_TEXTURE = "pic/backgrounds/preview/bg2.png";
     public static final String ZALA_PREVIEW_TEXTURE = "pic/backgrounds/preview/bg3.jpg";
@@ -29,35 +23,15 @@ public class ShopBackgroundPreview extends OneSpriteStaticActor {
         assetList.addTexture(SZAHARA_PREVIEW_TEXTURE);
         assetList.addTexture(OCEAN_PREVIEW_TEXTURE);
     }
-
+    //endregion
+    //region Konstruktor
     public ShopBackgroundPreview(MyGame game) {
+        //Alapesetben Csernobil textúra állítódik be
         super(game, CSERNOBIL_PREVIEW_TEXTURE);
         setSize(400,225);
-        id = 0;
     }
-
-    public enum StepDirection{
-        UP, DOWN
-    }
-
-    private byte id;
-
-    /**
-     * Háttér változtatása a StepDirection enummal
-     * **/
-    public void step(StepDirection stepDirection){
-        if(stepDirection == StepDirection.UP) id++;
-        else if (stepDirection == StepDirection.DOWN) id--;
-
-        switch (id % 5){
-            case 0: sprite.setTexture(game.getMyAssetManager().getTexture(CSERNOBIL_PREVIEW_TEXTURE));
-            case 1: sprite.setTexture(game.getMyAssetManager().getTexture(SZIBERIA_PREVIEW_TEXTURE));
-            case 2: sprite.setTexture(game.getMyAssetManager().getTexture(ZALA_PREVIEW_TEXTURE));
-            case 3: sprite.setTexture(game.getMyAssetManager().getTexture(SZAHARA_PREVIEW_TEXTURE));
-            case 4: sprite.setTexture(game.getMyAssetManager().getTexture(OCEAN_PREVIEW_TEXTURE));
-        }
-    }
-
+    //endregion
+    //region Textúra változtató metódusok
     /**
      * Háttér változtatása konkrét ID alapján (0-4 között)
      * **/
@@ -116,4 +90,5 @@ public class ShopBackgroundPreview extends OneSpriteStaticActor {
             }
         }
     }
+    //endregion
 }
